@@ -146,7 +146,7 @@ const Contact = () => {
                         <div className="flex items-start gap-4">
                             <FaEnvelope className="text-[#1B4374] text-2xl mt-1" />
                             <p className="text-gray-700">
-                                {t("contact_email_label")}: contact@salemproject.com
+                                {t("contact_email_label")}: salemproject75cs@gmail.com
                             </p>
                         </div>
 
