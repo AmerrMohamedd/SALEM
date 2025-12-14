@@ -3,22 +3,30 @@ import { assets } from "../assets/assets";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
-// Animation Variants
+// Animation Variants (هادية ومش سريعة)
 const fadeUp = {
-    hidden: { opacity: 0, y: 60 },
-    show: { opacity: 1, y: 0, transition: { duration: 1, ease: "easeOut" } }
+    hidden: { opacity: 0, y: 40 },
+    show: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.9, ease: "easeOut" },
+    },
 };
 
 const fadeRight = {
-    hidden: { opacity: 0, x: 80 },
-    show: { opacity: 1, x: 0, transition: { duration: 1, ease: "easeOut" } }
+    hidden: { opacity: 0, x: 60 },
+    show: {
+        opacity: 1,
+        x: 0,
+        transition: { duration: 0.9, ease: "easeOut" },
+    },
 };
 
 const stagger = {
     hidden: {},
     show: {
-        transition: { staggerChildren: 0.25 }
-    }
+        transition: { staggerChildren: 0.2 },
+    },
 };
 
 const Services = () => {
@@ -32,74 +40,79 @@ const Services = () => {
     ];
 
     return (
-        <div
+        <section
             id="Services"
-            className="w-full py-20 px-10 lg:px-20 flex flex-col lg:flex-row gap-10"
-        >
-            <motion.div
-                variants={fadeRight}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: "-200px 0px" }}
-                className="w-full sm:w-1/2 max-w-lg"
-            >
-                <img
-                    src={assets.road}
-                    alt="Service"
-                    className="w-full h-full object-cover rounded-3xl shadow-lg"
-                />
-            </motion.div>
+            className="w-full py-14 sm:py-16 lg:py-20 px-6 lg:px-20">
+            <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 items-center">
 
-            <motion.div
-                variants={stagger}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: "-200px 0px" }}
-                className="lg:w-1/2 w-full flex flex-col gap-6"
-            >
-                {/* Small title */}
-                <motion.p
-                    variants={fadeUp}
-                    className="text-[#1B4374] tracking-wide font-semibold uppercase"
+                {/* IMAGE */}
+                <motion.div
+                    variants={fadeRight}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true }}
+                    className="w-full lg:w-1/2">
+                    <img src={assets.road} alt="Service" 
+                    className="w-full max-h-[600px] object-cover rounded-3xl shadow-lg"/>
+                </motion.div>
+
+                {/* CONTENT */}
+                <motion.div
+                    variants={stagger}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true }}
+                    className="w-full lg:w-1/2 flex flex-col gap-6"
                 >
-                    {t("services_why")}
-                </motion.p>
+                    {/* Small title */}
+                    <motion.p
+                        variants={fadeUp}
+                        className=" text-[#1B4374] uppercase font-semibold tracking-wide text-xs sm:text-sm lg:text-base ">
+                        {t("services_why")}
+                    </motion.p>
 
-                {/* Main title */}
-                <motion.h2
-                    variants={fadeUp}
-                    className="text-3xl lg:text-4xl font-bold leading-snug"
-                >
-                    <span className="text-[#1B4374]">{t("services_main1")} </span>
-                    <span className="text-[#9A4D3A]">{t("services_main2")}</span>
-                </motion.h2>
+                    {/* Main title */}
+                    <motion.h2
+                        variants={fadeUp}
+                        className="font-bold leading-snug text-xl sm:text-2xl lg:text-4xl ">
+                        <span className="text-[#1B4374]">
+                            {t("services_main1")}{" "}
+                        </span>
+                        <span className="text-[#9A4D3A]">
+                            {t("services_main2")}
+                        </span>
+                    </motion.h2>
 
-                {/* Steps */}
-                <motion.div variants={stagger} className="flex flex-col gap-8 mt-4">
-                    {steps.map((item, index) => (
-                        <motion.div
-                            key={index}
-                            variants={fadeUp}
-                            className="flex flex-col gap-2"
-                        >
-                            {/* Number + Title */}
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-full bg-[#1B4374] flex items-center justify-center text-white font-bold">
-                                    {item.num}
+                    {/* Steps */}
+                    <motion.div
+                        variants={stagger}
+                        className="flex flex-col gap-8 mt-4"
+                    >
+                        {steps.map((item, index) => (
+                            <motion.div
+                                key={index}
+                                variants={fadeUp}
+                                className="flex flex-col gap-2">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#1B4374] 
+                                    flex items-center justify-center text-white font-bold text-sm sm:text-base">
+                                        {item.num}
+                                    </div>
+                                    <h3 className="font-semibold text-sm sm:text-base lg:text-lg">
+                                        {item.title}
+                                    </h3>
                                 </div>
 
-                                <h3 className="text-lg font-semibold">{item.title}</h3>
-                            </div>
-
-                            {/* Description */}
-                            <p className="text-gray-600 text-sm leading-relaxed ml-16">
-                                {item.desc}
-                            </p>
-                        </motion.div>
-                    ))}
+                                <p className=" text-gray-600 text-xs sm:text-sm leading-relaxedml-14 
+                                   sm:ml-16">
+                                    {item.desc}
+                                </p>
+                            </motion.div>
+                        ))}
+                    </motion.div>
                 </motion.div>
-            </motion.div>
-        </div>
+            </div>
+        </section>
     );
 };
 

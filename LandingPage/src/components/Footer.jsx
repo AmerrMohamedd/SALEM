@@ -23,14 +23,12 @@ const Footer = () => {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
-            className="w-full bg-[#0C111D] text-white px-6 lg:px-20 py-14"
-        >
+            className="w-full bg-[#0C111D] text-white px-6 lg:px-20 py-14">
 
             {/* MAIN CONTENT */}
             <motion.div
                 variants={stagger}
-                className="grid grid-cols-1 lg:grid-cols-3 gap-10"
-            >
+                className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
                 {/* LEFT SIDE */}
                 <motion.div variants={fadeUp} className="flex flex-col gap-4">
@@ -55,18 +53,14 @@ const Footer = () => {
 
                     <div className="flex flex-wrap gap-4">
                         <a href="#" target="_blank">
-                            <img
-                                src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-                                alt="Google Play"
-                                className="h-14"
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                                alt="Google Play" className="h-14"
                             />
                         </a>
 
                         <a href="#" target="_blank">
-                            <img
-                                src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
-                                alt="App Store"
-                                className="h-14"
+                            <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                                alt="App Store" className="h-14"
                             />
                         </a>
                     </div>
@@ -75,8 +69,7 @@ const Footer = () => {
 
             <motion.div
                 variants={fadeUp}
-                className="border-t border-gray-700 mt-10 pt-4 flex justify-between text-gray-500 text-sm"
-            >
+                className="border-t border-gray-700 mt-10 pt-4 flex justify-between text-gray-500 text-sm">
                 <p>{t("footer_bottom_left")}</p>
                 <p>{t("footer_bottom_right")}</p>
             </motion.div>

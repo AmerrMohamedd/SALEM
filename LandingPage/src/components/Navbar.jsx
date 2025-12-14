@@ -37,19 +37,14 @@ const Navbar = ({ changeLanguage }) => {
                 </ul>
 
                 {/* Lang Button */}
-                <button
-                    onClick={toggleLang}
-                    className="hidden md:block px-6 py-2 text-white hover:text-gray-300"
-                >
+                <button onClick={toggleLang}
+                    className="hidden md:block px-6 py-2 text-white hover:text-gray-300">
                     {nextLang}
                 </button>
 
                 {/* Mobile menu icon */}
-                <img
-                    src={assets.menu_icon}
-                    onClick={() => setMobileMenu(true)}
-                    className="md:hidden w-7 cursor-pointer"
-                    alt="menu"
+                <img src={assets.menu_icon} onClick={() => setMobileMenu(true)}
+                    className="md:hidden w-7 cursor-pointer" alt="menu"
                 />
             </div>
 
@@ -57,11 +52,8 @@ const Navbar = ({ changeLanguage }) => {
             <div className={`${showMobileMenu ? "fixed w-full" : "h-0 w-0"} top-0 right-0 bottom-0 bg-white overflow-hidden transition-all md:hidden`}>
 
                 <div className="flex justify-end p-6 cursor-pointer">
-                    <img
-                        src={assets.cross_icon}
-                        onClick={() => setMobileMenu(false)}
-                        className="w-6"
-                        alt="close"
+                    <img src={assets.cross_icon} onClick={() => setMobileMenu(false)}
+                        className="w-6" alt="close"
                     />
                 </div>
 
@@ -73,10 +65,8 @@ const Navbar = ({ changeLanguage }) => {
                     <a href="#Contact" onClick={() => setMobileMenu(false)}>{t("nav_contact")}</a>
 
                     {/* Change lan inside mobible */}
-                    <button
-                        onClick={() => { toggleLang(); setMobileMenu(false); }}
-                        className="mt-4 px-6 py-2 bg-black text-white rounded"
-                    >
+                    <button onClick={() => { toggleLang(); setMobileMenu(false); }}
+                        className="mt-4 px-6 py-2 bg-black text-white rounded">
                         {nextLang}
                     </button>
                 </ul>

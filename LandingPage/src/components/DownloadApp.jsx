@@ -3,121 +3,93 @@ import { motion } from "framer-motion";
 import { assets } from "../assets/assets";
 import { useTranslation } from "react-i18next";
 
-//Animation variants
+// Animations
 const fadeUp = {
-    hidden: { opacity: 0, y: 60 },
-    show: { opacity: 1, y: 0, transition: { duration: 1 } }
-};
-
-const fadeLeft = {
-    hidden: { opacity: 0, x: 60 },
-    show: { opacity: 1, x: 0, transition: { duration: 1 } }
+    hidden: { opacity: 0, y: 50 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.8 } }
 };
 
 const fadeRight = {
-    hidden: { opacity: 0, x: -60 },
-    show: { opacity: 1, x: 0, transition: { duration: 1 } }
+    hidden: { opacity: 0, x: -50 },
+    show: { opacity: 1, x: 0, transition: { duration: 0.8 } }
 };
 
 const stagger = {
     hidden: {},
-    show: { transition: { staggerChildren: 0.2 } }
+    show: { transition: { staggerChildren: 0.15 } }
 };
 
 const DownloadApp = () => {
     const { t } = useTranslation();
 
     return (
-        <div
-            id="DownloadApp"
-            className="relative w-full py-20 px-10 lg:px-20 text-white overflow-hidden"
-            style={{ backgroundColor: "#0C111D" }}
-        >
+        <section id="DownloadApp"
+            className="w-full bg-[#0C111D] pt-20 sm:pt-10 lg:pt-10 pb-10">
             <motion.div
                 variants={stagger}
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true }}
-                className="relative z-10 flex flex-col lg:flex-row items-center gap-16"
-            >
+                className="max-w-7xl mx-auto px-6 lg:px-20 w-full flex flex-col lg:flex-row items-center justify-between gap-12 text-white">
 
-                <div className="lg:w-1/2 w-full flex flex-col gap-6">
-
+                {/* TEXT */}
+                <div className="w-full lg:w-1/2 flex flex-col gap-5">
                     <motion.p
                         variants={fadeRight}
-                        className="text-[#1B4374] tracking-wide font-semibold uppercase"
-                    >
+                        className="text-[#1B4374] uppercase font-semibold tracking-wide text-sm">
                         {t("download_small")}
                     </motion.p>
 
                     <motion.h2
                         variants={fadeRight}
-                        className="text-3xl lg:text-4xl font-bold leading-snug"
-                    >
+                        className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-snug">
                         {t("download_title")}
                     </motion.h2>
 
                     <motion.p
                         variants={fadeRight}
-                        className="text-gray-300 leading-relaxed"
-                    >
+                        className="text-gray-300 text-sm sm:text-base leading-relaxed">
                         {t("download_desc1")}
                     </motion.p>
 
                     <motion.p
                         variants={fadeRight}
-                        className="text-gray-400 text-sm"
-                    >
+                        className="text-gray-400 text-sm">
                         {t("download_desc2")}
                     </motion.p>
 
                     <motion.p
                         variants={fadeRight}
-                        className="text-2xl font-bold text-[#C45038]"
-                    >
+                        className="text-[#C45038] font-bold text-lg sm:text-xl">
                         {t("download_now")}
                     </motion.p>
 
-                    {/* Download buttons */}
+                    {/* STORE BUTTONS */}
                     <motion.div
                         variants={fadeRight}
-                        className="flex items-center gap-4 mt-4 flex-wrap"
-                    >
-                        <a href="#" target="_blank" className="overflow-hidden rounded">
-                            <img
-                                src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-                                alt="google-play"
-                                className="h-14"
-                            />
+                        className="flex gap-4 mt-4">
+                        <a href="#" className="transition-transform hover:scale-105">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                                alt="Google Play" className="h-12 sm:h-14"/>
                         </a>
 
-                        <a href="#" target="_blank" className="overflow-hidden rounded">
-                            <img
-                                src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
-                                alt="app-store"
-                                className="h-14"
-                            />
+                        <a href="#" className="transition-transform hover:scale-105">
+                            <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                                alt="App Store" className="h-12 sm:h-14"/>
                         </a>
                     </motion.div>
                 </div>
 
+                {/* IMAGE */}
                 <motion.div
                     variants={fadeUp}
-                    className="lg:w-1/2 w-full flex justify-center relative"
-                >
-                    <motion.img
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1 }}
-                        src={assets.mobile}
-                        alt="phone preview"
-                        className="w-[280px] lg:w-[340px] relative z-20"
+                    className="w-full lg:w-1/2 flex justify-center">
+                    <motion.img src={assets.mobile}
+                        alt="phone preview" className="w-[280px] sm:w-[320px] lg:w-[380px]"
                     />
                 </motion.div>
-
             </motion.div>
-        </div>
+        </section>
     );
 };
 
