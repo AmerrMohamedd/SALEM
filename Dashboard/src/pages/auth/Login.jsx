@@ -31,12 +31,23 @@ function Login() {
 
                 {/* Form */}
                 <form className="space-y-4" onSubmit={async (e) => {
-                        e.preventDefault();
+                    e.preventDefault();
                         try {
-                            await login(email, password);
+                            const data = await login(email, password);
+
+                            // نحفظ التوكن عشان الداشبورد يفتح
+                            localStorage.setItem("token", data.token);
+
+                            // نحفظ بيانات المستخدم (اختياري)
+                            localStorage.setItem(
+                                "user",
+                                JSON.stringify({ email })
+                            );
+
                             navigate("/dashboard");
                         } catch {
                             alert("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+                            
                         }
                     }}>
 
