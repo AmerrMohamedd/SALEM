@@ -6,7 +6,6 @@ import Home from "../components/dashboard/Home";
 
 function Dashboard() {
     const navigate = useNavigate();
-
     // حماية الصفحة
     useEffect(() => {
         const token = localStorage.getItem("token");
