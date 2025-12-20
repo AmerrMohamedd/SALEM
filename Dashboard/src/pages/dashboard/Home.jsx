@@ -1,8 +1,8 @@
-import DashboardFilters from "../../components/dashboard/DashboardFilters";
-import DashboardCards from "../../components/dashboard/DashboardCards";
-import ChartsSection from "../../components/dashboard/ChartsSection";
-import RecentReportsTable from "../../components/dashboard/RecentReportsTable";
-import QuickNotifications from "../../components/dashboard/QuickNotifications";
+import DashboardFilters from "../../components/dashboard/home/DashboardFilters";
+import DashboardCards from "../../components/dashboard/home/DashboardCards";
+import ChartsSection from "../../components/dashboard/home/ChartsSection";
+import RecentReportsTable from "../../components/dashboard/home/RecentReportsTable";
+import QuickNotifications from "../../components/dashboard/home/QuickNotifications";
 
 function Home() {
     return (
