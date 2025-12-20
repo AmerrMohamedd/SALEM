@@ -1,0 +1,82 @@
+import { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+import searchIcon from "../../assets/icons/search-icon.png";
+import filterIcon from "../../assets/icons/filter-icon.png";
+import calendarIcon from "../../assets/icons/calendar.png";
+
+function ReportsFilters() {
+    const [showFilters, setShowFilters] = useState(false);
+    const [date, setDate] = useState(null);
+
+    return (
+        <div className="-mt-6 -mr-6 flex items-center gap-2 relative">
+
+            {/* 🔍 Search */}
+            <div className="relative">
+                <input type="text" placeholder="البحث..."
+                className="h-7 w-44 pr-10 pl-3 text-sm text-right border border-gray-200 rounded-full
+                shadow-[0_2px_4px_rgba(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
+                <img src={searchIcon} alt="search"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4"/>
+            </div>
+
+            {/* ⚙️ Filter Button */}
+            <button onClick={() => setShowFilters(!showFilters)}
+                className="h-7 w-7 flex items-center justify-center rounded-full
+                bg-[#2DDBC9] shadow-[0_2px_4px_rgba(0,0,0,0.12)]">
+                <img src={filterIcon} alt="filter" className="w-4 h-4" />
+            </button>
+
+            {/* 🎛 Filters */}
+            {showFilters && (
+                <div className="flex items-center gap-2">
+
+                    {/* 📅 Date */}
+                    <div dir="ltr" className="relative">
+                        <DatePicker
+                            selected={date}
+                            onChange={(date) => setDate(date)}
+                            placeholderText="التاريخ"
+                            className="h-7 w-40 px-3 text-sm text-right
+                            border border-gray-200 rounded-full
+                            shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                            focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]
+                            cursor-pointer"
+                        />
+                        <img src={calendarIcon} alt="calendar"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"/>
+                    </div>
+
+                    {/* 🏢 الجهة المسؤولة */}
+                    <select
+                        className="h-7 w-40 px-3 text-sm
+                        border border-gray-200 rounded-full
+                        shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                        focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]">
+                        <option>الجهة المسؤولة</option>
+                        <option>هيئة الطرق</option>
+                        <option>شركة المياه</option>
+                        <option>شركة الكهرباء</option>
+                        <option> الانارة</option>
+                    </select>
+
+                    {/* 📌 الحالة */}
+                    <select
+                        className="h-7 w-40 px-3 text-sm
+                        border border-gray-200 rounded-full
+                        shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                        focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]">
+                        <option>الحالة</option>
+                        <option>قيد التنفيذ</option>
+                        <option>تم الحل</option>
+                    </select>
+
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default ReportsFilters;
