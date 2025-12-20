@@ -5,7 +5,7 @@ import Signup from "../pages/auth/Signup";
 import ForgetPassword from "../pages/auth/ForgetPassword";
 import Verification from "../pages/auth/Verification";
 import SetNewPassword from "../pages/auth/SetNewPassword";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../pages/Dashboard"; // 👈 زي ما كان
 
 function AppRoutes() {
     return (
