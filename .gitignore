@@ -1,0 +1,14 @@
+# Virtual environment
+NLP Models/Duplicate Detection (Text-side)/nlp_env/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Jupyter checkpoints (لو عندك)
+.ipynb_checkpoints/
+
+# أي ملفات كبيرة أو حساسة
+*.log
+*.sqlite
+*.env
