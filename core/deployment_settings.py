@@ -1,31 +1,28 @@
 import os
-import dj_database_url
-from .settings import * # بيسحب الإعدادات الأساسية عشان م نكررش كود
+from pathlib import Path
+from .settings import *
 
-# 1. الأمان والبيئة
-DEBUG = False
+# 1. الأمان
+DEBUG = True  # هنخليه True مؤقتاً عشان نتأكد إن الموقع هيفتح
 
-# اكتب اسم المستخدم بتاعك في PythonAnywhere مكان 'yourusername'
-ALLOWED_HOSTS = [' abdullahgouda.pythonanywhere.com.', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['abdullahgouda.pythonanywhere.com', 'localhost', '127.0.0.1']
 
-# ضروري عشان الـ Cookies والـ Admin في الرفع
-CSRF_TRUSTED_ORIGINS = ['https://abdullahgouda.pythonanywhere.com']
+# 2. تعريف الـ BASE_DIR عشان ميعملش Error
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-# 2. إعدادات قاعدة البيانات (Supabase)
-# استخدمنا الرابط اللي إنت بعته مباشرة
+# 3. قاعدة البيانات SQLite الأصلية
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://postgres:A.gouda123456789@db.vsfxdmsykinuqrvxftjf.supabase.co:5432/postgres',
-        conn_max_age=600,
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
-# 3. الـ Middleware (ترتيب مهم جداً لـ WhiteNoise و CORS)
+# 4. الـ Middleware الأصلي (بدون WhiteNoise)
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # لخدمة الملفات الثابتة
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # تيم الويب والـ API
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -33,27 +30,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# 4. الـ CORS عشان تيم الـ Web والموبايل يعرفوا يكلموا الـ API
-CORS_ALLOW_ALL_ORIGINS = True  # بما إنك في مرحلة الـ Testing مع التيم
-
-# 5. الملفات الثابتة (Static & Media)
-# مهم جداً عشان الـ Admin panel والـ Images تظهر صح
+# 5. الملفات الثابتة العادية
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# 6. إعدادات إضافية لضمان عمل الـ API بشكل مستقر
-# (اختياري) لو بتستخدم Rest Framework
-if 'rest_framework' in INSTALLED_APPS:
-    REST_FRAMEWORK = {
-        'DEFAULT_RENDERER_CLASSES': [
-            'rest_framework.renderers.JSONRenderer',
-            'rest_framework.renderers.BrowsableAPIRenderer',
-        ],
-        'DEFAULT_PERMISSION_CLASSES': [
-            'rest_framework.permissions.AllowAny',
-        ],
-    }
