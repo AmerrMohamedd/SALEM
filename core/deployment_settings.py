@@ -21,6 +21,7 @@ DATABASES = {
 # 4. الـ Middleware الأصلي (بدون WhiteNoise)
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # لازم يكون هنا بالظبط بعد السكيورتي
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
