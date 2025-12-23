@@ -41,3 +41,9 @@ DATABASES = {
         conn_max_age=600,
     )
 }
+
+
+
+
+
+# postgresql://postgres:A.gouda123456789@db.vsfxdmsykinuqrvxftjf.supabase.co:5432/postgres
