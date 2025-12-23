@@ -6,7 +6,7 @@ set -o errexit
 pip install -r requirements.txt
 
 # جمع ملفات static في STATIC_ROOT
-python manage.py collectstatic --noinput
+python3 manage.py collectstatic --noinput
 
 # عمل أي migrations لقاعدة البيانات
-python manage.py migrate
+python3 manage.py migrate
