@@ -6,7 +6,10 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
+
+    settings_modules = "core.deployment_settings" if os.environ.get("RENDER") else "core.settings"
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings_modules)
+    
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
