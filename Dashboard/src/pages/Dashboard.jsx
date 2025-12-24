@@ -1,34 +1,34 @@
+import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../components/dashboard/Sidebar";
 import Header from "../components/dashboard/Header";
-import { Outlet, useNavigate } from "react-router-dom";
 
 function Dashboard() {
     const navigate = useNavigate();
 
-    // ✅ الدالة لازم تكون هنا
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-
         navigate("/login", { replace: true });
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex h-screen bg-[#F6F7FB]">
 
             {/* Sidebar */}
             <Sidebar />
 
-            {/* Main */}
+            {/* Main Area */}
             <div className="flex-1 flex flex-col">
 
                 {/* Header */}
                 <Header onLogout={handleLogout} />
 
-                {/* Page Content */}
-                <main className="flex-1 p-6 overflow-y-auto">
-                    <Outlet />
-                </main>
+                {/* Page Content Wrapper */}
+                <div className="flex-1 overflow-y-auto">
+                    <div className="max-w-[1400px] mx-auto px-6 py-6">
+                        <Outlet />
+                    </div>
+                </div>
 
             </div>
         </div>

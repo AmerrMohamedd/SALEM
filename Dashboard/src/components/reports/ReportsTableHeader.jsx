@@ -5,7 +5,7 @@ function ReportsTableHeader() {
       text-white rounded-xl px-4 py-3 text-sm font-semibold"
         >
             <div className="grid grid-cols-8 text-center">
-                <div>رقم البلاغ</div>
+                <div>رقم البلاغ (ID)</div>
                 <div>التصنيف</div>
                 <div>الموقع</div>
                 <div>التاريخ</div>
