@@ -1,4 +1,3 @@
-import AuthLayout from "../../layout/AuthLayout";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -13,12 +12,13 @@ function Login() {
     const navigate = useNavigate();
 
     return (
-        <AuthLayout>
+        <>
             {/* Page animation */}
             <motion.div
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}>
+                transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+            >
                 {/* Title */}
                 <h2 className="text-base md:text-lg font-extrabold text-gray-800 mb-2">
                     تسجيل الدخول
@@ -30,36 +30,34 @@ function Login() {
                 </p>
 
                 {/* Form */}
-                <form className="space-y-4" onSubmit={async (e) => {
-                    e.preventDefault();
-                    try {
-                        const data = await login(email, password);
+                <form
+                    className="space-y-4"
+                    onSubmit={async (e) => {
+                        e.preventDefault();
+                        try {
+                            const data = await login(email, password);
 
-                        // نحفظ التوكن عشان الداشبورد يفتح
-                        localStorage.setItem("token", data.token);
+                            localStorage.setItem("token", data.token);
+                            localStorage.setItem("user", JSON.stringify({ email }));
 
-                        // نحفظ بيانات المستخدم (اختياري)
-                        localStorage.setItem(
-                            "user",
-                            JSON.stringify({ email })
-                        );
-
-                        navigate("/dashboard");
-                    } catch {
-                        alert("البريد الإلكتروني أو كلمة المرور غير صحيحة");
-
-                    }
-                }}>
-
+                            navigate("/dashboard", { replace: true });
+                        } catch {
+                            alert("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+                        }
+                    }}
+                >
                     {/* Email */}
                     <div>
                         <label className="block text-xs md:text-sm mb-1">
                             البريد الإلكتروني
                         </label>
-                        <input type="email" placeholder="أدخل البريد الإلكتروني"
-                            className=" w-full px-3 py-2 border rounded-md text-sm transition-colors duration-200
-                        hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9] "
-                            onChange={(e) => setEmail(e.target.value)} />
+                        <input
+                            type="email"
+                            placeholder="أدخل البريد الإلكتروني"
+                            className="w-full px-3 py-2 border rounded-md text-sm transition-colors duration-200
+              hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
                     </div>
 
                     {/* Password */}
@@ -69,19 +67,22 @@ function Login() {
                         </label>
 
                         <div className="relative">
-                            <input type={showPassword ? "text" : "password"} placeholder="أدخل كلمة المرور"
-                                className=" w-full px-3 py-2 border rounded-md text-sm pr-10 transition-colors duration-200
-                            hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"
-                                onChange={(e) => setPassword(e.target.value)} />
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="أدخل كلمة المرور"
+                                className="w-full px-3 py-2 border rounded-md text-sm pr-10 transition-colors duration-200
+                hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
 
-                            {/* Eye icon */}
                             <motion.button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 transition={{ duration: 0.1 }}
-                                className="absolute inset-y-0 left-3 flex items-center text-gray-400 hover:text-[#00816F]">
+                                className="absolute inset-y-0 left-3 flex items-center text-gray-400 hover:text-[#00816F]"
+                            >
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </motion.button>
                         </div>
@@ -91,7 +92,8 @@ function Login() {
                     <div className="text-left">
                         <Link
                             to="/forget-password"
-                            className="text-xs text-[#00816F] transition-colors hover:text-[#2DDBC9]">
+                            className="text-xs text-[#00816F] transition-colors hover:text-[#2DDBC9]"
+                        >
                             هل نسيت كلمة المرور؟
                         </Link>
                     </div>
@@ -102,7 +104,8 @@ function Login() {
                         whileHover={{ scale: 1.015 }}
                         whileTap={{ scale: 0.98 }}
                         transition={{ duration: 0.12 }}
-                        className=" w-full py-2.5 rounded-xl text-white font-semibold bg-gradient-to-r from-[#00816F] to-[#2DDBC9]">
+                        className="w-full py-2.5 rounded-xl text-white font-semibold bg-gradient-to-r from-[#00816F] to-[#2DDBC9]"
+                    >
                         تسجيل الدخول
                     </motion.button>
                 </form>
@@ -110,12 +113,15 @@ function Login() {
                 {/* Signup */}
                 <div className="mt-6 text-center text-xs md:text-sm">
                     ليس لديك حساب؟
-                    <Link to="/signup" className="text-[#00816F] font-semibold mr-1 transition-colors hover:text-[#2DDBC9]">
+                    <Link
+                        to="/signup"
+                        className="text-[#00816F] font-semibold mr-1 transition-colors hover:text-[#2DDBC9]"
+                    >
                         التسجيل
                     </Link>
                 </div>
             </motion.div>
-        </AuthLayout>
+        </>
     );
 }
 
