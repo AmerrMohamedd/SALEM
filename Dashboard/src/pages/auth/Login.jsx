@@ -1,4 +1,4 @@
-import AuthLayout from "../../components/layout/AuthLayout";
+import AuthLayout from "../../layout/AuthLayout";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -32,24 +32,24 @@ function Login() {
                 {/* Form */}
                 <form className="space-y-4" onSubmit={async (e) => {
                     e.preventDefault();
-                        try {
-                            const data = await login(email, password);
+                    try {
+                        const data = await login(email, password);
 
-                            // نحفظ التوكن عشان الداشبورد يفتح
-                            localStorage.setItem("token", data.token);
+                        // نحفظ التوكن عشان الداشبورد يفتح
+                        localStorage.setItem("token", data.token);
 
-                            // نحفظ بيانات المستخدم (اختياري)
-                            localStorage.setItem(
-                                "user",
-                                JSON.stringify({ email })
-                            );
+                        // نحفظ بيانات المستخدم (اختياري)
+                        localStorage.setItem(
+                            "user",
+                            JSON.stringify({ email })
+                        );
 
-                            navigate("/dashboard");
-                        } catch {
-                            alert("البريد الإلكتروني أو كلمة المرور غير صحيحة");
-                            
-                        }
-                    }}>
+                        navigate("/dashboard");
+                    } catch {
+                        alert("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+
+                    }
+                }}>
 
                     {/* Email */}
                     <div>
@@ -57,9 +57,9 @@ function Login() {
                             البريد الإلكتروني
                         </label>
                         <input type="email" placeholder="أدخل البريد الإلكتروني"
-                        className=" w-full px-3 py-2 border rounded-md text-sm transition-colors duration-200
+                            className=" w-full px-3 py-2 border rounded-md text-sm transition-colors duration-200
                         hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9] "
-                        onChange={(e) => setEmail(e.target.value)}/>
+                            onChange={(e) => setEmail(e.target.value)} />
                     </div>
 
                     {/* Password */}
@@ -70,9 +70,9 @@ function Login() {
 
                         <div className="relative">
                             <input type={showPassword ? "text" : "password"} placeholder="أدخل كلمة المرور"
-                            className=" w-full px-3 py-2 border rounded-md text-sm pr-10 transition-colors duration-200
+                                className=" w-full px-3 py-2 border rounded-md text-sm pr-10 transition-colors duration-200
                             hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"
-                            onChange={(e) => setPassword(e.target.value)}/>
+                                onChange={(e) => setPassword(e.target.value)} />
 
                             {/* Eye icon */}
                             <motion.button

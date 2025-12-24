@@ -1,4 +1,4 @@
-import AuthLayout from "../../components/layout/AuthLayout";
+import AuthLayout from "../../layout/AuthLayout";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -23,7 +23,7 @@ function Signup() {
                             اسم الملف الشخصي
                         </label>
                         <input type="text" placeholder="أدخل اسم ملفك الشخصي"
-                        className="w-full px-3 py-2 border rounded-md transition-colors duration-200
+                            className="w-full px-3 py-2 border rounded-md transition-colors duration-200
                         hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
                     </div>
 
@@ -33,7 +33,7 @@ function Signup() {
                             البريد الإلكتروني
                         </label>
                         <input type="email" placeholder="أدخل عنوان بريدك الإلكتروني"
-                        className="w-full px-3 py-2 border rounded-md transition-colors duration-200
+                            className="w-full px-3 py-2 border rounded-md transition-colors duration-200
                         hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
                     </div>
 
@@ -43,7 +43,7 @@ function Signup() {
                             كلمة المرور
                         </label>
                         <input type="password" placeholder="أدخل كلمة المرور الخاصة بك"
-                        className="w-full px-3 py-2 border rounded-md transition-colors duration-200
+                            className="w-full px-3 py-2 border rounded-md transition-colors duration-200
                         hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
                         <p className="text-[11px] text-gray-500 mt-1">
                             استخدم 12 حرفًا أو أكثر من مزيج من الأحرف والأرقام والرموز
@@ -81,7 +81,7 @@ function Signup() {
                             المنطقة / المدينة
                         </label>
                         <input type="text" placeholder="أدخل المنطقة أو المدينة"
-                        className="w-full px-3 py-2 border rounded-md transition-colors duration-200
+                            className="w-full px-3 py-2 border rounded-md transition-colors duration-200
                         hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
                     </div>
 

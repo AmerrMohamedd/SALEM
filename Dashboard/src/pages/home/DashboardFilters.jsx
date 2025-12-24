@@ -3,7 +3,7 @@
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import calendarIcon from "../../../assets/icons/calendar.png";
+import calendarIcon from "../../assets/icons/calendar.png";
 
 function DashboardFilters() {
     const [date, setDate] = useState(null);

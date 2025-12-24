@@ -1,4 +1,4 @@
-import AuthLayout from "../../components/layout/AuthLayout";
+import AuthLayout from "../../layout/AuthLayout";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -17,11 +17,11 @@ function SetNewPassword() {
 
                 <div className="space-y-4">
                     <input type="password" placeholder="كلمة المرور"
-                    className="w-full px-4 py-2.5 border rounded-xl text-sm transition-colors duration-200
+                        className="w-full px-4 py-2.5 border rounded-xl text-sm transition-colors duration-200
                     hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
 
                     <input type="password" placeholder="تأكيد كلمة المرور"
-                    className="w-full px-4 py-2.5 border rounded-xl text-sm transition-colors duration-200
+                        className="w-full px-4 py-2.5 border rounded-xl text-sm transition-colors duration-200
                     hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
                 </div>
 

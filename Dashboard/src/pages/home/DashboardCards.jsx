@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { getDashboardStats } from "../../../services/dashboardService";
+import { getDashboardStats } from "../../services/dashboardService";
 
-import solvedIcon from "../../../assets/icons/solved.png";
-import transferredIcon from "../../../assets/icons/transferred.png";
-import reviewIcon from "../../../assets/icons/review.png";
-import openIcon from "../../../assets/icons/open.png";
-import totalIcon from "../../../assets/icons/total.png";
+import solvedIcon from "../../assets/icons/solved.png";
+import transferredIcon from "../../assets/icons/transferred.png";
+import reviewIcon from "../../assets/icons/review.png";
+import openIcon from "../../assets/icons/open.png";
+import totalIcon from "../../assets/icons/total.png";
 
 function DashboardCards() {
     const [stats, setStats] = useState(null);
