@@ -44,6 +44,7 @@ const menuItems = [
     },
     {
         label: "سجل الشوارع والصيانة السابقة",
+        path: "/dashboard/streets-history",
         icon: bookingIcon,
         iconActive: bookingIconActive,
     },
@@ -84,34 +85,22 @@ function Sidebar() {
             <nav className="flex-1 px-4 py-6 space-y-2 text-sm">
                 {menuItems.map((item, i) =>
                     item.path ? (
-                        <NavLink
-                            key={i}
-                            to={item.path}
-                            end={item.path === "/dashboard"}
+                        <NavLink key={i} to={item.path} end={item.path === "/dashboard"}
                             className={({ isActive }) =>
-                                `flex items-center gap-3 px-4 py-3 rounded-xl transition
-                ${isActive
-                                    ? "bg-white text-[#00816F] font-bold"
-                                    : "hover:bg-white/10 text-white"
-                                }`
-                            }
-                        >
+                            `flex items-center gap-3 px-4 py-3 rounded-xl transition ${isActive
+                            ? "bg-white text-[#00816F] font-bold"
+                            : "hover:bg-white/10 text-white"}`}>
                             {({ isActive }) => (
                                 <>
-                                    <img
-                                        src={isActive ? item.iconActive : item.icon}
-                                        className="w-5 h-5"
-                                    />
-
+                                    <img src={isActive ? item.iconActive : item.icon}
+                                    className="w-5 h-5"/>
                                     <span>{item.label}</span>
                                 </>
                             )}
                         </NavLink>
-                    ) : (
-                        <div
-                            key={i}
-                            className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer hover:bg-white/10 text-white"
-                        >
+                        ) : (
+                        <div key={i}
+                            className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer hover:bg-white/10 text-white">
                             <img src={item.icon} className="w-5 h-5 object-contain" />
                             <span>{item.label}</span>
                         </div>

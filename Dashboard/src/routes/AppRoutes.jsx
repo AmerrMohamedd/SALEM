@@ -12,6 +12,8 @@ import SetNewPassword from "../pages/auth/SetNewPassword";
 import HomePage from "../pages/home/HomePage";
 import ReportsPage from "../pages/reports/ReportsPage";
 import WorkflowPage from "../pages/workflow/WorkflowPage";
+import StreetsHistoryPage from "../pages/streetsHistory/StreetsHistoryPage";
+
 
 function AppRoutes() {
     return (
@@ -32,6 +34,7 @@ function AppRoutes() {
                 <Route path="/dashboard" element={<HomePage />} />
                 <Route path="/dashboard/reports" element={<ReportsPage />} />
                 <Route path="/dashboard/workflow" element={<WorkflowPage />} />
+                <Route path="/dashboard/streets-history" element={<StreetsHistoryPage/>} />
             </Route>
 
         </Routes>
