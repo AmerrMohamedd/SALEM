@@ -7,19 +7,20 @@ import StreetsHistoryTableRows from "./StreetsHistoryTableRows";
 import StreetsHistoryDetails from "./StreetsHistoryDetails";
 import StreetsHistoryMap from "./StreetsHistoryMap";
 
-
 function StreetsHistoryPage() {
     const [selectedReport, setSelectedReport] = useState(null);
     const [openDetails, setOpenDetails] = useState(false);
-
     const [showMap, setShowMap] = useState(false);
+
+    const [searchId, setSearchId] = useState("");
+    const [filterDate, setFilterDate] = useState(null);
+    const [filterCategory, setFilterCategory] = useState("");
 
     /* ===== Pagination ===== */
     const [page, setPage] = useState(1);
-
-    const firstPageCount = 7;   
+    const firstPageCount = 7;
     const rowsPerPage = 10;
-    const totalPages = 50;     
+    const totalPages = 50;
 
     // ===== Mock Data =====
     const records = [
@@ -35,26 +36,44 @@ function StreetsHistoryPage() {
         { id: "1009", date: "21-10-2025", category: "تشققات إسفلت", status: "تم الحل", repairTime: "5 أيام", process: "البلدية" },
         { id: "1010", date: "20-10-2025", category: "تلف مطبات", status: "مرفوض", repairTime: "—", process: "المرور" },
         { id: "1011", date: "19-10-2025", category: "تجمع مياه أمطار", status: "قيد التنفيذ", repairTime: "—", process: "البلدية" },
-      
     ];
+
+    /* ===== Filters ===== */
+    const filteredRecords = records.filter((item) => {
+        const matchId =
+            !searchId || item.id.includes(searchId);
+
+        const matchCategory =
+            !filterCategory || item.category === filterCategory;
+
+        const matchDate =
+            !filterDate ||
+            item.date ===
+            filterDate.toLocaleDateString("en-GB").replaceAll("/", "-");
+        return matchId && matchCategory && matchDate;
+    });
 
     /* ===== Pagination Logic ===== */
     let visibleReports = [];
 
     if (page === 1) {
-        //  1000 → 1006
-        visibleReports = records.slice(0, firstPageCount);
+        visibleReports = filteredRecords.slice(0, firstPageCount);
     } else {
         const startIndex =
             firstPageCount + (page - 2) * rowsPerPage;
         const endIndex = startIndex + rowsPerPage;
 
-        visibleReports = records.slice(startIndex, endIndex);
+        visibleReports = filteredRecords.slice(startIndex, endIndex);
     }
 
     return (
         <>
-            <StreetsHistoryFilters />
+            <StreetsHistoryFilters
+                onSearchChange={setSearchId}
+                onDateChange={setFilterDate}
+                onCategoryChange={setFilterCategory}
+            />
+
             <StreetsHistoryStats />
 
             <div className="mt-4">
@@ -64,23 +83,22 @@ function StreetsHistoryPage() {
                     records={visibleReports}
                     onView={(report) => {
                         setSelectedReport(report);
-                        setOpenDetails(true); // ✅ دي كانت ناقصة
+                        setOpenDetails(true);
+                        setShowMap(false);
                     }}
                 />
 
-
-                {/* ===== Pagination (دايمًا باينة) ===== */}
+                {/* Pagination */}
                 <div className="flex justify-between items-center mt-4 text-sm">
                     <span className="text-gray-500">
                         صفحة {page} من {totalPages}
                     </span>
 
                     <div className="flex gap-2">
-                        <button
-                            disabled={page === 1}
+                        <button disabled={page === 1}
                             onClick={() => {
                                 setPage((p) => Math.max(p - 1, 1));
-                                setSelectedReport(null);
+                                setOpenDetails(false);
                             }}
                             className="px-3 py-1 rounded-lg border disabled:opacity-40">
                             السابق
@@ -90,10 +108,8 @@ function StreetsHistoryPage() {
                             disabled={page === totalPages}
                             onClick={() => {
                                 setPage((p) => Math.min(p + 1, totalPages));
-                                setSelectedReport(null);
                                 setOpenDetails(false);
                             }}
-
                             className="px-3 py-1 rounded-lg border disabled:opacity-40">
                             التالي
                         </button>
@@ -101,18 +117,15 @@ function StreetsHistoryPage() {
                 </div>
             </div>
 
-            {/* ===== Details Card ===== */}
+            {/* ===== Details Modal ===== */}
             {openDetails && selectedReport && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
                     <div className="absolute inset-0 backdrop-blur-sm"></div>
 
                     <div className="relative bg-white w-[90%] max-w-6xl h-[85vh] rounded-2xl p-6">
-                        {/* Close */}
-                        <button
-                            onClick={() => {
-                                setOpenDetails(false);
-                                setShowMap(false);
-                            }}
+                        <button onClick={() => {
+                            setOpenDetails(false);
+                            setShowMap(false);}}
                             className="absolute top-4 left-4 text-green-800 text-xl font-bold">
                             ✕
                         </button>
@@ -120,9 +133,9 @@ function StreetsHistoryPage() {
                         {!showMap ? (
                             <StreetsHistoryDetails
                                 report={selectedReport}
-                                onOpenMap={() => setShowMap(true)}   // 👈 هنا السر
+                                onOpenMap={() => setShowMap(true)}
                             />
-                            ) : (
+                        ) : (
                             <StreetsHistoryMap
                                 location={selectedReport?.location || "Cairo"}
                                 onBack={() => setShowMap(false)}
