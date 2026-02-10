@@ -19,6 +19,8 @@ INSTALLED_APPS = [
     # Libraries
     "rest_framework",
     "corsheaders",
+    'rest_framework_simplejwt',
+    'django_rest_passwordreset',
     # Your Apps
     "accounts",
 ]
@@ -34,6 +36,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+
 
 ROOT_URLCONF = "core.urls"
 
@@ -62,6 +73,11 @@ DATABASES = {
     }
 }
 
+
+# update the use model to the custom user model
+AUTH_USER_MODEL = "accounts.User"
+
+
 # CORS - السماح للكل في مرحلة التطوير
 CORS_ALLOW_ALL_ORIGINS = True 
 
@@ -85,3 +101,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# for test only - in production, you should use a real email backend and not the console backend
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
