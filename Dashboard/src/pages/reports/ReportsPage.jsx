@@ -15,7 +15,7 @@ function ReportsPage() {
 
     /* ===== Pagination ===== */
     const [page, setPage] = useState(1);
-    const rowsPerPage = 10;
+    const rowsPerPage = 12;
     const totalPages = 50;
 
     /* ===== Details Modal ===== */

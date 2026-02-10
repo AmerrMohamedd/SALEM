@@ -50,21 +50,25 @@ const menuItems = [
     },
     {
         label: "التقارير والإحصائيات",
+        path: "/dashboard/statistics",
         icon: reviewsIcon,
         iconActive: reviewsIconActive,
     },
     {
         label: "مركز الإشعارات",
+        path: "/dashboard/notifications",
         icon: notificationIcon,
         iconActive: notificationIconActive,
     },
     {
         label: "إدارة المستخدمين",
+        path: "/dashboard/users",
         icon: usersIcon,
         iconActive: usersIconActive,
     },
     {
         label: "الإعدادات",
+        path: "/dashboard/settings",
         icon: settingsIcon,
         iconActive: settingsIconActive,
     },

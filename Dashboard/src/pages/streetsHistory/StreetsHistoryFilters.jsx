@@ -17,9 +17,12 @@ function StreetsHistoryFilters({
     return (
         <div className="flex items-center gap-3 mb-6">
 
-            {/* Search (ID) */}
-            <div className={`flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.12)] w-[860px]
-                ${focused ? "ring-2 ring-[#2DDBC9]" : ""}`}>
+            {/* Search */}
+            <div
+                className={`flex items-center gap-2 bg-white px-3 py-1 rounded-full
+                shadow-[0_2px_4px_rgba(0,0,0,0.12)] w-[860px]
+                ${focused ? "ring-2 ring-[#2DDBC9]" : ""}`}
+            >
                 <img src={searchIcon} alt="search" className="w-4 h-4" />
 
                 <input
@@ -46,17 +49,24 @@ function StreetsHistoryFilters({
                     }}
                     placeholderText="التاريخ"
                     className="h-7 w-40 px-3 text-sm text-right border border-gray-200 rounded-full
-                    shadow-[0_2px_4px_rgba(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9] cursor-pointer"/>
+                    shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                    focus:outline-none focus:ring-2 focus:ring-[#2DDBC9] cursor-pointer"
+                />
 
-                <img src={calendarIcon} alt="calendar"
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"/>
+                <img
+                    src={calendarIcon}
+                    alt="calendar"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+                />
             </div>
 
             {/* Category */}
             <select
                 onChange={(e) => onCategoryChange(e.target.value)}
                 className="h-7 w-40 px-3 text-sm border border-gray-200 rounded-full
-                shadow-[0_2px_4px_rgba(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]">
+                shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"
+            >
                 <option value="">نوع المشكلة</option>
                 <option value="حفرة طريق">حفرة طريق</option>
                 <option value="كسر ماسورة مياه">كسر ماسورة مياه</option>

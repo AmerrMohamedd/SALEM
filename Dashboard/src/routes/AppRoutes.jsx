@@ -13,6 +13,14 @@ import HomePage from "../pages/home/HomePage";
 import ReportsPage from "../pages/reports/ReportsPage";
 import WorkflowPage from "../pages/workflow/WorkflowPage";
 import StreetsHistoryPage from "../pages/streetsHistory/StreetsHistoryPage";
+import StatisticsPage from "../pages/statistics/StatisticsPage";
+import NotificationsPage from "../pages/notifications/NotificationsPage";
+import UsersPage from "../pages/users/UsersPage";
+import AddUserPage from "../pages/users/AddUserPage";
+import SettingsPage from "../pages/settings/SettingsPage";
+
+
+
 
 
 function AppRoutes() {
@@ -35,6 +43,11 @@ function AppRoutes() {
                 <Route path="/dashboard/reports" element={<ReportsPage />} />
                 <Route path="/dashboard/workflow" element={<WorkflowPage />} />
                 <Route path="/dashboard/streets-history" element={<StreetsHistoryPage/>} />
+                <Route path="/dashboard/statistics" element={<StatisticsPage />} />
+                <Route path="/dashboard/notifications" element={<NotificationsPage />}/>
+                <Route path="/dashboard/users" element={<UsersPage/>} />
+                <Route path="/dashboard/users/add" element={<AddUserPage />} />
+                <Route path="/dashboard/settings" element={<SettingsPage />} />
             </Route>
 
         </Routes>
