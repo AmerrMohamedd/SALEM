@@ -1,0 +1,15 @@
+# Dataset only (ignore)
+dataset/
+datasets/
+images/
+labels/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
