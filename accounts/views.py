@@ -5,6 +5,7 @@ from rest_framework import status
 from .models import *
 from .serializers import *
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import login
 from django.contrib.auth.hashers import make_password
@@ -77,6 +78,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 class RegistrationMetadataView(APIView):   # user_local_host_port/registration-data ---> the Api
 
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         
         department = Department.objects.all()
@@ -126,8 +129,16 @@ class LoginView(APIView):
         if serializer.is_valid():
             user = serializer.validated_data['user']
             
-            
+
             refresh = RefreshToken.for_user(user)
+
+
+            role = None
+            if user.user_type == 'employee' and hasattr(user, 'employee_profile'):
+                role = user.employee_profile.role
+            elif user.user_type == 'citizen':
+                role = "citizen"
+                
             
             return Response({
                 "message": "تم تسجيل الدخول بنجاح",
@@ -138,8 +149,26 @@ class LoginView(APIView):
                 "user_info": {
                     "username": user.username,
                     "user_type": user.user_type, # 'citizen' أو 'employee'
-                    "email": user.email
+                    "email": user.email,
+                    "role": role
                 }
             }, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class LogoutView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            
+            token.blacklist()
+            
+            return Response({"message": "تم تسجيل الخروج بنجاح"}, status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response({"message": "التوكن غير صالح أو تم استخدامه من قبل"}, status=status.HTTP_400_BAD_REQUEST)

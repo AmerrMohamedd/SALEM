@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'rest_framework_simplejwt',
     'django_rest_passwordreset',
+    'rest_framework_simplejwt.token_blacklist',
     # Your Apps
     "accounts",
 ]
@@ -41,7 +42,11 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny', 
+    ],
 }
 
 
@@ -105,4 +110,24 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # for test only - in production, you should use a real email backend and not the console backend
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'abdullahgouda29@gmail.com'  # اكتب هنا إيميلك اللي طلعت منه الكود
+EMAIL_HOST_PASSWORD = 'vutmbdsnxudotepc'  # الكود اللي إنت لسه باعتهولي (بدون مسافات)
+
+
+
+
+SIMPLE_JWT = {
+    # ... الإعدادات اللي عملناها قبل كدة
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True, # ده بيخلي التوكن القديم يدخل البلاك ليست فوراً أول ما يطلع واحد جديد
+}

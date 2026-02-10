@@ -5,3 +5,5 @@ from .models import *
 admin.site.register(User)
 admin.site.register(Region)
 admin.site.register(Department)
+admin.site.register(EmployeeProfile)
+admin.site.register(CitizenProfile)

@@ -81,6 +81,9 @@ class EmployeeProfile(models.Model):
     region = models.ForeignKey(Region, on_delete=models.PROTECT)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
 
+    def __str__(self):
+        return self.role
+
     
 
 class CitizenProfile(models.Model):
@@ -90,25 +93,14 @@ class CitizenProfile(models.Model):
     birth_date = models.DateField()
 
 
+    def __str__(self):
+        return self.citizen_id.username
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# for forgetpassword email sending 
 
 from django.core.mail import send_mail
 from django.dispatch import receiver
