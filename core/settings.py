@@ -5,9 +5,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-@j=gru+8@%0nf6ou1!(v24tc3==6y#lz3r_+d6_v%s4q&5-h+%"
 
-DEBUG = True # محلياً دايماً True
+DEBUG = True  # محلياً دايماً True
 
-ALLOWED_HOSTS = []
+# أثناء التطوير نسمح لكل الهوستات لتفادي أخطاء DisallowedHost
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -24,6 +25,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     # Your Apps
     "accounts",
+    'incidents',
 ]
 
 MIDDLEWARE = [
@@ -114,14 +116,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 
-# settings.py
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+# إعدادات الإيميل - يفضل ضبطها من متغيرات البيئة وعدم تخزين البيانات الحساسة في الكود
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'abdullahgouda29@gmail.com'  # اكتب هنا إيميلك اللي طلعت منه الكود
-EMAIL_HOST_PASSWORD = 'vutmbdsnxudotepc'  # الكود اللي إنت لسه باعتهولي (بدون مسافات)
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 
 
 
