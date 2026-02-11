@@ -16,21 +16,10 @@ function NotificationsTableRows({
     return (
         <div className="bg-white rounded-xl shadow mt-2 divide-y overflow-x-auto">
             {notifications.map((item) => (
-                <div
-                    key={item.id}
-                    className="
-                    relative
-                    grid grid-cols-5
-                    items-center
-                    px-2 sm:px-4 py-2 sm:py-3
-                    text-[10px] sm:text-xs md:text-sm
-                    gap-1 sm:gap-2
-                "
-                >
+                <div key={item.id}
+                    className="  relative grid grid-cols-5 items-center px-2 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs md:text-sm gap-1 sm:gap-2">
                     {/* شريط الأولوية */}
-                    <div
-                        className={`absolute right-0 top-0 h-full w-1 rounded-tr-xl rounded-br-xl ${priorityColor[item.priority]}`}
-                    />
+                    <div className={`absolute right-0 top-0 h-full w-1 rounded-tr-xl rounded-br-xl ${priorityColor[item.priority]}`}/>
 
                     {/* الاسم + checkbox */}
                     <div className="flex items-center gap-2 text-right pr-2">

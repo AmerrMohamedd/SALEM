@@ -1,20 +1,22 @@
 import { useState } from "react";
-import EmptyState from "./EmptyState";
-import StatisticsChart from "./StatisticsChart";
 import StatisticsFilters from "./StatisticsFilters";
+import StatisticsCards from "./StatisticsCards";
+import StatisticsChart from "./StatisticsChart";
 
-export default function StatisticsPage() {
-    const [statisticsData, setStatisticsData] = useState([]);
-
-    if (statisticsData.length === 0) {
-        return <EmptyState />;
-    }
+function StatisticsPage() {
+    const [filters, setFilters] = useState({
+        period: "month",
+    });
 
     return (
-        <div className="h-full flex flex-col gap-6">
-            <StatisticsFilters />
+        <div>
+            <StatisticsFilters onChange={setFilters} />
 
-            <StatisticsChart data={statisticsData} />
+            <StatisticsCards filters={filters} />
+
+            <StatisticsChart filters={filters} />
         </div>
     );
 }
+
+export default StatisticsPage;

@@ -84,19 +84,13 @@ function NotificationsPage() {
                 </span>
 
                 <div className="flex gap-2">
-                    <button
-                        disabled={page === 1}
-                        onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                        className="px-3 py-1 border rounded disabled:opacity-40"
-                    >
+                    <button disabled={page === 1} onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                        className="px-3 py-1 border rounded disabled:opacity-40">
                         السابق
                     </button>
 
-                    <button
-                        disabled={startIndex + rowsPerPage >= filteredData.length}
-                        onClick={() => setPage((p) => p + 1)}
-                        className="px-3 py-1 border rounded"
-                    >
+                    <button disabled={startIndex + rowsPerPage >= filteredData.length} onClick={() => setPage((p) => p + 1)}
+                        className="px-3 py-1 border rounded">
                         التالي
                     </button>
                 </div>
