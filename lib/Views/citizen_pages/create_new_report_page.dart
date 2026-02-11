@@ -3,11 +3,11 @@ import 'package:salem_app/Constants.dart';
 import 'package:salem_app/data/models/report_model.dart';
 import 'package:salem_app/data/report_Repository.dart';
 import 'package:salem_app/data/services/Controller/ReportLocationController.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/Create_report_page_widgets/Camera_Button.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/Create_report_page_widgets/get_currentLocation_section.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/Create_report_page_widgets/problem_selector_section.dart';
-import 'package:salem_app/widgets/common_widgets/customForm_textField.dart';
-import 'package:salem_app/widgets/common_widgets/section_title.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/Create_report_page_widgets/Camera_Button.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/Create_report_page_widgets/get_currentLocation_section.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/Create_report_page_widgets/problem_selector_section.dart';
+import 'package:salem_app/auth/modules/customForm_textField.dart';
+import 'package:salem_app/Views/widgets/common_widgets/section_title.dart';
 import 'package:camera/camera.dart';
 
 class CreateNewReportPage extends StatefulWidget {

@@ -57,10 +57,10 @@
 import 'package:flutter/material.dart';
 import 'package:salem_app/data/models/report_model.dart';
 import 'package:salem_app/data/report_Repository.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/myReports_page_wigets/custom_appBar.dart';
-import 'package:salem_app/widgets/employee_role_widgets/common%20widgets/task_card.dart';
-import 'package:salem_app/widgets/employee_role_widgets/common%20widgets/tasks_list.dart';
-import 'package:salem_app/widgets/employee_role_widgets/my_tasks_page_widgets/tasks_section.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/myReports_page_wigets/custom_appBar.dart';
+import 'package:salem_app/Views/widgets/employee_role_widgets/common%20widgets/task_card.dart';
+import 'package:salem_app/Views/widgets/employee_role_widgets/common%20widgets/tasks_list.dart';
+import 'package:salem_app/Views/widgets/employee_role_widgets/my_tasks_page_widgets/tasks_section.dart';
 
 class EmployeeMyTasksPage extends StatelessWidget {
   EmployeeMyTasksPage({super.key});

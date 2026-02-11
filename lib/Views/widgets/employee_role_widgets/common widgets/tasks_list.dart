@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:salem_app/data/models/report_model.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/home_widgets.dart/report_card.dart';
+import 'package:salem_app/Views/widgets/employee_role_widgets/common%20widgets/task_card.dart';
 
-class ReportsList extends StatelessWidget {
-  final List<ReportModel> reports;
+class TasksList extends StatelessWidget {
+    final List<ReportModel> reports;
 
-  const ReportsList({super.key, required this.reports});
+  const TasksList({super.key, required this.reports});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +16,9 @@ class ReportsList extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       separatorBuilder: (_, __) => const SizedBox(height: 8),
       itemBuilder: (context, index) {
-        return ReportCard(report: reports[index]);
+        return TaskCard(report: reports[index]);
       },
     );
   }
+
 }

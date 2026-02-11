@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salem_app/Constants.dart';
 import 'problem_card.dart';
-import 'package:salem_app/widgets/common_widgets/section_title.dart';
+import 'package:salem_app/Views/widgets/common_widgets/section_title.dart';
 
 class ProblemsSelectorSection extends StatelessWidget {
   final String? selectedProblem;

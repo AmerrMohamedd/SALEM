@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/home_widgets.dart/Nav_Bar_Item.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/home_widgets.dart/Nav_Bar_Item.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salem_app/Constants.dart';
 import 'package:salem_app/data/models/report_model.dart';
-import 'package:salem_app/widgets/employee_role_widgets/task%20details%20page%20widgets/task_info_card.dart';
+import 'package:salem_app/Views/widgets/employee_role_widgets/task%20details%20page%20widgets/task_info_card.dart';
 
 class TaskDetailsPage extends StatelessWidget {
     final ReportModel report;

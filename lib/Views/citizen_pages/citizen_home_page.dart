@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:salem_app/data/report_Repository.dart';
-import 'package:salem_app/widgets/common_widgets/reports_list.dart';
-import 'package:salem_app/widgets/common_widgets/section_title.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/home_widgets.dart/Create_newReport_button.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/home_widgets.dart/home_header_widget.dart';
+import 'package:salem_app/Views/widgets/common_widgets/reports_list.dart';
+import 'package:salem_app/Views/widgets/common_widgets/section_title.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/home_widgets.dart/Create_newReport_button.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/home_widgets.dart/home_header_widget.dart';
 
 class CitizenHomePage extends StatefulWidget {
   const CitizenHomePage({super.key});

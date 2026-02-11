@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:salem_app/Views/intial_pages/SignUp_page.dart';
-import 'package:salem_app/Views/intial_pages/login_page.dart';
-import 'package:salem_app/widgets/common_widgets/login_button.dart';
-import 'package:salem_app/widgets/common_widgets/signUp_button.dart';
+import 'package:salem_app/auth/view/SignUp_page.dart';
+import 'package:salem_app/auth/view/login_page.dart';
+import 'package:salem_app/auth/modules/login_button.dart';
+import 'package:salem_app/auth/modules/signUp_button.dart';
 
 class AuthactionsColumn extends StatelessWidget {
   const AuthactionsColumn({super.key, required this.role});

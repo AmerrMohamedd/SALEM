@@ -3,13 +3,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:salem_app/Constants.dart';
 import 'package:salem_app/data/models/report_model.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/myReports_page_wigets/custom_appBar.dart';
-import 'package:salem_app/widgets/common_widgets/customForm_textField.dart';
-import 'package:salem_app/widgets/employee_role_widgets/back_to_myTasks_button.dart';
-import 'package:salem_app/widgets/employee_role_widgets/common%20widgets/task_card.dart';
-import 'package:salem_app/widgets/employee_role_widgets/task_progress_page_widgets/progress_Tracker.dart';
-import 'package:salem_app/widgets/employee_role_widgets/task_progress_page_widgets/request_support_button.dart';
-import 'package:salem_app/widgets/employee_role_widgets/task_progress_page_widgets/submit_resolution_button.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/myReports_page_wigets/custom_appBar.dart';
+import 'package:salem_app/auth/modules/customForm_textField.dart';
+import 'package:salem_app/Views/widgets/employee_role_widgets/back_to_myTasks_button.dart';
+import 'package:salem_app/Views/widgets/employee_role_widgets/common%20widgets/task_card.dart';
+import 'package:salem_app/Views/widgets/employee_role_widgets/task_progress_page_widgets/progress_Tracker.dart';
+import 'package:salem_app/Views/widgets/employee_role_widgets/task_progress_page_widgets/request_support_button.dart';
+import 'package:salem_app/Views/widgets/employee_role_widgets/task_progress_page_widgets/submit_resolution_button.dart';
 
 class TaskProgressPage extends StatefulWidget {
   const TaskProgressPage({super.key, required this.report});

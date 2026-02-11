@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salem_app/Constants.dart';
 import 'package:salem_app/data/models/report_model.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/report_details_page/report_info_card.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/report_details_page/report_info_card.dart';
 
 class ReportDetailsPage extends StatelessWidget {
   final ReportModel report;

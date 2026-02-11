@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salem_app/widgets/welcomesPage_widgets/citizen_button.dart';
-import 'package:salem_app/widgets/welcomesPage_widgets/employee_button.dart';
+import 'package:salem_app/Views/widgets/welcomesPage_widgets/citizen_button.dart';
+import 'package:salem_app/Views/widgets/welcomesPage_widgets/employee_button.dart';
 
 class RoleSelectionRow extends StatelessWidget {
   const RoleSelectionRow({super.key, required this.selectRole});

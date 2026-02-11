@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:salem_app/data/models/report_model.dart';
 import 'package:salem_app/data/report_Repository.dart';
-import 'package:salem_app/widgets/common_widgets/reports_list.dart';
-import 'package:salem_app/widgets/common_widgets/section_title.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/myReports_page_wigets/Add_reportButton.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/myReports_page_wigets/Load_more_section.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/myReports_page_wigets/custom_appBar.dart';
+import 'package:salem_app/Views/widgets/common_widgets/reports_list.dart';
+import 'package:salem_app/Views/widgets/common_widgets/section_title.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/myReports_page_wigets/Add_reportButton.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/myReports_page_wigets/Load_more_section.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/myReports_page_wigets/custom_appBar.dart';
 
 class CitizenMyReportsPage extends StatefulWidget {
   const CitizenMyReportsPage({super.key});

@@ -61,9 +61,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:salem_app/data/report_Repository.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/home_widgets.dart/home_header_widget.dart';
-import 'package:salem_app/widgets/common_widgets/section_title.dart';
-import 'package:salem_app/widgets/employee_role_widgets/common%20widgets/tasks_list.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/home_widgets.dart/home_header_widget.dart';
+import 'package:salem_app/Views/widgets/common_widgets/section_title.dart';
+import 'package:salem_app/Views/widgets/employee_role_widgets/common%20widgets/tasks_list.dart';
 
 class EmployeeHomePage extends StatefulWidget {
   const EmployeeHomePage({super.key});

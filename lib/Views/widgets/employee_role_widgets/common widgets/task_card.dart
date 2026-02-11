@@ -105,8 +105,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:salem_app/data/models/report_model.dart';
-import 'package:salem_app/widgets/employee_role_widgets/home%20widgets/accept_button.dart';
-import 'package:salem_app/widgets/employee_role_widgets/home%20widgets/view_details_button.dart';
+import 'package:salem_app/Views/widgets/employee_role_widgets/home%20widgets/accept_button.dart';
+import 'package:salem_app/Views/widgets/employee_role_widgets/home%20widgets/view_details_button.dart';
 
 class TaskCard extends StatelessWidget {
   final ReportModel report;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salem_app/Views/citizen_pages/citizen_myReports_page.dart';
 import 'package:salem_app/Views/citizen_pages/citizen_home_page.dart';
 import 'package:salem_app/Views/citizen_pages/citizen_myProfile_page.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/home_widgets.dart/Custom_Bottom_Navigation_Bar.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/home_widgets.dart/Custom_Bottom_Navigation_Bar.dart';
 
 class CitizenMainPage extends StatefulWidget {
   const CitizenMainPage({super.key});

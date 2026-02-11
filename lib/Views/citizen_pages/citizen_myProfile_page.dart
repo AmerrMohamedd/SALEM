@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salem_app/Constants.dart';
-import 'package:salem_app/widgets/citizen_role_widgets/Citizen_myProfile_widgets/Section.dart';
+import 'package:salem_app/Views/widgets/citizen_role_widgets/Citizen_myProfile_widgets/Section.dart';
 
 class CitizenMyprofilePage extends StatelessWidget {
   const CitizenMyprofilePage({super.key});
