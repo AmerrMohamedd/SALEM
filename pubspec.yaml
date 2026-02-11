@@ -30,6 +30,7 @@ environment:
 dependencies:
   camera: ^0.11.2+1
   cupertino_icons: ^1.0.8
+  file_picker: ^10.3.10
   flutter:
     sdk: flutter
   geocoding: ^4.0.0

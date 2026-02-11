@@ -14,9 +14,9 @@ class EmployeeMainPage extends StatefulWidget {
 class _EmployeeMainPageState extends State<EmployeeMainPage> {
   int currentIndex = 0;
 
-  final pages = const [
+  final pages =  [
     EmployeeHomePage(),
-    EmployeeMytsaksPage(),
+    EmployeeMyTasksPage(),
     EmployeeMyprofilePage(),
   ];
 

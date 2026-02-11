@@ -39,7 +39,7 @@ class LoginPage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return CitizenMainPage();
+                      return EmployeeMainPage();
                     },
                   ),
                 );

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:salem_app/Constants.dart';
 import 'package:salem_app/Views/employee_pages/task_progress_page.dart';
+import 'package:salem_app/data/models/report_model.dart';
 
 class AcceptButton extends StatelessWidget {
-  const AcceptButton({super.key});
-
+  const AcceptButton({super.key, required this.report});
+ final ReportModel report ;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -13,7 +14,7 @@ class AcceptButton extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return TaskProgressPage();
+              return TaskProgressPage(report: report,);
             },
           ),
         );
