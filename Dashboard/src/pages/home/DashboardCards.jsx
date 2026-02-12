@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { getDashboardStats } from "../../services/dashboardService";
 
 import solvedIcon from "../../assets/icons/solved.png";
@@ -9,54 +10,37 @@ import totalIcon from "../../assets/icons/total.png";
 
 function DashboardCards() {
     const [stats, setStats] = useState(null);
+    const { t, i18n } = useTranslation();
 
-    // 🔹 هنا بنجيب الداتا (دلوقتي mock – بعدين API)
+    const isArabic = i18n.language === "ar";
+
     useEffect(() => {
         async function fetchStats() {
             const data = await getDashboardStats();
             setStats(data);
         }
-
         fetchStats();
     }, []);
 
-    // لو الداتا لسه مجتش
     if (!stats) return null;
 
     const cards = [
-        {
-            title: "البلاغات التي تم حلها اليوم",
-            value: stats.solvedToday,
-            icon: solvedIcon,
-        },
-        {
-            title: "البلاغات المحولة",
-            value: stats.transferred,
-            icon: transferredIcon,
-        },
-        {
-            title: "البلاغات قيد المراجعة",
-            value: stats.inReview,
-            icon: reviewIcon,
-        },
-        {
-            title: "البلاغات المفتوحة",
-            value: stats.open,
-            icon: openIcon,
-        },
-        {
-            title: "إجمالي البلاغات",
-            value: stats.total,
-            icon: totalIcon,
-        },
+        { title: t("solvedToday"), value: stats.solvedToday, icon: solvedIcon },
+        { title: t("transferred"), value: stats.transferred, icon: transferredIcon },
+        { title: t("inReview"), value: stats.inReview, icon: reviewIcon },
+        { title: t("openReports"), value: stats.open, icon: openIcon },
+        { title: t("totalReports"), value: stats.total, icon: totalIcon },
     ];
 
     return (
-        <div dir="rtl" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div
+            dir={isArabic ? "rtl" : "ltr"}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             {cards.map((card, index) => (
-                <div key={index} className=" bg-white rounded-lg px-3 py-2
-                    flex items-center justify-between
-                    shadow-[0_2px_4px_rgba(0,0,0,0.12)]">
+                <div
+                    key={index}
+                    className={`bg-white rounded-lg px-3 py-2 flex items-center shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                    ${isArabic ? "justify-between text-right" : "justify-between text-left"}`}>
                     {/* Text */}
                     <div>
                         <p className="text-[11px] text-gray-500">

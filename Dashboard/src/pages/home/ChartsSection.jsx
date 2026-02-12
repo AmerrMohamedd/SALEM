@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
 import {
     LineChart,
     Line,
@@ -11,60 +13,6 @@ import {
     Pie,
     Cell,
 } from "recharts";
-
-const months = [
-    "يناير",
-    "فبراير",
-    "مارس",
-    "أبريل",
-    "مايو",
-    "يونيو",
-    "يوليو",
-    "أغسطس",
-    "سبتمبر",
-    "أكتوبر",
-    "نوفمبر",
-    "ديسمبر",
-];
-
-const lineData = [
-    { day: "السبت", value: 10 },
-    { day: "الأحد", value: 15 },
-    { day: "الإثنين", value: 22 },
-    { day: "الثلاثاء", value: 18 },
-    { day: "الأربعاء", value: 64 },
-    { day: "الخميس", value: 20 },
-    { day: "الجمعة", value: 50 },
-];
-
-const CustomSharpLine = ({ points }) => {
-    if (!points || !points.length) return null;
-
-    const path = points
-        .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x},${p.y}`)
-        .join(" ");
-
-    return (
-        <path
-            d={path}
-            fill="none"
-            stroke="#4F73FF"
-            strokeWidth={2}
-            strokeLinejoin="miter"
-            strokeLinecap="butt"
-        />
-    );
-};
-
-
-/* ===== Donut Data ===== */
-const donutData = [
-    { name: "الطرق", value: 100, color: "#6C7CFF" },
-    { name: "الكهرباء", value: 62, color: "#6FD08C" },
-    { name: "المياه", value: 50, color: "#FFB547" },
-    { name: "الإنارة", value: 28, color: "#00C9FF" },
-];
-
 
 const renderCustomLabel = ({
     cx,
@@ -87,24 +35,18 @@ const renderCustomLabel = ({
     const x3 = x2 + (x2 > cx ? 15 : -15);
     const y3 = y2;
 
-    const total = donutData.reduce((sum, item) => sum + item.value, 0);
-
-
     return (
         <g>
-            {/* الخط */}
             <path
             d={`M${x1},${y1} L${x2},${y2} L${x3},${y3}`}
             stroke={fill} fill="none"/>
 
-            {/* الاسم */}
             <text x={x3} y={y3 - 4}
                 textAnchor={x3 > cx ? "start" : "end"}
                 className="text-xs fill-gray-700">
                 {name}
             </text>
 
-            {/* الرقم */}
             <text
                 x={x3}
                 y={y3 + 10}
@@ -119,21 +61,60 @@ const renderCustomLabel = ({
 
 
 function ChartsSection() {
-    const [selectedMonth, setSelectedMonth] = useState("يناير");
+    const { t, i18n } = useTranslation();
+    const isArabic = i18n.language === "ar";
+
+    const months = [
+        t("jan"),
+        t("feb"),
+        t("mar"),
+        t("apr"),
+        t("may"),
+        t("jun"),
+        t("jul"),
+        t("aug"),
+        t("sep"),
+        t("oct"),
+        t("nov"),
+        t("dec"),
+    ];
+
+
+
+    const lineData = [
+        { day: t("sat"), value: 10 },
+        { day: t("sun"), value: 15 },
+        { day: t("mon"), value: 22 },
+        { day: t("tue"), value: 18 },
+        { day: t("wed"), value: 64 },
+        { day: t("thu"), value: 20 },
+        { day: t("fri"), value: 50 },
+    ];
+
+    /* ===== Donut Data ===== */
+    const donutData = [
+        { name: t("roads"), value: 100, color: "#6C7CFF" },
+        { name: t("electricity"), value: 62, color: "#6FD08C" },
+        { name: t("water"), value: 50, color: "#FFB547" },
+        { name: t("lighting"), value: 28, color: "#00C9FF" },
+    ];
+
+
+
+
+    const [selectedMonth, setSelectedMonth] = useState(months[0]);
     const [open, setOpen] = useState(false);
 
     const total = donutData.reduce((sum, item) => sum + item.value, 0);
 
     return (
-        <div dir="ltr" className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
+        <div dir={isArabic ? "ltr" : "rtl"} className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
             {/* ================= Line Chart ================= */}
             <div className="bg-white rounded-2xl p-3 shadow-sm">
 
                 {/* Header */}
                 <div
-                    dir="ltr"
                     className="flex items-center justify-between mb-3">
-                    {/* الزرار شمال */}
                     <div className="relative">
                         <button
                             onClick={() => setOpen(!open)}
@@ -159,11 +140,8 @@ function ChartsSection() {
                             </div>
                         )}
                     </div>
-
-                    {/* الجملة يمين */}
-                    <h3 dir="rtl"
-                        className="font-bold text-sm text-gray-800">
-                        البلاغات الأسبوعية
+                    <h3 className="font-bold text-sm text-gray-800">
+                        {t("homeTitle")}
                     </h3>
                 </div>
 
