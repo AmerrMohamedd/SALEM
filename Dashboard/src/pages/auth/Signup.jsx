@@ -1,16 +1,23 @@
 import AuthLayout from "../../layout/AuthLayout";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 function Signup() {
+
+    const [name, setName] = useState("");
+    const [nationalId, setNationalId] = useState("");
+    const [password, setPassword] = useState("");
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}>
+
             {/* Title */}
             <h2 className="text-2xl font-extrabold text-gray-800 mb-6">
-                سجل باستخدام عنوان بريدك الإلكتروني
+                سجل باستخدام الرقم القومي
             </h2>
 
             {/* Form */}
@@ -21,19 +28,29 @@ function Signup() {
                     <label className="block mb-1 font-medium">
                         اسم الملف الشخصي
                     </label>
-                    <input type="text" placeholder="أدخل اسم ملفك الشخصي"
+                    <input
+                        type="text"
+                        placeholder="أدخل اسم ملفك الشخصي"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         className="w-full px-3 py-2 border rounded-md transition-colors duration-200
                     hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
                 </div>
 
-                {/* Email */}
+                {/* National ID بدل Email */}
                 <div>
                     <label className="block mb-1 font-medium">
-                        البريد الإلكتروني
+                        الرقم القومي
                     </label>
-                    <input type="email" placeholder="أدخل عنوان بريدك الإلكتروني"
+                    <input
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={14}
+                        placeholder="أدخل الرقم القومي"
+                        value={nationalId}
+                        onChange={(e) => setNationalId(e.target.value)}
                         className="w-full px-3 py-2 border rounded-md transition-colors duration-200
-                    hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
+                        hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
                 </div>
 
                 {/* Password */}
@@ -41,9 +58,13 @@ function Signup() {
                     <label className="block mb-1 font-medium">
                         كلمة المرور
                     </label>
-                    <input type="password" placeholder="أدخل كلمة المرور الخاصة بك"
+                    <input
+                        type="password"
+                        placeholder="أدخل كلمة المرور الخاصة بك"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         className="w-full px-3 py-2 border rounded-md transition-colors duration-200
-                    hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
+                        hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
                     <p className="text-[11px] text-gray-500 mt-1">
                         استخدم 12 حرفًا أو أكثر من مزيج من الأحرف والأرقام والرموز
                     </p>
@@ -80,7 +101,7 @@ function Signup() {
                         المنطقة / المدينة
                     </label>
                     <input type="text" placeholder="أدخل المنطقة أو المدينة"
-                        className="w-full px-3 py-2 border rounded-md transition-colors duration-200
+                    className="w-full px-3 py-2 border rounded-md transition-colors duration-200
                     hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
                 </div>
 
@@ -115,7 +136,6 @@ function Signup() {
                 </Link>
             </div>
         </motion.div>
-    
     );
 }
 
