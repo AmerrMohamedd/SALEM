@@ -108,7 +108,7 @@ from django_rest_passwordreset.signals import reset_password_token_created
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
-    # ده نص الرسالة اللي هتروح لليوزر
+    
     email_plaintext_message = f"استخدم هذا الرمز لإعادة تعيين كلمة المرور: {reset_password_token.key}"
 
     send_mail(
