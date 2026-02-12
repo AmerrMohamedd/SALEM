@@ -28,21 +28,23 @@ class IncidentDetailAPIView(generics.RetrieveAPIView):
 class IncidentCreateAPIView(generics.CreateAPIView):
     queryset = Incident.objects.all()
     serializer_class = IncidentSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        """
-        Always associate the incident with the currently authenticated user.
-        """
+        if not self.request.user.is_authenticated:
+            raise PermissionError("You must be logged in to create an incident.")
+        
         serializer.save(citizen=self.request.user)
 
 
 # Citizen API #2 - Get My Incidents for citizen
 class MyIncidentsAPIView(generics.ListAPIView):
     serializer_class = IncidentSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Incident.objects.none()  
         return Incident.objects.filter(citizen=self.request.user)
 
 
@@ -50,11 +52,12 @@ class MyIncidentsAPIView(generics.ListAPIView):
 class IncidentImageUploadAPIView(generics.CreateAPIView):
     serializer_class = IncidentImageSerializer
     parser_classes = [MultiPartParser, FormParser]
+    # permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        """
-        Attach uploaded image to the given incident, ensuring the user owns it.
-        """
+        if not self.request.user.is_authenticated:
+            raise PermissionError("User must be logged in to upload images.")
+
         incident_id = self.kwargs.get('pk')
         incident = get_object_or_404(
             Incident,
