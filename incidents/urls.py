@@ -5,7 +5,11 @@ from .views import (
     IncidentStatusListAPIView,
     IncidentListAPIView,
     IncidentDetailAPIView,
-    MyIncidentsAPIView
+    MyIncidentsAPIView,
+    DashboardStatsAPIView,
+    WeeklyStatsAPIView,
+    RecentIncidentsAPIView,
+    IncidentsByDepartmentAPIView
 )
 
 urlpatterns = [
@@ -15,6 +19,11 @@ urlpatterns = [
     path('create/', IncidentCreateAPIView.as_view(), name='incident-create'),
     path('my/', MyIncidentsAPIView.as_view(), name='my-incidents'),
     path('<int:pk>/images/', IncidentImageUploadAPIView.as_view(), name='incident-image-upload'),
+    path("dashboard/stats/", DashboardStatsAPIView.as_view()),
+    path("dashboard/weekly/", WeeklyStatsAPIView.as_view()),
+    path("dashboard/recent/", RecentIncidentsAPIView.as_view()),
+    path("dashboard/by-department/", IncidentsByDepartmentAPIView.as_view()),
+
 
 
 ]
