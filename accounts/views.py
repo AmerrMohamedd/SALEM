@@ -10,6 +10,10 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth import login
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import generics
+
+
+
 # Create your views here.
 
 
@@ -172,3 +176,9 @@ class LogoutView(APIView):
             return Response({"message": "تم تسجيل الخروج بنجاح"}, status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response({"message": "التوكن غير صالح أو تم استخدامه من قبل"}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+# Dashboard Api #7 -Get Incident departments
+class DepartmentListAPIView(generics.ListAPIView):
+    queryset = Department.objects.all()
+    serializer_class = DepartmentSerializer        

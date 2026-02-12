@@ -3,11 +3,11 @@ from .models import IncidentImage, IncidentStatus, Incident
 
 
 
-# show all data of report
+# show all status of report
 class IncidentStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = IncidentStatus
-        fields = '__all__'
+        fields = ["id", "name"]
 
 
 class IncidentSerializer(serializers.ModelSerializer):
@@ -28,3 +28,23 @@ class IncidentImageSerializer(serializers.ModelSerializer):
         fields = ['id', 'incident', 'image', 'uploaded_at']
         # The view determines which incident an image belongs to.
         read_only_fields = ['incident', 'uploaded_at']
+
+
+class IncidentListSerializer(serializers.ModelSerializer):
+    status = serializers.CharField(source="status.name", read_only=True)
+    department = serializers.CharField(
+        source="assigned_to.employee_profile.department.department_name",
+        read_only=True
+    )
+
+    class Meta:
+        model = Incident
+        fields = [
+            "id",
+            "description",
+            "location",
+            "created_at",
+            "status",
+            "department",
+            "priority",
+        ]        

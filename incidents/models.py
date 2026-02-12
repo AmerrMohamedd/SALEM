@@ -22,6 +22,8 @@ class Incident(models.Model):
 
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    location = models.CharField(max_length=255, blank=True, null=True)
+
 
     status = models.ForeignKey(
         IncidentStatus,
@@ -36,6 +38,20 @@ class Incident(models.Model):
         blank=True,
         related_name="assigned_incidents"
     )
+
+    PRIORITY_CHOICES = [
+    ('low', 'Low'),
+    ('medium', 'Medium'),
+    ('high', 'High'),
+    ]
+
+    priority = models.CharField(
+    max_length=10,
+    choices=PRIORITY_CHOICES,
+    default='medium'
+    )
+
+    
 
     created_at = models.DateTimeField(auto_now_add=True)
 

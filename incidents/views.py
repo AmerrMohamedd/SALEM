@@ -4,26 +4,22 @@ from django.shortcuts import render, get_object_or_404
 from h11 import Response
 from rest_framework import generics
 from .models import Incident, IncidentStatus
-from .serializers import IncidentImageSerializer, IncidentSerializer, IncidentStatusSerializer
+from .serializers import IncidentImageSerializer, IncidentListSerializer, IncidentSerializer, IncidentStatusSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models.functions import TruncDate
 from django.db.models import Count
+from rest_framework import generics, filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 
-#Core Api #1 -Get Incident Statuses
-class IncidentStatusListAPIView(generics.ListAPIView):
-    queryset = IncidentStatus.objects.all()
-    serializer_class = IncidentStatusSerializer
 
 
-#Core Api #2 - List Incidents
-class IncidentListAPIView(generics.ListAPIView):
-    queryset = Incident.objects.all()
-    serializer_class = IncidentSerializer
+
+
 
 
 #Core Api #3 - Incident Detail
@@ -176,3 +172,36 @@ class IncidentsByDepartmentAPIView(APIView):
         ]
 
         return Response(formatted_data)
+    
+
+# Dashboard Api #5 - List Incidents and filtering
+class IncidentListAPIView(generics.ListAPIView):
+    def get_queryset(self):
+        return Incident.objects.select_related(
+        "status",
+        "assigned_to__employee_profile__department"
+    )
+    serializer_class = IncidentListSerializer
+
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter
+    ]
+
+    filterset_fields = {
+        "status": ["exact"],
+        "assigned_to__employee_profile__department": ["exact"],
+        "created_at": ["date__gte", "date__lte"]
+    }
+
+    search_fields = ["description", "location"]
+
+
+    ordering_fields = ["created_at"]
+
+
+# Dashboard Api #6 -Get Incident Statuses
+class IncidentStatusListAPIView(generics.ListAPIView):
+    queryset = IncidentStatus.objects.all()
+    serializer_class = IncidentStatusSerializer    
