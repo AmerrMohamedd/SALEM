@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
 
 import StreetsHistoryFilters from "./StreetsHistoryFilters";
 import StreetsHistoryStats from "./StreetsHistoryStats";
@@ -8,6 +10,10 @@ import StreetsHistoryDetails from "./StreetsHistoryDetails";
 import StreetsHistoryMap from "./StreetsHistoryMap";
 
 function StreetsHistoryPage() {
+    const { t, i18n } = useTranslation();
+    const isArabic = i18n.language === "ar";
+
+
     const [selectedReport, setSelectedReport] = useState(null);
     const [openDetails, setOpenDetails] = useState(false);
     const [showMap, setShowMap] = useState(false);
@@ -24,19 +30,20 @@ function StreetsHistoryPage() {
 
     // ===== Mock Data =====
     const records = [
-        { id: "1000", date: "30-10-2025", category: "حفرة طريق", status: "قيد التنفيذ", repairTime: "3 أيام", process: "البلدية" },
-        { id: "1001", date: "29-10-2025", category: "كسر ماسورة مياه", status: "تم الحل", repairTime: "2 أيام", process: "المياه" },
-        { id: "1002", date: "28-10-2025", category: "انقطاع إنارة", status: "تم الحل", repairTime: "يوم واحد", process: "الكهرباء" },
-        { id: "1003", date: "27-10-2025", category: "تلف رصيف", status: "قيد التنفيذ", repairTime: "—", process: "البلدية" },
-        { id: "1004", date: "26-10-2025", category: "تسريب مياه", status: "مرفوض", repairTime: "—", process: "المياه" },
-        { id: "1005", date: "25-10-2025", category: "هبوط أرضي", status: "تم الحل", repairTime: "4 أيام", process: "البلدية" },
-        { id: "1006", date: "24-10-2025", category: "عطل إشارة مرور", status: "قيد التنفيذ", repairTime: "—", process: "المرور" },
-        { id: "1007", date: "23-10-2025", category: "تلف أعمدة إنارة", status: "تم الحل", repairTime: "3 أيام", process: "الكهرباء" },
-        { id: "1008", date: "22-10-2025", category: "انسداد صرف صحي", status: "قيد التنفيذ", repairTime: "—", process: "المياه" },
-        { id: "1009", date: "21-10-2025", category: "تشققات إسفلت", status: "تم الحل", repairTime: "5 أيام", process: "البلدية" },
-        { id: "1010", date: "20-10-2025", category: "تلف مطبات", status: "مرفوض", repairTime: "—", process: "المرور" },
-        { id: "1011", date: "19-10-2025", category: "تجمع مياه أمطار", status: "قيد التنفيذ", repairTime: "—", process: "البلدية" },
+        { id: "1000", date: "30-10-2025", category: "roadHole", status: "inProgress", repairTime: "threeDays", process: "roads" },
+        { id: "1001", date: "29-10-2025", category: "pipeBreak", status: "solved", repairTime: "twoDays", process: "water" },
+        { id: "1002", date: "28-10-2025", category: "lightingPole", status: "solved", repairTime: "oneDay", process: "electricity" },
+        { id: "1003", date: "27-10-2025", category: "roadHole", status: "inProgress", repairTime: "noTime", process: "roads" },
+        { id: "1004", date: "26-10-2025", category: "waterLeak", status: "rejected", repairTime: "noTime", process: "water" },
+        { id: "1005", date: "25-10-2025", category: "groundSubsidence", status: "solved", repairTime: "fourDays", process: "roads" },
+        { id: "1006", date: "24-10-2025", category: "trafficSignalFailure", status: "inProgress", repairTime: "noTime", process: "traffic" },
+        { id: "1007", date: "23-10-2025", category: "lightingPoleDamage", status: "solved", repairTime: "threeDays", process: "electricity" },
+        { id: "1008", date: "22-10-2025", category: "sewageBlockage", status: "inProgress", repairTime: "noTime", process: "water" },
+        { id: "1009", date: "21-10-2025", category: "asphaltCracks", status: "solved", repairTime: "fiveDays", process: "roads" },
+        { id: "1010", date: "20-10-2025", category: "speedBumpDamage", status: "rejected", repairTime: "noTime", process: "traffic" },
+        { id: "1011", date: "19-10-2025", category: "rainWaterAccumulation", status: "inProgress", repairTime: "noTime", process: "roads" },
     ];
+
 
     /* ===== Filters ===== */
     const filteredRecords = records.filter((item) => {
@@ -89,19 +96,22 @@ function StreetsHistoryPage() {
                 />
 
                 {/* Pagination */}
-                <div className="flex justify-between items-center mt-4 text-sm">
+                <div
+                    dir={isArabic ? "rtl" : "ltr"}
+                    className="flex justify-between items-center mt-4 text-sm">
                     <span className="text-gray-500">
-                        صفحة {page} من {totalPages}
+                        {t("page")} {page} {t("of")} {totalPages}
                     </span>
 
                     <div className="flex gap-2">
-                        <button disabled={page === 1}
+                        <button
+                            disabled={page === 1}
                             onClick={() => {
                                 setPage((p) => Math.max(p - 1, 1));
                                 setOpenDetails(false);
                             }}
                             className="px-3 py-1 rounded-lg border disabled:opacity-40">
-                            السابق
+                            {t("previous")}
                         </button>
 
                         <button
@@ -111,10 +121,11 @@ function StreetsHistoryPage() {
                                 setOpenDetails(false);
                             }}
                             className="px-3 py-1 rounded-lg border disabled:opacity-40">
-                            التالي
+                            {t("next")}
                         </button>
                     </div>
                 </div>
+
             </div>
 
             {/* ===== Details Modal ===== */}

@@ -29,7 +29,7 @@ const resources = {
             openReports: "البلاغات المفتوحة",
             totalReports: "إجمالي البلاغات",
 
-            /* ================= Table General ================= */
+            /* ================= Repots ================= */
             reportId: "رقم البلاغ",
             reportNumber: "رقم البلاغ",
             category: "التصنيف",
@@ -109,12 +109,10 @@ const resources = {
             mapTitle: "الخريطة",
 
             // ===== Mock Report Values (Temporary Until API) =====
-
             // Categories
             roadHole: "حفرة طريق",
             pipeBreak: "كسر ماسورة",
             lightingPole: "عمود إنارة",
-
             // Locations
             nasrCity: "مدينة نصر",
             maadi: "المعادي",
@@ -122,11 +120,12 @@ const resources = {
             heliopolis: "مصر الجديدة",
             dokki: "الدقي",
             shobra: "شبرا",
-
             // Priority
             high: "عالية",
             medium: "متوسطة",
             low: "منخفضة",
+
+
 
             /* ================= Details Page ================= */
             reportDetails: "تفاصيل البلاغ",
@@ -136,7 +135,66 @@ const resources = {
 
             /* ================= Map Page ================= */
             mapTitle: "الخريطه",
+            back: "رجوع",
 
+
+            /* ================= Streets History ================= */
+            streetsHistoryEmpty: "لا يوجد سجل الشوارع والصيانات السابقة حتى الآن",
+            searchStreetHistory:"البحث عن سجل الشوارع والصيانات السابقة برقم البلاغ...",
+            problemType: "نوع المشكلة",
+            dateTime: "التاريخ والوقت",
+            finalStatus: "الحالة النهائية",
+            repairTime: "زمن الإصلاح",
+            procedures: "الإجراءات",
+            avgStatusTime: "متوسط زمن الحالة",
+            mostFrequentProblem: "المشكلة الأكثر تكرارًا",
+            totalReportsCount: "إجمالي البلاغات",
+            before: "قبل",
+            after: "بعد",
+            aiInitialAnalysis:"نتيجة تحليل الذكاء الاصطناعي الأولية للمشكلة:",
+            aiComparisonResult:"نتيجة مقارنة الذكاء الاصطناعي بين الصورتين:",
+            reportNumberLabel: "رقم البلاغ",
+            problemTypeLabel: "نوع المشكلة",
+            registrationDate: "تاريخ التسجيل",
+            responsibleEntity: "الجهة المسؤولة",
+            mapTitleWithLocation: "الخريطة – {{location}}",
+
+            /* ================= Filters ================= */
+            dateFilter: "التاريخ",
+            statusFilter: "الحالة",
+            entityFilter: "الجهة المسؤولة",
+
+            /* ================= Categories ================= */
+            roadHole: "حفرة طريق",
+            pipeBreak: "كسر ماسورة مياه",
+            lightingPole: "انقطاع إنارة",
+            sidewalkDamage: "تلف رصيف",
+
+            /* ================= Status ================= */
+            inProgress: "قيد التنفيذ",
+            solved: "تم الحل",
+            rejected: "مرفوض",
+
+            /* =============== Mock data=============== */
+            mock_avgTimeValue: "4 ساعات و50 دقيقة",
+            mock_mostFrequentDesc:"80% من الإجمالي (2,004): مشاكل تسريب مياه",
+            mock_aiInitial:"تصنيف مبدئي للمشكلة",
+            mock_aiNoChange:"لا يوجد تغيير ملحوظ حتى الآن",
+            threeDays: "3 أيام",
+            twoDays: "يومان",
+            oneDay: "يوم واحد",
+            fourDays: "4 أيام",
+            fiveDays: "5 أيام",
+            noTime: "—",
+            waterLeak: "تسريب مياه",
+            groundSubsidence: "هبوط أرضي",
+            trafficSignalFailure: "عطل إشارة مرور",
+            lightingPoleDamage: "تلف أعمدة إنارة",
+            sewageBlockage: "انسداد صرف صحي",
+            asphaltCracks: "تشققات إسفلت",
+            speedBumpDamage: "تلف مطبات",
+            rainWaterAccumulation: "تجمع مياه أمطار",
+            traffic: "المرور",
 
         }
     },
@@ -267,6 +325,97 @@ const resources = {
 
             /* ================= Map Page ================= */
             mapTitle: "Map",
+            back: "back",
+
+            /* ================= Streets History Page ================= */
+            streetsHistoryEmpty: "No streets and maintenance history available yet",
+
+            searchStreetHistory: "Search streets and previous maintenance by Report ID...",
+            problemType: "Problem Type",
+
+            finalStatus: "Final Status",
+            repairTime: "Repair Time",
+            dateTime: "Date & Time",
+            procedures: "Procedures",
+
+            avgStatusTime: "Average Status Duration",
+            mostFrequentProblem: "Most Frequent Problem",
+            totalReportsCount: "Total Reports",
+
+            before: "Before",
+            after: "After",
+
+            aiInitialAnalysis: "Initial AI Problem Analysis:",
+            aiComparisonResult: "AI Comparison Result Between Images:",
+
+            reportNumberLabel: "Report ID",
+            problemTypeLabel: "Problem Type:",
+            registrationDate: "Registration Date:",
+            responsibleEntity: "Responsible Entity:",
+
+            showOnMap: "Show on Map",
+            mapTitleWithLocation: "Map – {{location}}",
+
+            /* ================= MOCK DATA (FAKE DATA - FOR UI TESTING ONLY) ================= */
+
+            // Categories
+            mock_roadHole: "Road Hole",
+            mock_waterPipeBreak: "Water Pipe Break",
+            mock_lightingOutage: "Lighting Outage",
+            mock_sidewalkDamage: "Sidewalk Damage",
+            mock_waterLeak: "Water Leakage",
+            mock_groundSubsidence: "Ground Subsidence",
+            mock_trafficSignalFailure: "Traffic Signal Failure",
+            mock_lightingPoleDamage: "Lighting Pole Damage",
+            mock_sewageBlockage: "Sewage Blockage",
+            mock_asphaltCracks: "Asphalt Cracks",
+            mock_speedBumpDamage: "Speed Bump Damage",
+            mock_rainWaterAccumulation: "Rainwater Accumulation",
+
+            // Status
+            mock_inProgress: "In Progress",
+            mock_solved: "Solved",
+            mock_rejected: "Rejected",
+
+            // Entities
+            mock_municipality: "Municipality",
+            mock_waterDept: "Water Department",
+            mock_electricityDept: "Electricity Department",
+            mock_trafficDept: "Traffic Department",
+
+            // Repair Time
+            mock_3days: "3 Days",
+            mock_2days: "2 Days",
+            mock_1day: "1 Day",
+            mock_4days: "4 Days",
+            mock_5days: "5 Days",
+
+            // AI Mock Text
+            mock_aiInitial: "Preliminary classification of the issue",
+            mock_aiNoChange: "No noticeable change detected yet",
+
+            // Stats Mock
+            mock_avgTimeValue: "4 Hours 50 Minutes",
+            mock_mostFrequentDesc: "80% of total (2,004): Water Leakage Issues",
+            threeDays: "3 Days",
+            twoDays: "2 Days",
+            oneDay: "1 Day",
+            fourDays: "4 Days",
+            fiveDays: "5 Days",
+            noTime: "—",
+
+            waterLeak: "Water Leak",
+            groundSubsidence: "Ground Subsidence",
+            trafficSignalFailure: "Traffic Signal Failure",
+            lightingPoleDamage: "Lighting Pole Damage",
+            sewageBlockage: "Sewage Blockage",
+            asphaltCracks: "Asphalt Cracks",
+            speedBumpDamage: "Speed Bump Damage",
+            rainWaterAccumulation: "Rainwater Accumulation",
+
+            traffic: "Traffic Department",
+
+
 
         
 
