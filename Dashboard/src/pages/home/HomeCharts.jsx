@@ -69,7 +69,7 @@ function ChartsHome({ lineData = [], donutData = [] }) {
                 <text x={x3} y={y3 - 4}
                     textAnchor={x3 > cx ? "start" : "end"}
                     className="text-xs fill-gray-700">
-                    {name}
+                    {t(name)}
                 </text>
 
                 <text
