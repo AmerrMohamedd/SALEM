@@ -1,45 +1,50 @@
+import { useTranslation } from "react-i18next";
 import avatar from "../../assets/avatar.png";
 
 export default function ReportDetailsPage({ report, onOpenMap }) {
-  // حماية لو فتحت قبل ما report يوصل
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
+
   if (!report) return null;
 
   return (
-    <div className="h-full flex flex-col px-6 py-4">
+    <div dir={isArabic ? "rtl" : "ltr"} className="h-full flex flex-col px-6 py-4">
+
       {/* ===== TITLE ===== */}
       <h2 className="text-lg font-bold text-center mb-4">
-        تفاصيل البلاغ
+        {t("reportDetails")}
       </h2>
 
       {/* ===== CONTENT ===== */}
       <div className="flex-1 grid grid-cols-12 gap-6">
+
         {/* ===== LEFT : IMAGES ===== */}
         <div className="col-span-7 space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <ImageCard title="بعد" />
-            <ImageCard title="قبل" />
+            <ImageCard title={t("after")} />
+            <ImageCard title={t("before")} />
           </div>
 
           <TextArea
-            label="نتيجة تحليل الـ AI الأولية للمشكلة :"
-            value={`تصنيف مبدئي لمشكلة ${report.category}`}
+            label={t("aiAnalysis")}
+            value={`${t("initialClassification")} ${t(report.category)}`}
           />
 
           <TextArea
-            label="نتيجة مقارنة الـ AI بين الصورتين :"
-            value="لا يوجد تغيير ملحوظ حتى الآن"
+            label={t("aiComparison")}
+            value={t("noChangeDetected")}
           />
         </div>
 
         {/* ===== RIGHT : DETAILS ===== */}
         <div className="col-span-5 space-y-3">
-          <Field label="رقم البلاغ :" value={report.id} />
-          <Field label="نوع المشكلة :" value={report.category} />
-          <Field label="الموقع :" value={report.location} />
-          <Field label="تاريخ التسجيل :" value={report.date} />
-          <Field label="الحالة :" value={report.status} />
-          <Field label="الجهة المسؤولة :" value={report.entity} />
-          <Field label="الأولوية :" value={report.priority} />
+          <Field label={t("reportNumber")} value={report.id} />
+          <Field label={t("category")} value={t(report.category)} />
+          <Field label={t("location")} value={t(report.location)} />
+          <Field label={t("reportDate")} value={report.date} />
+          <Field label={t("status")} value={t(report.status)} />
+          <Field label={t("entity")} value={t(report.entity)} />
+          <Field label={t("priority")} value={t(report.priority)} />
         </div>
       </div>
 
@@ -47,18 +52,18 @@ export default function ReportDetailsPage({ report, onOpenMap }) {
       <div className="mt-4 pt-4 border-t flex justify-center">
         <div className="flex gap-4">
           <button className="px-4 py-2 border border-red-500 text-red-500 rounded-lg text-sm">
-            رفض البلاغ
+            {t("rejectReport")}
           </button>
 
           <button className="px-4 py-2 bg-gradient-to-r from-[#00816F] to-[#2DDBC9] text-white rounded-lg text-sm">
-            تعيين لإدارة أخرى
+            {t("assignToOther")}
           </button>
 
           <button
             onClick={onOpenMap}
             className="px-4 py-2 bg-gradient-to-r from-[#00816F] to-[#2DDBC9] text-white rounded-lg text-sm"
           >
-            عرض على الخريطة
+            {t("showOnMap")}
           </button>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -12,29 +13,40 @@ function ReportsFilters({
     onDateChange,
     onSearchChange,
 }) {
+    const { t, i18n } = useTranslation();
+    const isArabic = i18n.language === "ar";
+
     const [showFilters, setShowFilters] = useState(false);
     const [date, setDate] = useState(null);
 
     return (
-        <div className="-mt-6 -mr-6 flex items-center gap-2 relative">
-            {/* Search by ID */}
+        <div
+            dir={isArabic ? "rtl" : "ltr"}
+            className="flex items-center gap-2 relative -mt-5">
+            {/*  Search */}
             <div className="relative">
                 <input
                     type="text"
-                    placeholder="ابحث برقم البلاغ..."
+                    placeholder={t("searchById")}
                     onChange={(e) => onSearchChange(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") e.preventDefault();
-                    }}
-                    className="h-7 w-44 pr-10 pl-3 text-sm text-right border border-gray-200 rounded-full
-                    shadow-[0_2px_4px_rgba(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"/>
-                <img src={searchIcon} alt="search"
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4"/>
+                    className={`h-8 w-52 text-sm border border-gray-200 rounded-full
+                    shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                    focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]
+                    ${isArabic ? "pr-10 text-right" : "pl-10 text-left"}`}
+                />
+
+                <img
+                    src={searchIcon}
+                    alt="search"
+                    className={`absolute top-1/2 -translate-y-1/2 w-4 h-4
+                    ${isArabic ? "right-3" : "left-3"}`}
+                />
             </div>
 
-            {/* Filter Button */}
-            <button onClick={() => setShowFilters(!showFilters)}
-                className="h-7 w-7 flex items-center justify-center rounded-full
+            {/*  Filter Button */}
+            <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="h-8 w-8 flex items-center justify-center rounded-full
                 bg-[#2DDBC9] shadow-[0_2px_4px_rgba(0,0,0,0.12)]">
                 <img src={filterIcon} alt="filter" className="w-4 h-4" />
             </button>
@@ -42,43 +54,55 @@ function ReportsFilters({
             {/*  Filters */}
             {showFilters && (
                 <div className="flex items-center gap-2">
-                    {/* Date */}
-                    <div dir="ltr" className="relative">
+
+                    {/*  Date */}
+                    <div className="relative">
                         <DatePicker
                             selected={date}
                             onChange={(newDate) => {
                                 setDate(newDate);
                                 onDateChange(newDate);
                             }}
-                            placeholderText="التاريخ"
-                            className="h-7 w-40 px-3 text-sm text-right border border-gray-200 rounded-full
-                            shadow-[0_2px_4px_rgba(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9] cursor-pointer"/>
-                        <img src={calendarIcon} alt="calendar"
-                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"/>
+                            placeholderText={t("dateFilter")}
+                            className={`h-8 w-40 text-sm border border-gray-200 rounded-full
+                            shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                            focus:outline-none focus:ring-2 focus:ring-[#2DDBC9] cursor-pointer
+                            ${isArabic ? "pr-8 text-right" : "pl-8 text-left"}`}
+                        />
+
+                        <img
+                            src={calendarIcon}
+                            alt="calendar"
+                            className={`absolute top-1/2 -translate-y-1/2 w-4 h-4
+                            ${isArabic ? "right-3" : "left-3"}`}
+                        />
                     </div>
 
                     {/*  Entity */}
                     <select
                         onChange={(e) => onEntityChange(e.target.value)}
-                        className="h-7 w-40 px-3 text-sm border border-gray-200 rounded-full
-                        shadow-[0_2px_4px_rgba(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]">
-                        <option value="">الجهة المسؤولة</option>
-                        <option value="هيئة الطرق">هيئة الطرق</option>
-                        <option value="شركة المياه">شركة المياه</option>
-                        <option value="الكهرباء">شركة الكهرباء</option>
-                        <option value="الانارة">الانارة</option>
+                        className="h-8 w-40 px-3 text-sm border border-gray-200 rounded-full
+                        shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                        focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]">
+                        <option value="">{t("entityFilter")}</option>
+                        <option value="roads">{t("roads")}</option>
+                        <option value="water">{t("water")}</option>
+                        <option value="electricity">{t("electricity")}</option>
+                        <option value="lighting">{t("lighting")}</option>
                     </select>
 
                     {/*  Status */}
                     <select
                         onChange={(e) => onStatusChange(e.target.value)}
-                        className="h-7 w-40 px-3 text-sm border border-gray-200 rounded-full
-                        shadow-[0_2px_4px_rgba(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]">
-                        <option value="">الحالة</option>
-                        <option value="قيد التنفيذ">قيد التنفيذ</option>
-                        <option value="تم الحل">تم الحل</option>
-                        <option value="مرفوض">مرفوض</option>
+                        className="h-8 w-40 px-3 text-sm border border-gray-200 rounded-full
+                        shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                        focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]">
+                        <option value="">{t("statusFilter")}</option>
+                        <option value="inProgress">{t("inProgress")}</option>
+                        <option value="solved">{t("solved")}</option>
+                        <option value="rejected">{t("rejected")}</option>
                     </select>
+
                 </div>
             )}
         </div>
