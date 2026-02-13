@@ -2,7 +2,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.db.models.functions import TruncDate
-from django.db.models import Count
+from django.db.models import Count, DurationField, ExpressionWrapper
 
 from rest_framework import generics, filters, status
 from rest_framework.permissions import IsAuthenticated
@@ -21,6 +21,9 @@ from .serializers import (
     IncidentSerializer,
     IncidentStatusSerializer,
 )
+from django.db.models import Count, Avg, F, ExpressionWrapper, DurationField
+from django.utils.dateparse import parse_date
+
 
 
 # =========================
@@ -296,12 +299,14 @@ class ChangeIncidentStatusAPIView(APIView):
     def patch(self, request, pk):
         incident = get_object_or_404(Incident, pk=pk)
 
+        # لازم البلاغ يكون اتقبل واتعين لموظف
         if not incident.assigned_to:
             return Response(
                 {"error": "Incident must be accepted first."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+        # لازم الموظف اللي بيغير الحالة هو نفسه المتعين
         if incident.assigned_to != request.user:
             raise PermissionDenied("You are not assigned to this incident.")
 
@@ -313,6 +318,7 @@ class ChangeIncidentStatusAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+        # نجيب الحالة الجديدة
         try:
             new_status = IncidentStatus.objects.get(name__iexact=new_status_name)
         except IncidentStatus.DoesNotExist:
@@ -324,14 +330,105 @@ class ChangeIncidentStatusAPIView(APIView):
         current_status = incident.status.name
         allowed = ALLOWED_TRANSITIONS.get(current_status, [])
 
+        # نتحقق من الانتقال المسموح
         if new_status.name not in allowed:
             return Response(
                 {"error": "Invalid status transition."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+        # تحديث الحالة
         incident.status = new_status
+
+        # لو الحالة الجديدة "تم الحل" نحط وقت الحل
+        if new_status.name == "تم الحل":
+            incident.resolved_at = timezone.now()
+        else:
+            # لو خرج من تم الحل لأي حالة تانية
+            incident.resolved_at = None
+
         incident.save()
 
-        return Response({"message": "Status updated successfully."})
+        return Response({
+            "message": "Status updated successfully.",
+            "incident_id": incident.id,
+            "new_status": incident.status.name,
+            "resolved_at": incident.resolved_at
+        })
     
+# Screen 4
+class IncidentHistoryAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        queryset = Incident.objects.filter(resolved_at__isnull=False)
+
+        # -------------------------
+        # Filters
+        # -------------------------
+
+        street = request.GET.get("street")
+        date = request.GET.get("date")
+        priority = request.GET.get("priority")
+
+        if street:
+            queryset = queryset.filter(location__icontains=street)
+
+        if date:
+            parsed_date = parse_date(date)
+            if parsed_date:
+                queryset = queryset.filter(created_at__date=parsed_date)
+
+        if priority:
+            queryset = queryset.filter(priority=priority)
+
+        # -------------------------
+        # Statistics
+        # -------------------------
+
+        total_incidents = queryset.count()
+
+        most_common_priority = (
+            queryset.values("priority")
+            .annotate(count=Count("id"))
+            .order_by("-count")
+            .first()
+        )
+
+        avg_resolution = queryset.annotate(
+            duration=ExpressionWrapper(
+                F("resolved_at") - F("created_at"),
+                output_field=DurationField()
+            )
+        ).aggregate(avg_duration=Avg("duration"))
+
+        # -------------------------
+        # Data List
+        # -------------------------
+
+        incidents_data = []
+
+        for incident in queryset:
+            resolution_time = None
+            if incident.resolved_at:
+                resolution_time = incident.resolved_at - incident.created_at
+
+            incidents_data.append({
+                "id": incident.id,
+                "title": incident.title,
+                "location": incident.location,
+                "priority": incident.priority,
+                "created_at": incident.created_at,
+                "resolved_at": incident.resolved_at,
+                "resolution_time": str(resolution_time) if resolution_time else None
+            })
+
+        return Response({
+            "stats": {
+                "total_incidents": total_incidents,
+                "most_common_priority": most_common_priority,
+                "average_resolution_time": str(avg_resolution["avg_duration"]) if avg_resolution["avg_duration"] else None
+            },
+            "results": incidents_data
+        })    
