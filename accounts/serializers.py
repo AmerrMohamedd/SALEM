@@ -7,57 +7,6 @@ from django.contrib.auth.password_validation import validate_password
 
 
 
-# class SignupSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['uuid'  , 'username' , 'email' , 'password' ,'department' ,'region' ,'role' ]
-
-    
-#     def validate(self, data):
-#         if not self.context.get('is_superuser' , False):
-#             if not data.get('department'):
-#                 raise serializers.ValidationError("Department is required for non-superusers.")
-#             if not data.get('role'):
-#                 raise serializers.ValidationError("Role is required for non-superusers.")
-#             if not data.get('region'):
-#                 raise serializers.ValidationError("Region is required for non-superusers.")
-#         return data
-
-
-#     def create(self , validated_data):
-#         password = validated_data.pop('password')
-#         user = User(**validated_data)
-#         user.set_password(password)
-#         user.save()
-#         return user
-
-
-# class LoginSerializer(serializers.ModelSerializer):
-
-#     email = serializers.EmailField()
-#     password = serializers.CharField(write_only=True)
-
-#     class Meta:
-#         model = User
-#         fields = ['email', 'password']
-
-#     def validate(self, data):
-#         email = data.get('email')
-#         password = data.get('password')
-
-#         try:
-#             user_obj  = User.objects.get(email=email)
-#             user = authenticate(username=user_obj.username, password=password)
-
-#         except User.DoesNotExist:
-#             user = None
-        
-#         if not user:
-#             raise serializers.ValidationError("Invalid email or password.")
-#         data['user'] = user
-#         return data
-
-
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
