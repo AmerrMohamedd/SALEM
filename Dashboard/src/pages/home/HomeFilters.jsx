@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import calendarIcon from "../../assets/icons/calendar.png";
 
-function DashboardFilters() {
+function HomeFilters() {
     const [date, setDate] = useState(null);
     const { t, i18n } = useTranslation();
 
@@ -32,4 +32,4 @@ function DashboardFilters() {
     );
 }
 
-export default DashboardFilters;
+export default HomeFilters;

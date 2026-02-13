@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getDashboardStats } from "../../services/dashboardService";
 
 import solvedIcon from "../../assets/icons/solved.png";
 import transferredIcon from "../../assets/icons/transferred.png";
@@ -8,28 +6,18 @@ import reviewIcon from "../../assets/icons/review.png";
 import openIcon from "../../assets/icons/open.png";
 import totalIcon from "../../assets/icons/total.png";
 
-function DashboardCards() {
-    const [stats, setStats] = useState(null);
+function HomeCards({ data }) {
     const { t, i18n } = useTranslation();
-
     const isArabic = i18n.language === "ar";
 
-    useEffect(() => {
-        async function fetchStats() {
-            const data = await getDashboardStats();
-            setStats(data);
-        }
-        fetchStats();
-    }, []);
-
-    if (!stats) return null;
+    if (!data) return null;
 
     const cards = [
-        { title: t("solvedToday"), value: stats.solvedToday, icon: solvedIcon },
-        { title: t("transferred"), value: stats.transferred, icon: transferredIcon },
-        { title: t("inReview"), value: stats.inReview, icon: reviewIcon },
-        { title: t("openReports"), value: stats.open, icon: openIcon },
-        { title: t("totalReports"), value: stats.total, icon: totalIcon },
+        { title: t("solvedToday"), value: data.solvedToday, icon: solvedIcon },
+        { title: t("transferred"), value: data.transferred, icon: transferredIcon },
+        { title: t("inReview"), value: data.inReview, icon: reviewIcon },
+        { title: t("openReports"), value: data.open, icon: openIcon },
+        { title: t("totalReports"), value: data.total, icon: totalIcon },
     ];
 
     return (
@@ -59,4 +47,4 @@ function DashboardCards() {
     );
 }
 
-export default DashboardCards;
+export default HomeCards;

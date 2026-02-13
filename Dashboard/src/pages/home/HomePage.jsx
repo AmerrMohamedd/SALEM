@@ -1,20 +1,40 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import DashboardFilters from "./DashboardFilters";
-import DashboardCards from "./DashboardCards";
-import ChartsSection from "./ChartsSection";
-import RecentReportsTable from "./RecentReportsTable";
-import QuickNotifications from "./QuickNotifications";
+import { getHomeData } from "../../services/homeService";
+
+import HomeFilters from "./HomeFilters";
+import HomeCards from "./HomeCards";
+import HomeCharts from "./HomeCharts";
+import HomeRecentReportsTable from "./HomeRecentReportsTable";
+import HomeQuickNotifications from "./HomeQuickNotifications";
 
 function HomePage() {
-    const { i18n } = useTranslation(); 
+    const { i18n } = useTranslation();
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await getHomeData();
+                setData(res);
+            } catch (err) {
+                console.error("Error loading home data:", err);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (!data) return null;
 
     return (
         <div key={i18n.language} className="flex flex-col gap-4 pb-8">
-            <DashboardFilters />
-            <DashboardCards />
-            <ChartsSection />
-            <RecentReportsTable />
-            <QuickNotifications />
+            <HomeFilters />
+            <HomeCards data={data.cards} />
+            <HomeCharts lineData={data.lineChart}
+                donutData={data.donutChart} />
+            <HomeRecentReportsTable reports={data.reports} />
+            <HomeQuickNotifications notifications={data.notifications} />
         </div>
     );
 }

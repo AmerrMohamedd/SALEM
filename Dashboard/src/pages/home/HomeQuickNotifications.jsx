@@ -1,26 +1,8 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-function QuickNotifications() {
+function HomeQuickNotifications({ notifications = [] }) {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
-
-    const initialNotifications = [
-        {
-            text: t("notif1"),
-            percent: 15,
-        },
-        {
-            text: t("notif2"),
-            percent: 45,
-        },
-        {
-            text: t("notif3"),
-            percent: 100,
-        },
-    ];
-
-    const [notifications] = useState(initialNotifications);
 
     const getColor = (percent) => {
         if (percent < 25) return "bg-red-500";
@@ -40,7 +22,7 @@ function QuickNotifications() {
                     <div key={i} className="bg-white rounded-xl p-4 shadow-sm">
                         <div className="flex items-center gap-2 mb-3">
                             <p className="text-xs text-gray-600 flex-1">
-                                {item.text}
+                                {t(item.text)}
                             </p>
 
                             <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center
@@ -82,4 +64,4 @@ function QuickNotifications() {
     );
 }
 
-export default QuickNotifications;
+export default HomeQuickNotifications;

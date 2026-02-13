@@ -1,14 +1,10 @@
 import { useTranslation } from "react-i18next";
 
-function RecentReportsTable() {
+function HomeRecentReportsTable({ reports = [] }) {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
 
-    const reports = [
-        { id: 1025, date: "2025-10-30", status: "inProgress", entity: "electricity" },
-        { id: 1027, date: "2025-10-30", status: "underReview", entity: "water" },
-        { id: 1028, date: "2025-10-30", status: "solved", entity: "roads" },
-    ];
+    
 
     const statusStyles = {
         inProgress: "bg-purple-100 text-purple-700",
@@ -71,4 +67,4 @@ function RecentReportsTable() {
     );
 }
 
-export default RecentReportsTable;
+export default HomeRecentReportsTable;

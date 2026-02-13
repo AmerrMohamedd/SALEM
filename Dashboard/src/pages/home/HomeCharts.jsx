@@ -60,7 +60,7 @@ const renderCustomLabel = ({
 };
 
 
-function ChartsSection() {
+function ChartsHome({ lineData = [], donutData = [] }) {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
 
@@ -78,27 +78,6 @@ function ChartsSection() {
         t("nov"),
         t("dec"),
     ];
-
-
-
-    const lineData = [
-        { day: t("sat"), value: 10 },
-        { day: t("sun"), value: 15 },
-        { day: t("mon"), value: 22 },
-        { day: t("tue"), value: 18 },
-        { day: t("wed"), value: 64 },
-        { day: t("thu"), value: 20 },
-        { day: t("fri"), value: 50 },
-    ];
-
-    /* ===== Donut Data ===== */
-    const donutData = [
-        { name: t("roads"), value: 100, color: "#6C7CFF" },
-        { name: t("electricity"), value: 62, color: "#6FD08C" },
-        { name: t("water"), value: 50, color: "#FFB547" },
-        { name: t("lighting"), value: 28, color: "#00C9FF" },
-    ];
-
 
 
 
@@ -238,4 +217,4 @@ function ChartsSection() {
     );
 }
 
-export default ChartsSection;
+export default ChartsHome;
