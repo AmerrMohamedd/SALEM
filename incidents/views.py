@@ -1,23 +1,37 @@
 from datetime import timedelta
 from django.utils import timezone
-from django.shortcuts import render, get_object_or_404
-from rest_framework import generics
-from .models import Incident, IncidentStatus
-from .serializers import IncidentDetailSerializer, IncidentImageSerializer, IncidentListSerializer, IncidentSerializer, IncidentStatusSerializer
+from django.shortcuts import get_object_or_404
+from django.db.models.functions import TruncDate
+from django.db.models import Count
+
+from rest_framework import generics, filters, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.db.models.functions import TruncDate
-from django.db.models import Count
-from rest_framework import generics, filters
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.exceptions import PermissionDenied
 
+from django_filters.rest_framework import DjangoFilterBackend
+
+from .models import Incident, IncidentStatus
+from .serializers import (
+    IncidentDetailSerializer,
+    IncidentImageSerializer,
+    IncidentListSerializer,
+    IncidentSerializer,
+    IncidentStatusSerializer,
+)
 
 
-#Core Api #3 - Incident Detail
+# =========================
+# Core APIs
+# =========================
+
+# Api #1 - Incident Detail
+
 class IncidentDetailAPIView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+
     queryset = Incident.objects.select_related(
         "status",
         "assigned_to__employee_profile__department",
@@ -26,53 +40,61 @@ class IncidentDetailAPIView(generics.RetrieveAPIView):
 
     serializer_class = IncidentDetailSerializer
 
+# =========================
+# Citizen APIs
+# =========================
 
-# Citizen API #1 - Create Incident
+# API #1 - Create Incident
+
 class IncidentCreateAPIView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Incident.objects.all()
     serializer_class = IncidentSerializer
-    #permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        if not self.request.user.is_authenticated:
-            raise PermissionError("You must be logged in to create an incident.")
-        
         serializer.save(citizen=self.request.user)
 
 
-# Citizen API #2 - Get My Incidents for citizen
+# API #2 - Get My Incidents for citizen
+
 class MyIncidentsAPIView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = IncidentSerializer
-    #permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Incident.objects.none()  
         return Incident.objects.filter(citizen=self.request.user)
 
 
-# Citizen API #3 - Upload Image
+# API #3 - Upload Image
+
 class IncidentImageUploadAPIView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = IncidentImageSerializer
     parser_classes = [MultiPartParser, FormParser]
-    # permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        if not self.request.user.is_authenticated:
-            raise PermissionError("User must be logged in to upload images.")
-
         incident_id = self.kwargs.get('pk')
+
         incident = get_object_or_404(
             Incident,
             pk=incident_id,
             citizen=self.request.user
         )
+
         serializer.save(incident=incident)
+
+# =========================
+# Dashboard APIs (Employees Only)
+# =========================        
 
 # Dashboard Api #1 - (Total,Pending,In Progress,Rejected,Resolved Today)
 class DashboardStatsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        if not hasattr(request.user, "employee_profile"):
+            raise PermissionDenied("Employees only.")
+
         today = timezone.now().date()
 
         total = Incident.objects.count()
@@ -104,8 +126,12 @@ class DashboardStatsAPIView(APIView):
     
 # Dashboard Api #2 -Line Chart
 class WeeklyStatsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        if not hasattr(request.user, "employee_profile"):
+            raise PermissionDenied("Employees only.")
+
         today = timezone.now().date()
         week_ago = today - timedelta(days=6)
 
@@ -123,8 +149,12 @@ class WeeklyStatsAPIView(APIView):
 
 # Dashboard Api #3 - latest 4 Recent Incidents
 class RecentIncidentsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        if not hasattr(request.user, "employee_profile"):
+            raise PermissionDenied("Employees only.")
+
         incidents = (
             Incident.objects
             .select_related(
@@ -141,8 +171,7 @@ class RecentIncidentsAPIView(APIView):
                 "status": incident.status.name,
                 "department": (
                     incident.assigned_to.employee_profile.department.department_name
-                    if incident.assigned_to
-                    else None
+                    if incident.assigned_to else None
                 )
             }
             for incident in incidents
@@ -153,8 +182,12 @@ class RecentIncidentsAPIView(APIView):
 
 # Dashboard Api #4 -Pie Chart
 class IncidentsByDepartmentAPIView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        if not hasattr(request.user, "employee_profile"):
+            raise PermissionDenied("Employees only.")
+
         data = (
             Incident.objects
             .filter(assigned_to__isnull=False)
@@ -172,14 +205,14 @@ class IncidentsByDepartmentAPIView(APIView):
 
         return Response(formatted_data)
     
+# =========================
+# Incident List + Filtering
+# =========================
 
 # Dashboard Api #5 - List Incidents and filtering
 class IncidentListAPIView(generics.ListAPIView):
-    def get_queryset(self):
-        return Incident.objects.select_related(
-        "status",
-        "assigned_to__employee_profile__department"
-    )
+    permission_classes = [IsAuthenticated]
+
     serializer_class = IncidentListSerializer
 
     filter_backends = [
@@ -195,15 +228,25 @@ class IncidentListAPIView(generics.ListAPIView):
     }
 
     search_fields = ["description", "location"]
-
-
     ordering_fields = ["created_at"]
+
+    def get_queryset(self):
+        return Incident.objects.select_related(
+            "status",
+            "assigned_to__employee_profile__department"
+        )
 
 
 # Dashboard Api #7 -Get Incident Statuses
 class IncidentStatusListAPIView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = IncidentStatus.objects.all()
-    serializer_class = IncidentStatusSerializer    
+    serializer_class = IncidentStatusSerializer
+
+
+# =========================
+# Employee Workflow APIs
+# =========================
 
 
 class AcceptIncidentAPIView(APIView):
@@ -238,8 +281,6 @@ class AcceptIncidentAPIView(APIView):
         incident.save()
 
         return Response({"message": "Incident accepted successfully."})
-    
-        
 
 
 ALLOWED_TRANSITIONS = {
@@ -280,9 +321,7 @@ class ChangeIncidentStatusAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        #  Validation هنا
         current_status = incident.status.name
-
         allowed = ALLOWED_TRANSITIONS.get(current_status, [])
 
         if new_status.name not in allowed:

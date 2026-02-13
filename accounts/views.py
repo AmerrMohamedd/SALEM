@@ -180,6 +180,7 @@ class LogoutView(APIView):
 
 # Dashboard Api #6 -Get Incident departments
 class DepartmentListAPIView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer        
 
