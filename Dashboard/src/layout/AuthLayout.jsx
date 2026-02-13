@@ -1,22 +1,30 @@
 import { Outlet } from "react-router-dom";
 import logo from "../assets/logow.png";
 import pattern from "../assets/pattern.png";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../components/common/LanguageSwitcher";
 
 function AuthLayout() {
+    const { i18n } = useTranslation();
+    const isArabic = i18n.language === "ar";
+
     return (
-        <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+        <div
+            dir={isArabic ? "rtl" : "ltr"}
+            className="relative min-h-screen grid grid-cols-1 lg:grid-cols-2"
+        >
+            {/* زرار اللغة فوق */}
+            <LanguageSwitcher />
 
             {/* Right Side - Branding */}
             <div className="relative hidden lg:flex items-center justify-center overflow-hidden bg-gradient-to-r from-[#00816F] to-[#2DDBC9]">
 
-                {/* Pattern Image */}
                 <img
                     src={pattern}
                     alt="Pattern Background"
                     className="absolute inset-0 w-full h-full object-cover opacity-30"
                 />
 
-                {/* Logo */}
                 <img
                     src={logo}
                     alt="Salem Logo"
@@ -30,7 +38,6 @@ function AuthLayout() {
                     <Outlet />
                 </div>
             </div>
-
         </div>
     );
 }

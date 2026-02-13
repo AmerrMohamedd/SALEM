@@ -4,6 +4,56 @@ import { initReactI18next } from "react-i18next";
 const resources = {
     ar: {
         translation: {
+            /* ================= Login ================= */
+            loginTitle: "تسجيل الدخول",
+            loginDesc: "قم بتسجيل الدخول للوصول إلى لوحة التحكم الخاصة بك",
+            nationalId: "الرقم القومي",
+            enterNationalId: "أدخل الرقم القومي",
+            password: "كلمة المرور",
+            enterPassword: "أدخل كلمة المرور",
+            forgotPassword: "هل نسيت كلمة المرور؟",
+            loginButton: "تسجيل الدخول",
+            noAccount: "ليس لديك حساب؟",
+            signup: "التسجيل",
+
+            /* ================= SignUp ================= */
+            signupTitle: "سجل باستخدام الرقم القومي",
+            profileName: "اسم الملف الشخصي",
+            enterProfileName: "أدخل اسم ملفك الشخصي",
+            enterEmail:"ادخل البريد الاكتروني",
+            department: "الإدارة / الجهة",
+            role: "الوظيفة / الدور",
+            city: "المنطقة / المدينة",
+            enterCity: "ادخل المنطقة / المدينة ",
+            passwordHint: "استخدم 12 حرفًا أو أكثر مع مزيج من الأحرف والأرقام والرموز",
+            managers: "المديرون",
+            employees:"الموظفون",
+            fieldStaff: "المسؤولون",
+            distributionOfficers:"مسؤلو التوزيع",
+            alreadyHaveAccount: " لديه حساب بالفعل..",
+
+
+
+            /* ================= forgetPassword ================= */
+            forgetPassword: "استعادة كلمة المرور",
+            sendCode: "إرسال رمز التحقق",
+            forgetPasswordDesc: "ادخل بريدك الالكتروني",
+            email:"بريدك الالكتروني ",
+            rememberPassword: "تذكرت كلمة المرور؟",
+
+            /* ================= verification ================= */
+            verificationTitle: "ادخل رمز التحقق",
+            verificationDesc: "لقد قمنا بإرسال رمز التأكيد إلى بريدك الإلكتروني",
+            verify: "تحقق",
+            enterCode: " ادخل الكود",
+
+
+            /* ================= setNewPassword ================= */
+            setNewPassword: "تعيين كلمة مرور جديدة",
+            confirmPassword: " تأكيد كلمه المرور",
+            createNewPassword:"انشاء كلمه المرور",
+
+
             /* ================= Sidebar ================= */
             home: "الصفحة الرئيسية",
             reports: "إدارة البلاغات",
@@ -201,6 +251,57 @@ const resources = {
 
     en: {
         translation: {
+            /* ================= Login ================= */
+            loginTitle: "Login",
+            loginDesc: "Sign in to access your dashboard",
+            nationalId: "National ID",
+            enterNationalId: "Enter National ID",
+            password: "Password",
+            enterPassword: "Enter Password",
+            forgotPassword: "Forgot password?",
+            loginButton: "Login",
+            noAccount: "Don't have an account?",
+            signup: "Sign Up",
+
+            /* ================= SignUp ================= */
+            signupTitle: "Register using National ID",
+            profileName: "Profile Name",
+            enterProfileName: "Enter profile name",
+            enterEmail: "Enter Email",
+            department: "Department",
+            role: "Role",
+            city: "City / Area",
+            enterCity: "Enter City",
+            passwordHint: "Use 12 or more characters with a mix of letters, numbers & symbols",
+            managers: "Managers",
+            employees: "Employee",
+            fieldStaff: "Field Staff",
+            distributionOfficers: " Distribution Officers",
+            alreadyHaveAccount:"Already Have Account..",
+
+
+            /* ================= forgetPassword ================= */
+
+            forgetPassword: "Recover Password",
+            sendCode: "Send Verification Code",
+            forgetPasswordDesc: "Enter your Email  ",
+            email: "Your Email ",
+            rememberPassword: "Remembered your password?",
+
+
+            /* ================= verification ================= */
+            verificationTitle: "Enter Verification Code",
+            verificationDesc: "We have sent a confirmation code to your email",
+            verify: "Verify",
+            enterCode:"Enter code",
+
+            /* ================= setNewPassword ================= */
+            setNewPassword: "Set New Password",
+            confirmPassword: "Comfirm Password",
+            createNewPassword: " Create New Password  ",
+
+
+
             /* ================= Sidebar ================= */
             home: "Home",
             reports: "Reports",
