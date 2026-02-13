@@ -73,9 +73,7 @@ function ReportsTableRows({ reports = [], onView }) {
                     {/* Priority */}
                     <div
                         className={`font-semibold truncate ${priorityColor(
-                            report.priority
-                        )}`}
-                    >
+                            report.priority)}`}>
                         {t(report.priority)}
                     </div>
 
