@@ -40,9 +40,9 @@ class Incident(models.Model):
     )
 
     PRIORITY_CHOICES = [
-    ('low', 'Low'),
-    ('medium', 'Medium'),
-    ('high', 'High'),
+    ('low', 'منخفضة'),
+    ('medium', 'متوسطة'),
+    ('high', 'عالية'),
     ]
 
     priority = models.CharField(

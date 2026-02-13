@@ -48,3 +48,48 @@ class IncidentListSerializer(serializers.ModelSerializer):
             "department",
             "priority",
         ]        
+
+
+# Details
+class IncidentDetailSerializer(serializers.ModelSerializer):
+    status = serializers.CharField(source="status.name", read_only=True)
+
+    department = serializers.CharField(
+        source="assigned_to.employee_profile.department.department_name",
+        read_only=True
+    )
+
+    priority = serializers.CharField(
+        source="get_priority_display",
+        read_only=True
+    )
+
+
+    images = IncidentImageSerializer(many=True, read_only=True)
+
+    verification_image = serializers.ImageField(
+        source="verification.image",
+        read_only=True
+    )
+
+    verification_comment = serializers.CharField(
+        source="verification.comment",
+        read_only=True
+    )
+
+    class Meta:
+        model = Incident
+        fields = [
+            "id",
+            "description",
+            "location",
+            "created_at",
+            "status",
+            "priority",
+            "department",
+            "latitude",
+            "longitude",
+            "images",
+            "verification_image",
+            "verification_comment",
+        ]

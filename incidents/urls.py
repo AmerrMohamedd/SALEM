@@ -1,5 +1,7 @@
 from django.urls import path
 from .views import (
+    AcceptIncidentAPIView,
+    ChangeIncidentStatusAPIView,
     IncidentCreateAPIView,
     IncidentImageUploadAPIView,
     IncidentStatusListAPIView,
@@ -23,6 +25,10 @@ urlpatterns = [
     path("dashboard/weekly/", WeeklyStatsAPIView.as_view()),
     path("dashboard/recent/", RecentIncidentsAPIView.as_view()),
     path("dashboard/by-department/", IncidentsByDepartmentAPIView.as_view()),
+    path("<int:pk>/accept/", AcceptIncidentAPIView.as_view(), name="accept-incident"),
+    path("<int:pk>/change-status/", ChangeIncidentStatusAPIView.as_view(), name="change-status"),
+
+
 
 
 

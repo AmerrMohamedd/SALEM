@@ -178,7 +178,11 @@ class LogoutView(APIView):
             return Response({"message": "التوكن غير صالح أو تم استخدامه من قبل"}, status=status.HTTP_400_BAD_REQUEST)
         
 
-# Dashboard Api #7 -Get Incident departments
+# Dashboard Api #6 -Get Incident departments
 class DepartmentListAPIView(generics.ListAPIView):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer        
+
+
+
+    
