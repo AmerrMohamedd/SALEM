@@ -1,8 +1,3 @@
-/*
-  🔹 Temporary mock data
-  ❗ سيتم استبداله بالـ API من الباك إند
-*/
-
 export const getHomeData = async () => {
     return {
         cards: {
@@ -14,20 +9,20 @@ export const getHomeData = async () => {
         },
 
         lineChart: [
-            { day: "Sat", value: 10 },
-            { day: "Sun", value: 15 },
-            { day: "Mon", value: 22 },
-            { day: "Tue", value: 18 },
-            { day: "Wed", value: 64 },
-            { day: "Thu", value: 20 },
-            { day: "Fri", value: 50 },
+            { day: "sat", value: 10 },
+            { day: "sun", value: 15 },
+            { day: "mon", value: 22 },
+            { day: "tue", value: 18 },
+            { day: "wed", value: 64 },
+            { day: "thu", value: 20 },
+            { day: "fri", value: 50 },
         ],
 
         donutChart: [
-            { name: "Roads", value: 100, color: "#6C7CFF" },
-            { name: "Electricity", value: 62, color: "#6FD08C" },
-            { name: "Water", value: 50, color: "#FFB547" },
-            { name: "Lighting", value: 28, color: "#00C9FF" },
+            { name: "roads", value: 100, color: "#6C7CFF" },
+            { name: "electricity", value: 62, color: "#6FD08C" },
+            { name: "water", value: 50, color: "#FFB547" },
+            { name: "lighting", value: 28, color: "#00C9FF" },
         ],
 
         reports: [

@@ -8,56 +8,10 @@ import {
     YAxis,
     Tooltip,
     ResponsiveContainer,
-    Customized, 
     PieChart,
     Pie,
     Cell,
 } from "recharts";
-
-const renderCustomLabel = ({
-    cx,
-    cy,
-    midAngle,
-    outerRadius,
-    name,
-    value,
-    fill,
-}) => {
-    const RADIAN = Math.PI / 180;
-    const radius = outerRadius + 15;
-
-    const x1 = cx + outerRadius * Math.cos(-midAngle * RADIAN);
-    const y1 = cy + outerRadius * Math.sin(-midAngle * RADIAN);
-
-    const x2 = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y2 = cy + radius * Math.sin(-midAngle * RADIAN);
-
-    const x3 = x2 + (x2 > cx ? 15 : -15);
-    const y3 = y2;
-
-    return (
-        <g>
-            <path
-            d={`M${x1},${y1} L${x2},${y2} L${x3},${y3}`}
-            stroke={fill} fill="none"/>
-
-            <text x={x3} y={y3 - 4}
-                textAnchor={x3 > cx ? "start" : "end"}
-                className="text-xs fill-gray-700">
-                {name}
-            </text>
-
-            <text
-                x={x3}
-                y={y3 + 10}
-                textAnchor={x3 > cx ? "start" : "end"}
-                className="text-xs font-bold"
-                fill={fill}>
-                {value}
-            </text>
-        </g>
-    );
-};
 
 
 function ChartsHome({ lineData = [], donutData = [] }) {
@@ -83,8 +37,54 @@ function ChartsHome({ lineData = [], donutData = [] }) {
 
     const [selectedMonth, setSelectedMonth] = useState(months[0]);
     const [open, setOpen] = useState(false);
-
     const total = donutData.reduce((sum, item) => sum + item.value, 0);
+
+    const renderCustomLabel = ({
+        cx,
+        cy,
+        midAngle,
+        outerRadius,
+        name,
+        value,
+        fill,
+    }) => {
+        const RADIAN = Math.PI / 180;
+        const radius = outerRadius + 15;
+
+        const x1 = cx + outerRadius * Math.cos(-midAngle * RADIAN);
+        const y1 = cy + outerRadius * Math.sin(-midAngle * RADIAN);
+
+        const x2 = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y2 = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        const x3 = x2 + (x2 > cx ? 15 : -15);
+        const y3 = y2;
+
+        return (
+            <g>
+                <path
+                    d={`M${x1},${y1} L${x2},${y2} L${x3},${y3}`}
+                    stroke={fill} fill="none" />
+
+                <text x={x3} y={y3 - 4}
+                    textAnchor={x3 > cx ? "start" : "end"}
+                    className="text-xs fill-gray-700">
+                    {name}
+                </text>
+
+                <text
+                    x={x3}
+                    y={y3 + 10}
+                    textAnchor={x3 > cx ? "start" : "end"}
+                    className="text-xs font-bold"
+                    fill={fill}>
+                    {value}
+                </text>
+            </g>
+        );
+    };
+
+
 
     return (
         <div dir={isArabic ? "ltr" : "rtl"} className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
@@ -130,6 +130,7 @@ function ChartsHome({ lineData = [], donutData = [] }) {
                     <LineChart data={lineData}>
                         <XAxis
                             dataKey="day"
+                            tickFormatter={(value) => t(value)}
                             axisLine={false}
                             tickLine={false}
                             tick={{ fontSize: 12, fill: "#9CA3AF" }}
@@ -207,7 +208,7 @@ function ChartsHome({ lineData = [], donutData = [] }) {
                         <div key={i} className="flex items-center gap-1 text-gray-600">
                             <span className="w-2.5 h-2.5 rounded-full"
                             style={{ backgroundColor: item.color }}/>
-                            <span>{item.name}</span>
+                            <span>{t(item.name)}</span>
                         </div>
                     ))}
                 </div>
