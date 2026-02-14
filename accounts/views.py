@@ -62,22 +62,30 @@ class SignUpView(APIView):    # user_local_host_port/signup ---> the Api
 
 class LoginView(APIView):
     def post(self, request):
-        
         serializer = LoginSerializer(data=request.data)
 
         if serializer.is_valid():
             user = serializer.validated_data['user']
-            
-
             refresh = RefreshToken.for_user(user)
 
 
             role = None
+            department_name = None
+            region_name = None
+
+
             if user.user_type == 'employee' and hasattr(user, 'employee_profile'):
-                role = user.employee_profile.role
+                profile = user.employee_profile
+                role = profile.role
+        
+                if profile.department:
+                    department_name = profile.department.department_name
+                if profile.region:
+                    region_name = profile.region.region_name
+            
+
             elif user.user_type == 'citizen':
                 role = "citizen"
-                
             
             return Response({
                 "message": "تم تسجيل الدخول بنجاح",
@@ -87,9 +95,12 @@ class LoginView(APIView):
                 },
                 "user_info": {
                     "username": user.username,
-                    "user_type": user.user_type, # 'citizen' أو 'employee'
+                    "user_type": user.user_type,
                     "email": user.email,
-                    "role": role
+                    "national_id": user.national_id, 
+                    "role": role,
+                    "department": department_name,
+                    "region": region_name,        
                 }
             }, status=status.HTTP_200_OK)
         
