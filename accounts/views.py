@@ -18,7 +18,6 @@ from rest_framework import generics
 
 class RegistrationMetadataView(APIView):   # user_local_host_port/registration-data ---> the Api
 
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         
