@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:salem_app/Constants.dart';
+import 'package:salem_app/core/Constants.dart';
 import 'package:salem_app/Views/employee_pages/task_progress_page.dart';
-import 'package:salem_app/data/models/report_model.dart';
+import 'package:salem_app/citizen/data/report_model.dart';
 
 class AcceptButton extends StatelessWidget {
   const AcceptButton({super.key, required this.report});

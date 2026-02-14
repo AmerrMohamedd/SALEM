@@ -1,46 +1,49 @@
 import 'package:bloc/bloc.dart';
+import 'package:salem_app/auth/data/models/base_user.dart';
 import 'package:salem_app/auth/data/user_repo.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  final UserRepository repo;
+  final UserRepository _repo;
+  String user_type = "";
+  BaseUser? currentUser;
+  AuthCubit(this._repo) : super(AuthInitial());
 
-  AuthCubit(this.repo) : super(AuthInitial());
-
-  Future<void> login(String email, String password) async {
+  Future<void> login(String? email, String? nationalId, String password) async {
     emit(AuthLoading());
-    try {
-      await Future.delayed(Duration(seconds: 2));
 
-      final user = await repo.login(email, password);
-      emit(AuthAuthenticated(user.role));
+    try {
+      final user = await _repo.login(email, nationalId, password);
+      currentUser = user;
+      emit(AuthAuthenticated(user));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthError("Login failed"));
     }
   }
 
-  Future<void> signup(String email, String password, String role, String name, String mobile_num) async {
+  Future<void> signup(Map<String, dynamic> userData) async {
     emit(AuthLoading());
+
     try {
-      final user = await repo.signup(email, password, role, name, mobile_num);
-      emit(AuthAuthenticated(user.role));
+      await _repo.signup(userData);
+      emit(AuthInitial());
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthError("Signup failed : $e"));
     }
   }
 
   void logout() {
-    repo.logout();
+    _repo.logout();
+    user_type = "";
     emit(AuthInitial());
   }
 
-  Future<void> checkUser() async {
-    final user = await repo.getCurrentUser();
-    if (user != null) {
-      emit(AuthAuthenticated(user.role));
-    } else {
-      emit(AuthInitial());
-    }
+  void setUserType_citizen() {
+    user_type = 'citizen';
+  }
+
+  void setUserType_employee() {
+    user_type = 'employee';
   }
 }

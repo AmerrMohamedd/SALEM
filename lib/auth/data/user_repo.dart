@@ -1,64 +1,80 @@
-import 'package:salem_app/auth/data/user_model.dart';
+import 'package:dio/dio.dart';
+import 'package:salem_app/auth/data/api_services.dart';
+import 'package:salem_app/auth/data/models/base_user.dart';
+import 'package:salem_app/auth/data/models/citizen_model.dart';
+import 'package:salem_app/auth/data/models/employee_model.dart';
 
 class UserRepository {
-  final List<UserModel> _users = [
-    UserModel(
-      id: '11111',
-      email: 'ccc',
-      password: 'ccc',
-      role: 'citizen',
-      name: 'hassan',
-      mobile_num: '01010101010',
-    ),
-    UserModel(
-      id: '22222',
-      email: 'eee',
-      password: 'eee',
-      role: 'employee',
-      name: 'michael',
-      mobile_num: '01201201200',
-    ),
-  ];
+  final ApiService _api = ApiService();
 
-  UserModel? _currentUser;
-
-  Future<UserModel> signup(
-    String email,
+  /// 🔹 LOGIN
+  Future<BaseUser> login(
+    String? email,
+    String? nationalId,
     String password,
-    String role,
-    String name,
-    String mobile_num,
   ) async {
-    final newUser = UserModel(
-      id: DateTime.now().toString(),
-      email: email,
-      password: password,
-      role: role,
-      name: name,
-      mobile_num: mobile_num,
-    );
+    try {
+      final response = await _api.dio.post(
+        "/login/",
+        data: {
+          email != null ? "email" : "national_id": email ?? nationalId,
+          "password": password,
+        },
+      );
 
-    _users.add(newUser);
-    _currentUser = newUser;
+      final data = response.data;
 
-    return newUser;
+      final token = data["tokens"]["access"];
+      final userData = data["user_info"];
+      print("Login successful, User Data: $userData , Token: $token");
+      _api.setToken(token);
+
+      return _mapUser(userData);
+    } on DioException catch (e) {
+      if (e.response != null) {
+        print("Dio Error Response: ${e.response?.data}");
+        throw Exception(e.response?.data["detail"] ?? "Login failed");
+      } else {
+        print("Dio Error Message: ${e.message}");
+        throw Exception("Network error: ${e.message}");
+      }
+    } catch (e) {
+      print("Unexpected Error: $e");
+      throw Exception("Login failed: $e");
+    }
   }
 
-  Future<UserModel> login(String email, String password) async {
-    final user = _users.firstWhere(
-      (user) => user.email == email && user.password == password,
-      orElse: () => throw Exception("Invalid credentials"),
-    );
+  Future<void> signup(Map<String, dynamic> userData) async {
+    try {
+      final response = await _api.dio.post("/signup/", data: userData);
 
-    _currentUser = user;
-    return user;
+      final data = response.data;
+      print("response from signup: $data");
+    } on DioException catch (e) {
+      if (e.response != null) {
+        print("Dio Error Response: ${e.response?.data}");
+        throw Exception(e.response?.data["detail"] ?? "Signup failed");
+      } else {
+        print("Dio Error Message: ${e.message}");
+        throw Exception("Network error: ${e.message}");
+      }
+    } catch (e) {
+      print("Unexpected Error: $e");
+      throw Exception("Signup failed: $e");
+    }
   }
 
-  Future<UserModel?> getCurrentUser() async {
-    return _currentUser;
+
+
+  void logout() {
+    _api.clearToken();
   }
 
-  Future<void> logout() async {
-    _currentUser = null;
+  BaseUser _mapUser(Map<String, dynamic> userData) {
+    if (userData["user_type"] == "citizen") {
+      return CitizenModel.fromJson(userData);
+    } else {
+      return EmployeeModel.fromJson(userData);
+    }
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salem_app/data/models/report_model.dart';
+import 'package:salem_app/citizen/data/report_model.dart';
 import 'package:salem_app/Views/widgets/employee_role_widgets/common%20widgets/task_card.dart';
 
 class TasksList extends StatelessWidget {

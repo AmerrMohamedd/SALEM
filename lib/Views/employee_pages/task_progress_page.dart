@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:salem_app/Constants.dart';
-import 'package:salem_app/data/models/report_model.dart';
-import 'package:salem_app/Views/widgets/citizen_role_widgets/myReports_page_wigets/custom_appBar.dart';
-import 'package:salem_app/auth/modules/customForm_textField.dart';
+import 'package:salem_app/core/Constants.dart';
+import 'package:salem_app/citizen/data/report_model.dart';
+import 'package:salem_app/citizen/view/modules/myReports_page_wigets/custom_appBar.dart';
+import 'package:salem_app/auth/view/modules/customForm_textField.dart';
 import 'package:salem_app/Views/widgets/employee_role_widgets/back_to_myTasks_button.dart';
 import 'package:salem_app/Views/widgets/employee_role_widgets/common%20widgets/task_card.dart';
 import 'package:salem_app/Views/widgets/employee_role_widgets/task_progress_page_widgets/progress_Tracker.dart';
@@ -52,7 +52,9 @@ class _TaskProgressPageState extends State<TaskProgressPage> {
                 children: [
                   Text('What was done ?',style: TextStyle(fontSize: 18,color: kPrimaryColor),),
                   const SizedBox(height: 10,),
-                  CustomFormTextfield(hintText: 'Briefly write dow the actions taken..',),
+                  CustomFormTextfield(
+                    type: 'text',
+                    hintText: 'Briefly write down the actions taken..',),
                 ],
               ),
             ),

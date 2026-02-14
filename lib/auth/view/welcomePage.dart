@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:salem_app/Constants.dart';
-import 'package:salem_app/Views/widgets/welcomesPage_widgets/AuthActions_Column.dart';
-import 'package:salem_app/Views/widgets/welcomesPage_widgets/Logo_widget.dart';
-import 'package:salem_app/Views/widgets/welcomesPage_widgets/Role_Selection_Row.dart';
-import 'package:salem_app/Views/widgets/welcomesPage_widgets/left_sideGradient.dart';
-import 'package:salem_app/Views/widgets/welcomesPage_widgets/right_sideGradient.dart';
+import 'package:salem_app/core/Constants.dart';
+import 'package:salem_app/auth/view/modules/AuthActions_Column.dart';
+import 'package:salem_app/auth/view/modules/Logo_widget.dart';
+import 'package:salem_app/auth/view/modules/Role_Selection_Row.dart';
+import 'package:salem_app/auth/view/modules/left_sideGradient.dart';
+import 'package:salem_app/auth/view/modules/right_sideGradient.dart';
 
 class Welcomepage extends StatefulWidget {
   const Welcomepage({super.key});

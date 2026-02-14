@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salem_app/data/models/report_model.dart';
+import 'package:salem_app/citizen/data/report_model.dart';
 
 class TaskInfoCard extends StatelessWidget {
     final ReportModel report;

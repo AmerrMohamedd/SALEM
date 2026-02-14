@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:salem_app/core/Constants.dart';
 import 'package:salem_app/citizen/data/report_model.dart';
-import 'package:salem_app/Views/widgets/employee_role_widgets/task%20details%20page%20widgets/task_info_card.dart';
+import 'package:salem_app/citizen/view/modules/report_details_page/report_info_card.dart';
 
-class TaskDetailsPage extends StatelessWidget {
-    final ReportModel report;
+class ReportDetailsPage extends StatelessWidget {
+  final ReportModel report;
 
-  const TaskDetailsPage({super.key, required this.report});
+  const ReportDetailsPage({super.key, required this.report});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Task Details',
+          'Report Details',
           style: TextStyle(fontWeight: FontWeight.bold, color: kPrimaryColor),
         ),
         centerTitle: true,
@@ -23,8 +23,9 @@ class TaskDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TaskInfoCard(report: report),
+            ReportInfoCard(report: report),
             const SizedBox(height: 15),
+            //  if (report.imageUrl != null)
             GestureDetector(
               onTap: () {
                 showDialog(
@@ -74,5 +75,4 @@ class TaskDetailsPage extends StatelessWidget {
       ),
     );
   }
-
 }

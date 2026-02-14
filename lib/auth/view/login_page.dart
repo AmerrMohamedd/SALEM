@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salem_app/auth/cubits/auth_cubit.dart';
 import 'package:salem_app/auth/view/SignUp_page.dart';
-import 'package:salem_app/auth/modules/customForm_textField.dart';
-import 'package:salem_app/auth/modules/have_or_not_anAccount.dart';
-import 'package:salem_app/auth/modules/login_button.dart';
+import 'package:salem_app/auth/view/modules/customForm_textField.dart';
+import 'package:salem_app/auth/view/modules/have_or_not_anAccount.dart';
+import 'package:salem_app/auth/view/modules/login_button.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -29,10 +29,10 @@ class LoginPage extends StatelessWidget {
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
-            if (state.role == 'citizen') {
-              Navigator.pushReplacementNamed(context, 'citizen');
-            } else if (state.role == 'employee') {
-              Navigator.pushReplacementNamed(context, 'employee');
+            if (state.user.user_type == 'citizen') {
+              Navigator.pushNamedAndRemoveUntil(context, 'citizen', (route) => false);
+            } else if (state.user.user_type == 'employee') {
+              Navigator.pushNamedAndRemoveUntil(context, 'employee', (route) => false);
             }
           } else if (state is AuthError) {
             ScaffoldMessenger.of(
@@ -45,9 +45,21 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CustomFormTextfield(hintText: 'Email', controller: emailController),
+              CustomFormTextfield(
+                type: 'email',
+                hintText:
+                    context.read<AuthCubit>().user_type == 'citizen'
+                        ? 'Email'
+                        : 'National ID',
+                controller: emailController,
+              ),
               const SizedBox(height: 20),
-              CustomFormTextfield(hintText: 'Password', obscureText: true, controller: passwordController),
+              CustomFormTextfield(
+                type: 'password',
+                hintText: 'Password',
+                obscureText: true,
+                controller: passwordController,
+              ),
               const SizedBox(height: 60),
               BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, state) {
@@ -56,7 +68,16 @@ class LoginPage extends StatelessWidget {
                   }
                   return GestureDetector(
                     onTap: () {
-                      context.read<AuthCubit>().login(emailController.text, passwordController.text);
+                      context.read<AuthCubit>().login(
+                        context.read<AuthCubit>().user_type == 'citizen'
+                            ? emailController.text
+                            : null,
+                        context.read<AuthCubit>().user_type == 'employee'
+                            ? emailController.text
+                            : null,
+                        passwordController.text,
+                      );
+
                     },
                     child: LoginButton(width: 200),
                   );

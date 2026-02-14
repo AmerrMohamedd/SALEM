@@ -6,8 +6,8 @@ class AuthInitial extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class AuthAuthenticated extends AuthState {
-  final String role;
-  AuthAuthenticated(this.role);
+  final BaseUser user;
+  AuthAuthenticated(this.user);
 }
 
 class AuthError extends AuthState {

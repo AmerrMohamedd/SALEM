@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salem_app/data/models/report_model.dart';
-import 'package:salem_app/Views/widgets/citizen_role_widgets/home_widgets.dart/report_card.dart';
+import 'package:salem_app/citizen/data/report_model.dart';
+import 'package:salem_app/citizen/view/modules/home_widgets.dart/report_card.dart';
 
 class ReportsList extends StatelessWidget {
   final List<ReportModel> reports;
