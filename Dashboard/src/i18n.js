@@ -246,6 +246,97 @@ const resources = {
             rainWaterAccumulation: "تجمع مياه أمطار",
             traffic: "المرور",
 
+            /* ================= Workflow Page ================= */
+            new: "بلاغات جديدة",
+            assigned: "تم التعيين",
+            review: "مراجعة",
+            done: "تم الانتهاء",
+            noReports: "لا توجد بلاغات",
+            minutes: "دقيقة",
+            hours: "ساعة",
+
+            /* ================= Statistics ================= */
+
+            statistics: "الإحصائيات",
+            thisMonth: "هذا الشهر",
+            last7Days: "آخر 7 أيام",
+
+            reportsDensity: "كثافة البلاغات حسب المناطق",
+            teamPerformance: "أداء الفرق",
+
+            weak: "ضعيف",
+            average: "متوسط",
+            excellent: "ممتاز",
+            highLevel: "عالي",
+            professional: "احترافي",
+
+            /* ================= Notifications ================= */
+
+            searchByName: "ابحث بالاسم...",
+            type: "النوع",
+            status: "الحالة",
+
+            urgent: "عاجلة",
+            normal: "غير عاجلة",
+
+            read: "مقروء",
+            unread: "غير مقروء",
+
+            name: "الاسم",
+            email: "البريد الإلكتروني",
+            subject: "الموضوع",
+            message: "الرسالة",
+            actions: "الإجراءات",
+
+            newReport: "بلاغ جديد",
+            newReportMessage: "تم استلام بلاغ جديد برجاء المراجعة",
+
+            high: "عالية",
+            medium: "متوسطة",
+            low: "منخفضة",
+
+            newReport: "بلاغ جديد",
+            newReportMessage: "تم استلام بلاغ جديد برجاء المراجعة",
+
+            /* ================= Users Page ================= */
+            searchUsers: "البحث عن الموظفين بالاسم أو البريد الإلكتروني...",
+            addUser: "إضافة موظف جديد",
+            active: "نشط",
+            managers: "المديرون",
+            employees: "الموظفون",
+            fieldStaff: "الميدانيون",
+            distribution: "مسؤولو التوزيع",
+            searchUsers: "البحث عن الموظفين بالاسم أو البريد الإلكتروني...",
+            role: "الوظيفة",
+            admin: "المديرون",
+            employee: "الموظفون",
+            fieldWorker: "الميدانيون",
+            distributionOfficer: "مسؤولو التوزيع",
+            addNewUser: "إضافة موظف جديد",
+            active: "نشط",
+
+            /* ================= Settings Page ================= */
+            incidentRules: "إدارة قواعد البلاغات",
+            categories: "تحديد الفئات",
+            addNew: "إضافة جديد",
+            editPriorities: "تعديل الأولويات",
+            sla: "تحديد زمن الخدمة",
+            hour: "ساعة",
+            day: "يوم",
+            overtime: "إجراء تجاوز الزمن",
+            redAlert: "إرسال تنبيه أحمر",
+            reassignTask: "إعادة تعيين المهمة",
+            aiSettings: "إعدادات التحقق الذكي",
+            notificationSettings: "إعدادات الإشعارات",
+            email: "البريد الإلكتروني",
+            simpleUpdate: "تنبيه عند تحديث بسيط",
+            assignNotify: "تنبيه عند التعيين",
+            electricityS: "⚡ كهرباء",
+            waterS: "💧 مياه",
+            lightingS: "💡 إنارة",
+            roadsS: "🛣 طرق",
+            edit: "تعديل",
+            add: "إضافة",
         }
     },
 
@@ -513,14 +604,101 @@ const resources = {
             asphaltCracks: "Asphalt Cracks",
             speedBumpDamage: "Speed Bump Damage",
             rainWaterAccumulation: "Rainwater Accumulation",
-
             traffic: "Traffic Department",
 
+            /* ================= Workflow Page ================= */
+            new: "New Reports",
+            assigned: "Assigned",
+            review: "Review",
+            done: "Completed",
+            noReports: "No Reports",
+            minutes: "minutes",
+            hours: "hour",
+
+            /* ================= Statistics ================= */
+
+            statistics: "Statistics",
+            thisMonth: "This Month",
+            last7Days: "Last 7 Days",
+
+            reportsDensity: "Reports Density by Area",
+            teamPerformance: "Team Performance",
+
+            weak: "Weak",
+            average: "Average",
+            excellent: "Excellent",
+            highLevel: "High",
+            professional: "Professional",
+
+            /* ================= Notifications ================= */
+
+            searchByName: "Search by name...",
+            type: "Type",
+            status: "Status",
+
+            urgent: "Urgent",
+            normal: "Normal",
+
+            read: "Read",
+            unread: "Unread",
+
+            name: "Name",
+            email: "Email",
+            subject: "Subject",
+            message: "Message",
+            actions: "Actions",
+
+            newReport: "New Report",
+            newReportMessage: "A new report has been received. Please review.",
+
+            high: "High",
+            medium: "Medium",
+            low: "Low",
+
+            newReport: "New Report",
+            newReportMessage: "A new report has been received. Please review.",
+
+            /* ================= Users Page ================= */
+            searchUsers: "Search employees by name or email...",
+            addUser: "Add New User",
+            active: "Active",
+            managers: "Managers",
+            employees: "Employees",
+            fieldStaff: "Field Staff",
+            distribution: "Distribution Officers",
+            searchUsers: "Search employees by name or email...",
+            role: "Role",
+            admin: "Admins",
+            employee: "Employees",
+            fieldWorker: "Field Workers",
+            distributionOfficer: "Distribution Officers",
+            addNewUser: "Add New User",
+            active: "Active",
 
 
-        
 
-
+            /* ================= Settings Page ================= */
+            incidentRules: "Incident Rules Management",
+            categories: "Categories",
+            addNew: "Add New",
+            editPriorities: "Edit Priorities",
+            sla: "Service Level Time",
+            hour: "Hour",
+            day: "Day",
+            overtime: "Overtime Action",
+            redAlert: "Send Red Alert",
+            reassignTask: "Reassign Task",
+            aiSettings: "AI Verification Settings",
+            notificationSettings: "Notification Settings",
+            email: "Email",
+            simpleUpdate: "Notify on Minor Update",
+            assignNotify: "Notify on Assignment",
+            electricityS: "⚡ Electricity",
+            waterS: "💧 Water",
+            lightingS: "💡 Lighting",
+            roadsS: "🛣 Roads",
+            edit: "Edit",
+            add: "Add",
         }
     }
 };

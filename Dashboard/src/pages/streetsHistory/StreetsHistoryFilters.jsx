@@ -21,12 +21,13 @@ function StreetsHistoryFilters({
     return (
         <div
             dir={isArabic ? "rtl" : "ltr"}
-            className="flex items-center gap-3 mb-6">
+            className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 mb-6">
 
             {/*  Search */}
             <div
                 className={`flex items-center gap-2 bg-white px-3 py-1 rounded-full
-                shadow-[0_2px_4px_rgba(0,0,0,0.12)] w-[860px] ${focused ? "ring-2 ring-[#2DDBC9]" : ""}`}>
+                shadow-[0_2px_4px_rgba(0,0,0,0.12)] w-full lg:flex-1
+ ${focused ? "ring-2 ring-[#2DDBC9]" : ""}`}>
                 <img
                     src={searchIcon}
                     alt="search"
@@ -55,7 +56,8 @@ function StreetsHistoryFilters({
                         onDateChange(newDate);
                     }}
                     placeholderText={t("dateFilter")}
-                    className={`h-7 w-40 text-sm text-gray-900 border border-gray-200 rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                    className={`h-7w-full lg:w-40
+                    text-sm text-gray-900 border border-gray-200 rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.12)]
                     focus:outline-none focus:ring-2 focus:ring-[#2DDBC9] cursor-pointer ${isArabic ? "text-right pr-8" : "text-left pl-8"}`}/>
                      
                 <img

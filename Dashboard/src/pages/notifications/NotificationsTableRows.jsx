@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import trashIcon from "../../assets/trash.png";
 import arrowIcon from "../../assets/arrow-right.png";
 
@@ -7,48 +8,70 @@ function NotificationsTableRows({
     onDelete,
     onGo,
 }) {
+    const { i18n } = useTranslation();
+    const isArabic = i18n.language === "ar";
+
     const priorityColor = {
-        عالية: "bg-red-500",
-        متوسطة: "bg-yellow-400",
-        منخفضة: "bg-green-500",
+        high: "bg-red-500",
+        medium: "bg-yellow-400",
+        low: "bg-green-500",
     };
 
     return (
-        <div className="bg-white rounded-xl shadow mt-2 divide-y overflow-x-auto">
+        <div
+            dir={isArabic ? "rtl" : "ltr"}
+            className="bg-white rounded-xl shadow mt-2 divide-y overflow-x-auto">
             {notifications.map((item) => (
-                <div key={item.id}
-                    className="  relative grid grid-cols-5 items-center px-2 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs md:text-sm gap-1 sm:gap-2">
-                    {/* شريط الأولوية */}
-                    <div className={`absolute right-0 top-0 h-full w-1 rounded-tr-xl rounded-br-xl ${priorityColor[item.priority]}`}/>
+                <div
+                    key={item.id}
+                    className="relative grid grid-cols-5 items-center px-4 py-3 text-sm">
+                    {/* Priority Bar */}
+                    <div
+                        className={`absolute ${isArabic ? "right-0" : "left-0"
+                            } top-0 h-full w-1 ${isArabic
+                                ? "rounded-tr-xl rounded-br-xl"
+                                : "rounded-tl-xl rounded-bl-xl"
+                            } ${priorityColor[item.priority]}`}
+                    />
 
-                    {/* الاسم + checkbox */}
-                    <div className="flex items-center gap-2 text-right pr-2">
+                    {/* Name + Checkbox */}
+                    <div
+                        className={`flex items-center gap-2 ${isArabic ? "text-right pr-3" : "text-left pl-3"
+                        }`}>
                         <input
                             type="checkbox"
                             checked={item.selected}
                             onChange={() => onSelect(item.id)}
                         />
+
                         <span className="font-semibold truncate">
-                            {item.name}
+                            {item.name[i18n.language]}
                         </span>
                     </div>
 
-                    <div className="truncate text-center">
+                    {/* Email */}
+                    <div className="text-center truncate">
                         {item.email}
                     </div>
 
-                    <div className="truncate text-center font-semibold">
-                        {item.subject}
+                    {/* Subject */}
+                    <div className="text-center font-semibold truncate">
+                        {item.subject[i18n.language]}
                     </div>
 
-                    <div className="truncate text-center text-gray-500">
-                        {item.message}
+                    {/* Message */}
+                    <div className="text-center text-gray-500 truncate">
+                        {item.message[i18n.language]}
                     </div>
 
-                    {/* الإجراءات */}
+                    {/* Actions */}
                     <div className="flex justify-center items-center gap-3">
                         <button onClick={() => onGo(item.reportId)}>
-                            <img src={arrowIcon} className="w-4 h-4" />
+                            <img
+                                src={arrowIcon}
+                                className={`w-4 h-4 ${!isArabic ? "rotate-180" : ""
+                                }`}
+                            />
                         </button>
 
                         <button onClick={() => onDelete(item.id)}>

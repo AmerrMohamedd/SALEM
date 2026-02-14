@@ -1,98 +1,80 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import WorkflowHeader from "./WorkflowHeader";
-import WorkflowColumn from "./WorkflowColumn";
-import EmptyWork from "./EmptyWork";
-
-/* ========= Mock Data ========= */
-const allReports = [
-    { id: 1, status: "new", title: "كابل مقطوع", location: "مدينة نصر", time: "8 دقائق", priority: "عالية" },
-    { id: 2, status: "assigned", title: "حفرة طريق", location: "المعادي", time: "15 دقيقة", priority: "متوسطة" },
-    { id: 3, status: "inProgress", title: "كسر ماسورة", location: "الدقي", time: "20 دقيقة", priority: "منخفضة" },
-    { id: 4, status: "review", title: "عمود إنارة", location: "شبرا", time: "5 دقائق", priority: "عالية" },
-    { id: 5, status: "done", title: "كابل كهرباء", location: "مدينة نصر", time: "1 ساعة", priority: "متوسطة" },
-    { id: 6, status: "new", title: "كابل مقطوع", location: "مدينة نصر", time: "8 دقائق", priority: "عالية" },
-    { id: 7, status: "assigned", title: "حفرة طريق", location: "المعادي", time: "15 دقيقة", priority: "متوسطة" },
-    { id: 8, status: "inProgress", title: "كسر ماسورة", location: "الدقي", time: "20 دقيقة", priority: "منخفضة" },
-];
-
-/* ========= Columns ========= */
-const columns = [
-    { key: "new", title: "بلاغات جديدة" },
-    { key: "assigned", title: "تم التعيين" },
-    { key: "inProgress", title: "جاري التنفيذ" },
-    { key: "review", title: "مراجعة" },
-    { key: "done", title: "تم الانتهاء" },
-];
+import WorkflowCard from "./WorkflowCard";
+import { getWorkflowReports } from "../../services/workflowService";
 
 function WorkflowPage() {
+    const { t, i18n } = useTranslation();
     const [page, setPage] = useState(1);
-    const itemsPerPage = 5;
+    const totalPages = 50;
 
-    // 👇 البلاغات بتزيد بالطول
-    const visibleReports = allReports.slice(0, page * itemsPerPage);
+    const allReports = getWorkflowReports();
 
-    const hasAnyReports = visibleReports.length > 0;
+    const visibleReports = page === 1 ? allReports : [];
+
+    const columns = [
+        { key: "new", title: t("newReports") },
+        { key: "assigned", title: t("assigned") },
+        { key: "inProgress", title: t("inProgress") },
+        { key: "review", title: t("underReview") },
+        { key: "done", title: t("solved") },
+    ];
+
+    const orderedColumns =
+        i18n.language === "ar" ? columns : [...columns].reverse();
 
     return (
         <div className="flex flex-col gap-6">
-            {/* Header */}
-            <WorkflowHeader />
 
-            {hasAnyReports ? (
-                <div
-                    className="
-                    grid gap-4
-                    grid-cols-1
-                    sm:grid-cols-3
-                    lg:grid-cols-5
-                "
-                >
-                    {columns.map((col) => (
-                        <WorkflowColumn
-                            key={col.key}
-                            data={visibleReports.filter(
-                                (report) => report.status === col.key
+            {/* ===== Header ===== */}
+            <WorkflowHeader reports={visibleReports} />
+
+            {/* ===== Columns ===== */}
+            <div className=" grid gap-4 grid-cols-1 sm:grid-cols-3 lg:grid-cols-5">
+                {orderedColumns.map((col) => {
+                    const columnReports = visibleReports.filter(
+                        (report) => report.status === col.key
+                    );
+
+                    return (
+                        <div key={col.key}
+                            className="bg-gray-100 rounded-xl p-3 flex flex-col gap-3"> 
+                            {columnReports.length > 0 ? (
+                                columnReports.map((report) => (
+                                    <WorkflowCard key={report.id} report={report} />
+                                ))
+                            ) : (
+                                <p className="text-xs text-gray-400 text-center">
+                                    {t("noReports")}
+                                </p>
                             )}
-                        />
-                    ))}
-                </div>
-            ) : (
-                <div className="flex-1 flex items-center justify-center">
-                    <EmptyWork />
-                </div>
-            )}
+                        </div>
+                    );
+                })}
+            </div>
 
             {/* ===== Pagination ===== */}
             <div
-                dir="rtl"
-                className="
-                mt-6
-                flex flex-col-reverse sm:flex-row
-                items-center justify-between
-                gap-3
-                text-xs sm:text-sm
-            "
-            >
-                {/* 👇 ثابتة 50 */}
+                dir={i18n.language === "ar" ? "rtl" : "ltr"}
+                className="flex justify-between items-center mt-6 text-sm">
                 <span className="text-gray-500">
-                    صفحة {page} من 50
+                    {t("page")} {page} {t("of")} {totalPages}
                 </span>
 
                 <div className="flex gap-2">
                     <button
                         disabled={page === 1}
                         onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                        className="px-3 py-1.5 rounded-lg border hover:bg-gray-100 disabled:opacity-40"
-                    >
-                        السابق
+                        className="px-3 py-1 rounded-lg border disabled:opacity-40">
+                        {t("previous")}
                     </button>
 
                     <button
-                        disabled={page === 50}
-                        onClick={() => setPage((p) => p + 1)}
-                        className="px-3 py-1.5 rounded-lg border hover:bg-gray-100"
-                    >
-                        التالي
+                        disabled={page === totalPages}
+                        onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                        className="px-3 py-1 rounded-lg border disabled:opacity-40">
+                        {t("next")}
                     </button>
                 </div>
             </div>
