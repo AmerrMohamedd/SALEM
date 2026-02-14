@@ -72,6 +72,7 @@ class LoginView(APIView):
             role = None
             department_name = None
             region_name = None
+            phone_number = None
 
 
             if user.user_type == 'employee' and hasattr(user, 'employee_profile'):
@@ -86,6 +87,11 @@ class LoginView(APIView):
 
             elif user.user_type == 'citizen':
                 role = "citizen"
+
+                if hasattr(user, 'citizen_profile') and user.citizen_profile.phone_number:
+                    phone_number = user.citizen_profile.phone_number
+
+
             
             return Response({
                 "message": "تم تسجيل الدخول بنجاح",
@@ -100,7 +106,8 @@ class LoginView(APIView):
                     "national_id": user.national_id, 
                     "role": role,
                     "department": department_name,
-                    "region": region_name,        
+                    "region": region_name,  
+                    "phone_number": phone_number     
                 }
             }, status=status.HTTP_200_OK)
         
