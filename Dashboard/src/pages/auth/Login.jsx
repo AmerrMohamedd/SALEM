@@ -30,17 +30,26 @@ function Login() {
             </p>
 
             <form
-                className="space-y-4"
-                onSubmit={async (e) => {
-                    e.preventDefault();
-                    try {
-                        const data = await login(nationalId, password);
-                        localStorage.setItem("token", data.token);
-                        navigate("/dashboard", { replace: true });
-                    } catch {
-                        alert("Error");
-                    }
-                }}>
+    className="space-y-4"
+    onSubmit={async (e) => {
+        e.preventDefault();
+        try {
+            const data = await login({
+                national_id: nationalId,
+                password: password
+            });
+
+            localStorage.setItem("access", data.tokens.access);
+            localStorage.setItem("refresh", data.tokens.refresh);
+            localStorage.setItem("user", JSON.stringify(data.user_info));
+
+            navigate("/dashboard", { replace: true });
+        } catch (error) {
+            console.log("LOGIN ERROR:", error.response?.data);
+            alert("Login failed");
+        }
+    }}>
+
                 <div>
                     <label className="block text-sm mb-1">
                         {t("nationalId")}

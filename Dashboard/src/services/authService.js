@@ -1,27 +1,19 @@
-const BASE_URL = "https://69401730993d68afba6af174.mockapi.io";
-export async function login(nationalId, password) {
-  const response = await fetch(`${BASE_URL}/users`);
-  const users = await response.json();
+import api from "./api";
 
-  console.log("Entered:", nationalId, password);
-  console.log("Users from API:", users);
+export const signup = async (data) => {
+    const response = await api.post("/signup/", data);
+    return response.data;
+};
 
-  const user = users.find((u) => {
-    console.log("Checking user:", u);
-    return (
-      String(u.nationalId) === String(nationalId) &&
-      String(u.password) === String(password)
-    );
-  });
+export const getSignupMeta = async () => {
+    const response = await api.get("/registration-data/");
+    return response.data;
+};
 
-  console.log("Matched user:", user);
 
-  if (!user) {
-    throw new Error("خطأ في البيانات");
-  }
 
-  return {
-    token: "fake-token",
-    user,
-  };
-}
+export const login = async (data) => {
+    const response = await api.post("/login/", data);
+    return response.data;
+};
+

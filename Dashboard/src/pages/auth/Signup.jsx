@@ -1,16 +1,65 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { signup, getSignupMeta } from "../../services/authService";
 
 function Signup() {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
+    const navigate = useNavigate();
 
     const [name, setName] = useState("");
     const [nationalId, setNationalId] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const [department, setDepartment] = useState("");
+    const [region, setRegion] = useState("");
+    const [role, setRole] = useState("");
+
+    const [departments, setDepartments] = useState([]);
+    const [regions, setRegions] = useState([]);
+    const [roles, setRoles] = useState([]);
+
+    useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const data = await getSignupMeta(); 
+            // endpoint بيرجع departments, regions, roles
+
+            setDepartments(data.departments || []);
+            setRegions(data.regions || []);
+            setRoles(data.roles || []);
+        } catch (error) {
+            console.error("Fetch Error:", error);
+        }
+    };
+
+    fetchData();
+}, []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const payload = {
+            username: name,
+            email: email,
+            password: password,
+            user_type: "employee",
+            national_id: nationalId,
+            department: Number(department),
+            region: Number(region),           // ID
+            role: role                // string like "admin"
+        };
+
+        try {
+            await signup(payload);
+            navigate("/login");
+        } catch (error) {
+            console.log("ERROR DATA:", error.response?.data);
+        }
+    };
 
     return (
         <motion.div
@@ -23,7 +72,7 @@ function Signup() {
                 {t("signupTitle")}
             </h2>
 
-            <form className="space-y-5 text-sm">
+            <form onSubmit={handleSubmit} className="space-y-5 text-sm">
 
                 {/* Name */}
                 <div>
@@ -72,7 +121,6 @@ function Signup() {
                     />
                 </div>
 
-
                 {/* Password */}
                 <div>
                     <label className="block mb-1 font-medium">
@@ -100,14 +148,17 @@ function Signup() {
                         </label>
 
                         <select
+                            value={department}
+                            onChange={(e) => setDepartment(e.target.value)}
                             className="w-full px-3 py-1 border rounded-md bg-white text-sm
                             transition-colors duration-200 hover:border-[#2DDBC9]  focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]">
-                            <option value=""></option>
-                            <option value="roads">{t("roads")}</option>
-                            <option value="water">{t("water")}</option>
-                            <option value="electricity">{t("electricity")}</option>
-                            <option value="lighting">{t("lighting")}</option>
 
+                            <option value=""></option>
+                            {departments.map((dept) => (
+                                <option key={dept.id} value={dept.id}>
+                                    {dept.department_name}
+                                </option>
+                            ))}
                         </select>
                     </div>
 
@@ -117,34 +168,42 @@ function Signup() {
                         </label>
 
                         <select
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}
                             className="w-full px-3 py-1 border rounded-md bg-white text-sm
                             transition-colors duration-200 hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]">
-                            <option value=""></option>
-                            <option value="managers">{t("managers")}</option>
-                            <option value="employees">{t("employees")}</option>
-                            <option value="fieldStaff">{t("fieldStaff")}</option>
-                            <option value="distributionOfficers">{t("distributionOfficers")}</option>
 
+                            <option value=""></option>
+                            {roles.map((rol) => (
+                                <option key={rol.id} value={rol.id}>
+                                    {rol.name}
+                                </option>
+                            ))}
                         </select>
                     </div>
-
                 </div>
 
-                {/* City */}
+                {/* Region Select بدل input */}
                 <div>
                     <label className="block mb-1 font-medium">
                         {t("city")}
                     </label>
-                    <input
-                        type="text"
-                        placeholder={t("enterCity")}
+
+                    <select
+                        value={region}
+                        onChange={(e) => setRegion(e.target.value)}
                         className="w-full px-3 py-2 border rounded-md transition-colors duration-200
-                        hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"
-                    />
+                        hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]">
+
+                        <option value=""></option>
+                        {regions.map((reg) => (
+                            <option key={reg.id} value={reg.id}>
+                                {reg.region_name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
-
-                {/* Submit */}
                 <motion.button
                     type="submit"
                     whileHover={{ scale: 1.015 }}
@@ -157,10 +216,9 @@ function Signup() {
 
             </form>
 
-            {/* Login Link */}
             <div className="mt-4 text-center text-xs">
                 {t("alreadyHaveAccount")}
-                <Link  to="/login"
+                <Link to="/login"
                     className="text-[#00816F] font-semibold mr-1 hover:text-[#2DDBC9]">
                     {t("loginButton")}
                 </Link>
