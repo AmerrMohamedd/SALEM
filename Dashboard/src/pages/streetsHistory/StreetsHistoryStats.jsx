@@ -3,31 +3,47 @@ import clockIcon from "../../assets/icons/clock.png";
 import mostFreqIcon from "../../assets/icons/most-freq.png";
 import totalRepIcon from "../../assets/icons/total-rep.png";
 
-function StreetsHistoryStats() {
+function formatDuration(duration) {
+    if (!duration) return "-";
+
+    // duration جاي string زي: "4:50:00"
+    const parts = duration.split(":");
+    if (parts.length < 2) return duration;
+
+    const hours = parseInt(parts[0], 10);
+    const minutes = parseInt(parts[1], 10);
+
+    return `${hours} ${hours === 1 ? "hour" : "hours"} ${minutes} ${minutes === 1 ? "minute" : "minutes"}`;
+}
+
+function StreetsHistoryStats({ stats }) {
     const { t } = useTranslation();
 
-    const stats = [
+    const total = stats?.total_incidents ?? 0;
+    const mostCommon = stats?.most_common_priority ?? "-";
+    const avgTime = formatDuration(stats?.average_resolution_time);
+
+    const cards = [
         {
             title: t("avgStatusTime"),
-            value: t("mock_avgTimeValue"),
+            value: avgTime,
             icon: clockIcon,
         },
         {
             title: t("mostFrequentProblem"),
-            value: "2,004",
-            description: t("mock_mostFrequentDesc"),
+            value: mostCommon,
             icon: mostFreqIcon,
         },
         {
             title: t("totalReportsCount"),
-            value: "2,004",
+            value: total,
             icon: totalRepIcon,
         },
     ];
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {stats.map((item, index) => (
+            {cards.map((item, index) => (
                 <div
                     key={index}
                     className="bg-gradient-to-t from-[#00816F] to-[#2DDBC9]
@@ -49,11 +65,6 @@ function StreetsHistoryStats() {
                         <span className="text-lg font-extrabold">
                             {item.value}
                         </span>
-                        {item.description && (
-                            <span className="text-[11px] opacity-80">
-                                {item.description}
-                            </span>
-                        )}
                     </div>
                 </div>
             ))}

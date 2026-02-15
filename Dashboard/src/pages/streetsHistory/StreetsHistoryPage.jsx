@@ -11,11 +11,9 @@ import { getStreetsHistory } from "../../services/streetshistoryService";
 function StreetsHistoryPage() {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
-    const [records, setRecords] = useState([]);
 
-    useEffect(() => {
-        getStreetsHistory().then(setRecords);
-    }, []);
+    const [records, setRecords] = useState([]);
+    const [stats, setStats] = useState(null);
 
     const [selectedReport, setSelectedReport] = useState(null);
     const [openDetails, setOpenDetails] = useState(false);
@@ -24,49 +22,62 @@ function StreetsHistoryPage() {
     const [searchId, setSearchId] = useState("");
     const [filterDate, setFilterDate] = useState(null);
     const [filterCategory, setFilterCategory] = useState("");
-    /* ===== Pagination ===== */
+
     const [page, setPage] = useState(1);
-    const firstPageCount = 7;
-    const rowsPerPage = 10;
-    const totalPages = 50;
+    const [totalPages, setTotalPages] = useState(1);
 
-    /* ===== Filters (local filter on fetched records) ===== */
-    const filteredRecords = records.filter((item) => {
-        const matchId = !searchId || String(item.id).includes(searchId);
-        const matchCategory = !filterCategory || item.category === filterCategory;
-        const dateStr = filterDate ? filterDate.toLocaleDateString("en-GB").replaceAll("/", "-") : "";
-        const matchDate = !filterDate || item.date === dateStr;
-        return matchId && matchCategory && matchDate;
-    });
+    useEffect(() => {
+        let isMounted = true;
 
-    /* ===== Pagination Logic ===== */
-    let visibleReports = [];
+        const loadData = async () => {
+            const params = {
+                page,
+                street: searchId || undefined,
+                priority: filterCategory || undefined,
+                date: filterDate
+                    ? filterDate.toISOString().split("T")[0]
+                    : undefined
+            };
 
-    if (page === 1) {
-        visibleReports = filteredRecords.slice(0, firstPageCount);
-    } else {
-        const startIndex =
-            firstPageCount + (page - 2) * rowsPerPage;
-        const endIndex = startIndex + rowsPerPage;
+            try {
+                const data = await getStreetsHistory(params);
 
-        visibleReports = filteredRecords.slice(startIndex, endIndex);
-    }
+                if (!isMounted) return;
+
+                setRecords(data.results?.results || []);
+                setStats(data.results?.stats || null);
+
+                const totalCount = data.count || 0;
+                setTotalPages(Math.ceil(totalCount / 10) || 1);
+
+            } catch (error) {
+                console.error("History Fetch Error:", error);
+            }
+        };
+
+        loadData();
+
+        return () => {
+            isMounted = false;
+        };
+
+    }, [page, searchId, filterDate, filterCategory]);
 
     return (
         <>
             <StreetsHistoryFilters
-                onSearchChange={setSearchId}
-                onDateChange={setFilterDate}
-                onCategoryChange={setFilterCategory}
+                onSearchChange={(val) => { setSearchId(val); setPage(1); }}
+                onDateChange={(val) => { setFilterDate(val); setPage(1); }}
+                onCategoryChange={(val) => { setFilterCategory(val); setPage(1); }}
             />
 
-            <StreetsHistoryStats />
+            <StreetsHistoryStats stats={stats} />
 
             <div className="mt-4">
                 <StreetsHistoryTable />
 
                 <StreetsHistoryTableRows
-                    records={visibleReports}
+                    records={records}
                     onView={(report) => {
                         setSelectedReport(report);
                         setOpenDetails(true);
@@ -74,10 +85,10 @@ function StreetsHistoryPage() {
                     }}
                 />
 
-                {/* Pagination */}
                 <div
                     dir={isArabic ? "rtl" : "ltr"}
                     className="flex justify-between items-center mt-4 text-sm">
+
                     <span className="text-gray-500">
                         {t("page")} {page} {t("of")} {totalPages}
                     </span>
@@ -104,18 +115,18 @@ function StreetsHistoryPage() {
                         </button>
                     </div>
                 </div>
-
             </div>
 
-            {/* ===== Details Modal ===== */}
             {openDetails && selectedReport && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
                     <div className="absolute inset-0 backdrop-blur-sm"></div>
 
                     <div className="relative bg-white w-[90%] max-w-6xl h-[85vh] rounded-2xl p-6">
-                        <button onClick={() => {
-                            setOpenDetails(false);
-                            setShowMap(false);}}
+                        <button
+                            onClick={() => {
+                                setOpenDetails(false);
+                                setShowMap(false);
+                            }}
                             className="absolute top-4 left-4 text-green-800 text-xl font-bold">
                             ✕
                         </button>

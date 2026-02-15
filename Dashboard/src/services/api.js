@@ -37,3 +37,23 @@ api.interceptors.response.use(
 );
 
 export default api;
+
+// screen 4 - get incident history with params and auth
+export const getIncidentHistory = async (params = {}, token) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/incidents/history/`,
+      {
+        params: params,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("History API Error:", error);
+    throw error;
+  }
+};

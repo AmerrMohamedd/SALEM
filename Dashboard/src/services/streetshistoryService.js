@@ -8,19 +8,20 @@ function mapHistoryToRecord(item, i) {
         "closed": "solved",
         "rejected": "rejected",
     };
+
     const s = String(item.status ?? "").toLowerCase();
     const status = statusMap[s] ?? "inProgress";
 
-    const date = item.created_at?.split?.("T")?.[0] ?? item.date ?? "";
+    const date = item.created_at?.split?.("T")?.[0] ?? "";
     const dateFormatted = date ? date.split("-").reverse().join("-") : "";
 
     return {
         id: String(item.id ?? i),
         date: dateFormatted,
-        category: item.title ?? item.category ?? "report",
+        category: item.title ?? "report",
         status,
-        repairTime: item.repair_time ?? "noTime",
-        process: item.department_name ?? item.entity ?? "roads",
+        repairTime: item.resolution_time ?? "noTime",
+        process: "roads",
         location: item.location ?? "",
     };
 }
@@ -28,15 +29,31 @@ function mapHistoryToRecord(item, i) {
 export async function getStreetsHistory(params = {}) {
     try {
         const res = await getIncidentHistory(params);
-        const list = res?.results ?? res?.data ?? (Array.isArray(res) ? res : []);
-        return list.map(mapHistoryToRecord);
+
+        // Pagination structure handling
+        const count = res?.count ?? 0;
+        const stats = res?.results?.stats ?? null;
+        const rawList = res?.results?.results ?? [];
+
+        const mapped = rawList.map(mapHistoryToRecord);
+
+        return {
+            count,
+            stats,
+            records: mapped
+        };
+
     } catch (err) {
         console.error("Streets history API error:", err);
-        return [];
+        return {
+            count: 0,
+            stats: null,
+            records: []
+        };
     }
 }
 
 export async function getStreetHistoryById(id) {
-    const list = await getStreetsHistory();
-    return list.find((r) => String(r.id) === String(id)) ?? null;
+    const data = await getStreetsHistory();
+    return data.records.find((r) => String(r.id) === String(id)) ?? null;
 }

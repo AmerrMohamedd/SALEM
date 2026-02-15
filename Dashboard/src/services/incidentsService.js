@@ -1,4 +1,6 @@
 import api from "./api";
+import axios from "axios";
+
 
 /* ================= Incident Statuses ================= */
 export const getIncidentStatuses = async () => {
@@ -70,12 +72,28 @@ export const changeIncidentStatus = async (incidentId, status) => {
 };
 
 /* ================= Incident History ================= */
+
 export const getIncidentHistory = async (params = {}) => {
-    const { street = "", date = "", priority = "" } = params;
-    const { data } = await api.get("/incidents/history/", {
-        params: { street, date, priority },
-    });
-    return data;
+    const cleanParams = Object.fromEntries(
+        Object.entries(params).filter(
+            entry =>
+                entry[1] !== undefined &&
+                entry[1] !== "" &&
+                entry[1] !== null
+        )
+    );
+
+    const response = await axios.get(
+        "http://127.0.0.1:8000/incidents/history/",
+        {
+            params: cleanParams,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+    );
+
+    return response.data;
 };
 
 /* ================= Dashboard APIs ================= */
