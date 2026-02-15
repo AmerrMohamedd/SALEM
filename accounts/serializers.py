@@ -137,10 +137,4 @@ class LoginSerializer(serializers.ModelSerializer):
 
 
         attrs['user'] = user
-        return attrs
-
- # show all department of report   
-class DepartmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Department
-        fields = ["id", "department_name"]    
+        return attrs    

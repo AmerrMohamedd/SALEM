@@ -340,11 +340,10 @@ class ChangeIncidentStatusAPIView(APIView):
         # تحديث الحالة
         incident.status = new_status
 
-        # لو الحالة الجديدة "تم الحل" نحط وقت الحل
-        if new_status.name == "تم الحل":
+        # لو الحالة الجديدة "Completed" (تم الحل) نحط وقت الحل
+        if new_status.name in ("Completed", "تم الحل", "Resolved"):
             incident.resolved_at = timezone.now()
         else:
-            # لو خرج من تم الحل لأي حالة تانية
             incident.resolved_at = None
 
         incident.save()

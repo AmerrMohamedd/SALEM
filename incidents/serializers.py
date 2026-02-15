@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import IncidentImage, IncidentStatus, Incident
 
 
-
 # show all status of report
 class IncidentStatusSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,55 +31,44 @@ class IncidentImageSerializer(serializers.ModelSerializer):
 
 class IncidentListSerializer(serializers.ModelSerializer):
     status = serializers.CharField(source="status.name", read_only=True)
-    department = serializers.CharField(
-        source="assigned_to.employee_profile.department.department_name",
-        read_only=True
-    )
+    department = serializers.SerializerMethodField()
 
     class Meta:
         model = Incident
         fields = [
             "id",
+            "title",
             "description",
             "location",
             "created_at",
             "status",
             "department",
             "priority",
-        ]        
+        ]
+
+    def get_department(self, obj):
+        if not obj.assigned_to or not hasattr(obj.assigned_to, "employee_profile"):
+            return None
+        try:
+            return obj.assigned_to.employee_profile.department.department_name
+        except Exception:
+            return None        
 
 
-# Details
+# Details (safe for React: handles missing assigned_to and verification)
 class IncidentDetailSerializer(serializers.ModelSerializer):
     status = serializers.CharField(source="status.name", read_only=True)
-
-    department = serializers.CharField(
-        source="assigned_to.employee_profile.department.department_name",
-        read_only=True
-    )
-
-    priority = serializers.CharField(
-        source="get_priority_display",
-        read_only=True
-    )
-
-
+    department = serializers.SerializerMethodField()
+    priority = serializers.CharField(source="get_priority_display", read_only=True)
     images = IncidentImageSerializer(many=True, read_only=True)
-
-    verification_image = serializers.ImageField(
-        source="verification.image",
-        read_only=True
-    )
-
-    verification_comment = serializers.CharField(
-        source="verification.comment",
-        read_only=True
-    )
+    verification_image = serializers.SerializerMethodField()
+    verification_comment = serializers.SerializerMethodField()
 
     class Meta:
         model = Incident
         fields = [
             "id",
+            "title",
             "description",
             "location",
             "created_at",
@@ -93,3 +81,23 @@ class IncidentDetailSerializer(serializers.ModelSerializer):
             "verification_image",
             "verification_comment",
         ]
+
+    def get_department(self, obj):
+        if not obj.assigned_to or not hasattr(obj.assigned_to, "employee_profile"):
+            return None
+        try:
+            return obj.assigned_to.employee_profile.department.department_name
+        except Exception:
+            return None
+
+    def get_verification_image(self, obj):
+        try:
+            return obj.verification.image if obj.verification else None
+        except Exception:
+            return None
+
+    def get_verification_comment(self, obj):
+        try:
+            return obj.verification.comment if obj.verification else None
+        except Exception:
+            return None

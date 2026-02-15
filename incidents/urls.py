@@ -11,7 +11,8 @@ from .views import (
     DashboardStatsAPIView,
     WeeklyStatsAPIView,
     RecentIncidentsAPIView,
-    IncidentsByDepartmentAPIView
+    IncidentsByDepartmentAPIView,
+    IncidentHistoryAPIView,
 )
 
 urlpatterns = [
@@ -27,9 +28,5 @@ urlpatterns = [
     path("dashboard/by-department/", IncidentsByDepartmentAPIView.as_view()),
     path("<int:pk>/accept/", AcceptIncidentAPIView.as_view(), name="accept-incident"),
     path("<int:pk>/change-status/", ChangeIncidentStatusAPIView.as_view(), name="change-status"),
-
-
-
-
-
+    path("history/", IncidentHistoryAPIView.as_view(), name="incident-history"),
 ]

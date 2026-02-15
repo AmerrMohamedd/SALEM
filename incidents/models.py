@@ -10,7 +10,7 @@ class IncidentStatus(models.Model):
     def __str__(self):
         return self.name
 
-# Report contain title, description, latitude, latitude, status and created at
+# Report: title, description, latitude, longitude, status, created_at
 class Incident(models.Model):
     citizen = models.ForeignKey(
     settings.AUTH_USER_MODEL,
