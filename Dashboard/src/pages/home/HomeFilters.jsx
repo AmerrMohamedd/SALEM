@@ -17,8 +17,10 @@ function HomeFilters() {
             className="-mt-3 flex justify-start relative">
             <DatePicker
                 selected={date}
-                onChange={(date) => setDate(date)}
+                onChange={(d) => setDate(d)}
                 placeholderText={t("calendar")}
+                dateFormat="yyyy-MM-dd"
+                showTimeSelect={false}
                 className={`h-7 w-30 text-sm text-gray-900 border border-gray-200 rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.12)]
                 focus:outline-none focus:ring-2 focus:ring-[#2DDBC9] cursor-pointer ${isArabic ? "text-right pr-8" : "text-left pl-8"}`}
             />

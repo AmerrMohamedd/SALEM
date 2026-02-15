@@ -1,11 +1,15 @@
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getStatisticsCards } from "../../services/statisticsService";
 
 function StatisticsCards({ filters }) {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
+    const [data, setData] = useState({ solvedToday: 0, transferred: 0, inReview: 0, open: 0, total: 0 });
 
-    const data = getStatisticsCards(filters.period);
+    useEffect(() => {
+        getStatisticsCards(filters.period).then(setData);
+    }, [filters.period]);
 
     const cards = [
         { title: t("solvedToday"), value: data.solvedToday },

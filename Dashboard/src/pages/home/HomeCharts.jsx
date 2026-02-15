@@ -87,9 +87,9 @@ function ChartsHome({ lineData = [], donutData = [] }) {
 
 
     return (
-        <div dir={isArabic ? "ltr" : "rtl"} className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
+        <div dir={isArabic ? "ltr" : "rtl"} className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 sm:gap-6 w-full min-w-0">
             {/* ================= Line Chart ================= */}
-            <div className="bg-white rounded-2xl p-3 shadow-sm">
+            <div className="bg-white rounded-xl sm:rounded-2xl p-3 shadow-sm min-w-0 overflow-hidden">
 
                 {/* Header */}
                 <div
@@ -126,7 +126,8 @@ function ChartsHome({ lineData = [], donutData = [] }) {
 
 
                 {/* Chart */}
-                <ResponsiveContainer width="100%" height={220}>
+                <div className="w-full h-[200px] sm:h-[220px] min-h-[180px]">
+                <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={lineData}>
                         <XAxis
                             dataKey="day"
@@ -167,11 +168,13 @@ function ChartsHome({ lineData = [], donutData = [] }) {
                         />
                     </LineChart>
                 </ResponsiveContainer>
+                </div>
             </div>
 
             {/* ================= Donut Chart ================= */}
-            <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center">
-                <ResponsiveContainer width={300} height={230}>
+            <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-sm flex flex-col items-center min-w-0">
+                <div className="w-full max-w-[280px] sm:max-w-[300px] mx-auto h-[200px] sm:h-[230px]">
+                <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
                             data={donutData}
@@ -201,9 +204,10 @@ function ChartsHome({ lineData = [], donutData = [] }) {
                         </text>
                     </PieChart>
                 </ResponsiveContainer>
+                </div>
 
                 {/* ===== Legend ===== */}
-                <div className="flex items-center justify-center gap-4 mt-2 text-xs">
+                <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mt-2 text-xs">
                     {donutData.map((item, i) => (
                         <div key={i} className="flex items-center gap-1 text-gray-600">
                             <span className="w-2.5 h-2.5 rounded-full"

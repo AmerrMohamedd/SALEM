@@ -1,23 +1,42 @@
+import { getIncidentHistory } from "./incidentsService";
 
-const records = [
-    { id: "1000", date: "30-10-2025", category: "roadHole", status: "inProgress", repairTime: "threeDays", process: "roads" },
-    { id: "1001", date: "29-10-2025", category: "pipeBreak", status: "solved", repairTime: "twoDays", process: "water" },
-    { id: "1002", date: "28-10-2025", category: "lightingPole", status: "solved", repairTime: "oneDay", process: "electricity" },
-    { id: "1003", date: "27-10-2025", category: "roadHole", status: "inProgress", repairTime: "noTime", process: "roads" },
-    { id: "1004", date: "26-10-2025", category: "waterLeak", status: "rejected", repairTime: "noTime", process: "water" },
-    { id: "1005", date: "25-10-2025", category: "groundSubsidence", status: "solved", repairTime: "fourDays", process: "roads" },
-    { id: "1006", date: "24-10-2025", category: "trafficSignalFailure", status: "inProgress", repairTime: "noTime", process: "traffic" },
-    { id: "1007", date: "23-10-2025", category: "lightingPoleDamage", status: "solved", repairTime: "threeDays", process: "electricity" },
-    { id: "1008", date: "22-10-2025", category: "sewageBlockage", status: "inProgress", repairTime: "noTime", process: "water" },
-    { id: "1009", date: "21-10-2025", category: "asphaltCracks", status: "solved", repairTime: "fiveDays", process: "roads" },
-    { id: "1010", date: "20-10-2025", category: "speedBumpDamage", status: "rejected", repairTime: "noTime", process: "traffic" },
-    { id: "1011", date: "19-10-2025", category: "rainWaterAccumulation", status: "inProgress", repairTime: "noTime", process: "roads" },
-];
+function mapHistoryToRecord(item, i) {
+    const statusMap = {
+        "in progress": "inProgress",
+        "in_progress": "inProgress",
+        "solved": "solved",
+        "closed": "solved",
+        "rejected": "rejected",
+    };
+    const s = String(item.status ?? "").toLowerCase();
+    const status = statusMap[s] ?? "inProgress";
 
-export const getStreetsHistory = () => {
-    return records;
-};
+    const date = item.created_at?.split?.("T")?.[0] ?? item.date ?? "";
+    const dateFormatted = date ? date.split("-").reverse().join("-") : "";
 
-export const getStreetHistoryById = (id) => {
-    return records.find((r) => r.id === id);
-};
+    return {
+        id: String(item.id ?? i),
+        date: dateFormatted,
+        category: item.title ?? item.category ?? "report",
+        status,
+        repairTime: item.repair_time ?? "noTime",
+        process: item.department_name ?? item.entity ?? "roads",
+        location: item.location ?? "",
+    };
+}
+
+export async function getStreetsHistory(params = {}) {
+    try {
+        const res = await getIncidentHistory(params);
+        const list = res?.results ?? res?.data ?? (Array.isArray(res) ? res : []);
+        return list.map(mapHistoryToRecord);
+    } catch (err) {
+        console.error("Streets history API error:", err);
+        return [];
+    }
+}
+
+export async function getStreetHistoryById(id) {
+    const list = await getStreetsHistory();
+    return list.find((r) => String(r.id) === String(id)) ?? null;
+}

@@ -8,10 +8,11 @@ import ReportDetailsPage from "./ReportDetailsPage";
 import ReportMapPage from "./ReportMapPage";
 import { getReports } from "../../services/reportsService";
 
-
 function ReportsPage() {
     const { t } = useTranslation();
-    const reports = getReports();
+    const [reports, setReports] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(1);
 
     /* ===== Filters State ===== */
     const [searchId, setSearchId] = useState("");
@@ -19,43 +20,36 @@ function ReportsPage() {
     const [selectedEntity, setSelectedEntity] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("");
 
+    useEffect(() => {
+        let cancelled = false;
+        queueMicrotask(() => { if (!cancelled) setLoading(true); });
+        getReports({
+            search: searchId,
+            status: selectedStatus,
+            department: selectedEntity,
+            dateFrom: selectedDate ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}` : "",
+            dateTo: "",
+        }).then((data) => {
+            if (!cancelled) {
+                setReports(data ?? []);
+                setPage(1);
+                setLoading(false);
+            }
+        }).catch(() => { if (!cancelled) setLoading(false); });
+        return () => { cancelled = true; };
+    }, [searchId, selectedStatus, selectedEntity, selectedDate]);
+
+    /* ========= Reports from API are already filtered ========= */
+    const filteredReports = reports;
 
     /* ===== Pagination ===== */
-    const [page, setPage] = useState(1);
     const rowsPerPage = 12;
-    const totalPages = 50;
+    const totalPages = Math.max(1, Math.ceil(filteredReports.length / rowsPerPage));
 
     /* ===== Details Modal ===== */
     const [openDetails, setOpenDetails] = useState(false);
     const [showMap, setShowMap] = useState(false);
     const [selectedReport, setSelectedReport] = useState(null);
-
-
-    /* ========= FILTER LOGIC ========= */
-    const filteredReports = reports.filter((report) => {
-        const entityMatch =
-            selectedEntity === "" || report.entity === selectedEntity;
-
-        const statusMatch =
-            selectedStatus === "" || report.status === selectedStatus;
-
-        const dateMatch =
-            !selectedDate ||
-            report.date ===
-            `${selectedDate.getFullYear()}-${String(
-                selectedDate.getMonth() + 1
-            ).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`;
-
-        const searchMatch =
-            searchId === "" ||
-            report.id.toString().includes(searchId.trim());
-
-        return entityMatch && statusMatch && dateMatch && searchMatch;
-    });
-
-    useEffect(() => {
-        setPage(1);
-    }, [searchId, selectedDate, selectedEntity, selectedStatus]);
 
     /* ========= Pagination ========= */
     const startIndex = (page - 1) * rowsPerPage;
@@ -76,7 +70,9 @@ function ReportsPage() {
                 <div className="mt-4">
                     <ReportsTableHeader />
 
-                    {hasData ? (
+                    {loading ? (
+                        <p className="py-8 text-center text-gray-500">{t("loading") || "Loading..."}</p>
+                    ) : hasData ? (
                         <>
                             <ReportsTableRows
                                 reports={visibleReports}

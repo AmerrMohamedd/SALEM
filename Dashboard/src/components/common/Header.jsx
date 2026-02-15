@@ -32,7 +32,7 @@ function Header({ onLogout, onMenuClick }) {
     return (
         <header
             dir={i18n.language === "ar" ? "rtl" : "ltr"}
-            className="h-16 bg-white border-b flex items-center justify-between px-6"
+            className="h-14 sm:h-16 bg-white border-b flex items-center justify-between px-4 sm:px-6 gap-2"
         >
             {/* زرار الموبايل */}
             <button
@@ -42,11 +42,11 @@ function Header({ onLogout, onMenuClick }) {
                 ☰
             </button>
 
-            <h2 className="font-extrabold text-gray-800">
+            <h2 className="font-extrabold text-gray-800 text-sm sm:text-base truncate flex-1 min-w-0 mx-2">
                 {title}
             </h2>
 
-            <div className="flex items-center gap-6 text-sm">
+            <div className="flex items-center gap-2 sm:gap-6 text-xs sm:text-sm flex-shrink-0">
                 <button
                     onClick={changeLanguage}
                     className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition"

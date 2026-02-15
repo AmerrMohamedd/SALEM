@@ -28,8 +28,7 @@ function HomePage() {
     if (!data) return null;
 
     return (
-        <div key={i18n.language} className="flex flex-col gap-4 pb-8">
-            <HomeFilters />
+        <div key={i18n.language} className="flex flex-col gap-3 sm:gap-4 pb-6 sm:pb-8 w-full max-w-full overflow-x-hidden">
             <HomeCards data={data.cards} />
             <HomeCharts lineData={data.lineChart}
                 donutData={data.donutChart} />

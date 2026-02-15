@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import StreetsHistoryFilters from "./StreetsHistoryFilters";
 import StreetsHistoryStats from "./StreetsHistoryStats";
@@ -11,9 +11,11 @@ import { getStreetsHistory } from "../../services/streetshistoryService";
 function StreetsHistoryPage() {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
-    const records = getStreetsHistory();
+    const [records, setRecords] = useState([]);
 
-
+    useEffect(() => {
+        getStreetsHistory().then(setRecords);
+    }, []);
 
     const [selectedReport, setSelectedReport] = useState(null);
     const [openDetails, setOpenDetails] = useState(false);
@@ -22,25 +24,18 @@ function StreetsHistoryPage() {
     const [searchId, setSearchId] = useState("");
     const [filterDate, setFilterDate] = useState(null);
     const [filterCategory, setFilterCategory] = useState("");
-
     /* ===== Pagination ===== */
     const [page, setPage] = useState(1);
     const firstPageCount = 7;
     const rowsPerPage = 10;
     const totalPages = 50;
 
-    /* ===== Filters ===== */
+    /* ===== Filters (local filter on fetched records) ===== */
     const filteredRecords = records.filter((item) => {
-        const matchId =
-            !searchId || item.id.includes(searchId);
-
-        const matchCategory =
-            !filterCategory || item.category === filterCategory;
-
-        const matchDate =
-            !filterDate ||
-            item.date ===
-            filterDate.toLocaleDateString("en-GB").replaceAll("/", "-");
+        const matchId = !searchId || String(item.id).includes(searchId);
+        const matchCategory = !filterCategory || item.category === filterCategory;
+        const dateStr = filterDate ? filterDate.toLocaleDateString("en-GB").replaceAll("/", "-") : "";
+        const matchDate = !filterDate || item.date === dateStr;
         return matchId && matchCategory && matchDate;
     });
 

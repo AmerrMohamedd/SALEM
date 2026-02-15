@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { signup, getSignupMeta } from "../../services/authService";
+import { error as swalError, success as swalSuccess } from "../../utils/swal";
 
 function Signup() {
     const { t, i18n } = useTranslation();
@@ -55,9 +56,11 @@ function Signup() {
 
         try {
             await signup(payload);
+            await swalSuccess("Success", "Account created. You can now login.");
             navigate("/login");
-        } catch (error) {
-            console.log("ERROR DATA:", error.response?.data);
+        } catch (err) {
+            const msg = err.response?.data?.detail ?? err.response?.data?.message ?? Object.values(err.response?.data || {})?.[0]?.[0] ?? "Signup failed";
+            swalError("Signup failed", typeof msg === "string" ? msg : JSON.stringify(msg));
         }
     };
 

@@ -4,12 +4,13 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { login } from "../../services/authService";
+import { error as swalError } from "../../utils/swal";
 
 function Login() {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
 
-    const [nationalId, setNationalId] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
@@ -35,8 +36,8 @@ function Login() {
         e.preventDefault();
         try {
             const data = await login({
-                national_id: nationalId,
-                password: password
+                email,
+                password
             });
 
             localStorage.setItem("access", data.tokens.access);
@@ -44,21 +45,21 @@ function Login() {
             localStorage.setItem("user", JSON.stringify(data.user_info));
 
             navigate("/dashboard", { replace: true });
-        } catch (error) {
-            console.log("LOGIN ERROR:", error.response?.data);
-            alert("Login failed");
+        } catch (err) {
+            const msg = err.response?.data?.detail ?? err.response?.data?.message ?? "Login failed";
+            swalError("Login failed", typeof msg === "string" ? msg : JSON.stringify(msg));
         }
     }}>
 
                 <div>
                     <label className="block text-sm mb-1">
-                        {t("nationalId")}
+                        {t("email")}
                     </label>
                     <input
-                        type="text"
-                        placeholder={t("enterNationalId")}
+                        type="email"
+                        placeholder={t("enterEmail")}
                         className="w-full px-3 py-2 border rounded-md text-sm"
-                        onChange={(e) => setNationalId(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
 

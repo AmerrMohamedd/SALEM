@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import WorkflowHeader from "./WorkflowHeader";
 import WorkflowCard from "./WorkflowCard";
@@ -7,11 +7,15 @@ import { getWorkflowReports } from "../../services/workflowService";
 function WorkflowPage() {
     const { t, i18n } = useTranslation();
     const [page, setPage] = useState(1);
-    const totalPages = 50;
+    const [allReports, setAllReports] = useState([]);
+    const totalPages = Math.max(1, Math.ceil(allReports.length / 12) || 1);
 
-    const allReports = getWorkflowReports();
+    useEffect(() => {
+        getWorkflowReports().then(setAllReports);
+    }, []);
 
-    const visibleReports = page === 1 ? allReports : [];
+    const startIdx = (page - 1) * 12;
+    const visibleReports = allReports.slice(startIdx, startIdx + 12);
 
     const columns = [
         { key: "new", title: t("newReports") },

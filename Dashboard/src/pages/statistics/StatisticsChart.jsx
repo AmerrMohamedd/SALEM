@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
     LineChart,
@@ -52,11 +52,17 @@ function HeatLayer({ points }) {
 function ChartsSection() {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
-
-    const lineData = getLineChartData();
-    const donutData = getDonutData();
+    const [lineData, setLineData] = useState([]);
+    const [donutData, setDonutData] = useState([]);
     const teamPerformanceData = getTeamPerformance();
     const heatPoints = getHeatPoints();
+
+    useEffect(() => {
+        Promise.all([getLineChartData(), getDonutData()]).then(([line, donut]) => {
+            setLineData(Array.isArray(line) && line.length ? line : []);
+            setDonutData(Array.isArray(donut) && donut.length ? donut : [{ name: "empty", value: 0, color: "#ccc" }]);
+        });
+    }, []);
 
     const total = donutData.reduce((s, i) => s + i.value, 0);
 

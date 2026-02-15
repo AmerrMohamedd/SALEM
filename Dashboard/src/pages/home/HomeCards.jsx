@@ -23,24 +23,24 @@ function HomeCards({ data }) {
     return (
         <div
             dir={isArabic ? "rtl" : "ltr"}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
             {cards.map((card, index) => (
                 <div
                     key={index}
-                    className={`bg-white rounded-lg px-3 py-2 flex items-center shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                    className={`bg-white rounded-lg px-2 sm:px-3 py-2 flex items-center shadow-[0_2px_4px_rgba(0,0,0,0.12)]
                     ${isArabic ? "justify-between text-right" : "justify-between text-left"}`}>
                     {/* Text */}
-                    <div>
-                        <p className="text-[11px] text-gray-500">
+                    <div className="min-w-0 flex-1">
+                        <p className="text-[10px] sm:text-[11px] text-gray-500 truncate">
                             {card.title}
                         </p>
-                        <p className="text-lg font-extrabold text-[#00816F]">
+                        <p className="text-base sm:text-lg font-extrabold text-[#00816F] truncate">
                             {card.value}
                         </p>
                     </div>
 
                     {/* Icon */}
-                    <img src={card.icon} alt="" className="w-8 h-8" />
+                    <img src={card.icon} alt="" className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" />
                 </div>
             ))}
         </div>

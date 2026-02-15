@@ -3,15 +3,15 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import Sidebar from "../components/common/Sidebar";
 import Header from "../components/common/Header";
+import { logout } from "../services/authService";
 
 function DashboardLayout() {
     const navigate = useNavigate();
     const { i18n } = useTranslation();
     const [openSidebar, setOpenSidebar] = useState(false);
 
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+    const handleLogout = async () => {
+        await logout();
         navigate("/login", { replace: true });
     };
 
@@ -34,7 +34,7 @@ function DashboardLayout() {
                     onMenuClick={() => setOpenSidebar(true)}
                 />
 
-                <main className="flex-1 p-6 overflow-x-hidden">
+                <main className="flex-1 p-4 sm:p-6 overflow-x-hidden min-w-0">
                     <Outlet />
                 </main>
             </div>
