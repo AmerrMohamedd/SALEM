@@ -355,13 +355,14 @@ class ChangeIncidentStatusAPIView(APIView):
             "resolved_at": incident.resolved_at
         })
     
-# Screen 4
 class IncidentHistoryAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
 
-        queryset = Incident.objects.filter(resolved_at__isnull=False)
+        queryset = Incident.objects.filter(
+            resolved_at__isnull=False
+        ).order_by("-created_at")
 
         # -------------------------
         # Filters
@@ -403,15 +404,18 @@ class IncidentHistoryAPIView(APIView):
         ).aggregate(avg_duration=Avg("duration"))
 
         # -------------------------
-        # Data List
+        # Pagination
         # -------------------------
+
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+
+        page = paginator.paginate_queryset(queryset, request)
 
         incidents_data = []
 
-        for incident in queryset:
-            resolution_time = None
-            if incident.resolved_at:
-                resolution_time = incident.resolved_at - incident.created_at
+        for incident in page:
+            resolution_time = incident.resolved_at - incident.created_at
 
             incidents_data.append({
                 "id": incident.id,
@@ -420,13 +424,13 @@ class IncidentHistoryAPIView(APIView):
                 "priority": incident.priority,
                 "created_at": incident.created_at,
                 "resolved_at": incident.resolved_at,
-                "resolution_time": str(resolution_time) if resolution_time else None
+                "resolution_time": str(resolution_time)
             })
 
-        return Response({
+        return paginator.get_paginated_response({
             "stats": {
                 "total_incidents": total_incidents,
-                "most_common_priority": most_common_priority,
+                "most_common_priority": most_common_priority["priority"] if most_common_priority else None,
                 "average_resolution_time": str(avg_resolution["avg_duration"]) if avg_resolution["avg_duration"] else None
             },
             "results": incidents_data
