@@ -56,11 +56,11 @@ function Signup() {
 
         try {
             await signup(payload);
-            await swalSuccess("Success", "Account created. You can now login.");
+            await swalSuccess(t("signupSuccess"), t("signupSuccessDesc"));
             navigate("/login");
         } catch (err) {
-            const msg = err.response?.data?.detail ?? err.response?.data?.message ?? Object.values(err.response?.data || {})?.[0]?.[0] ?? "Signup failed";
-            swalError("Signup failed", typeof msg === "string" ? msg : JSON.stringify(msg));
+            const msg = err.response?.data?.detail ?? err.response?.data?.message ?? Object.values(err.response?.data || {})?.[0]?.[0] ?? t("signupFailed");
+            swalError(t("signupFailed"), typeof msg === "string" ? msg : JSON.stringify(msg));
         }
     };
 

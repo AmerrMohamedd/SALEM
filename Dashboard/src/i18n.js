@@ -15,6 +15,14 @@ const resources = {
             loginButton: "تسجيل الدخول",
             noAccount: "ليس لديك حساب؟",
             signup: "التسجيل",
+            loginFailed: "فشل تسجيل الدخول",
+            loginFailedDesc: "تحقق من الرقم القومي وكلمة المرور",
+            signupSuccess: "تم إنشاء الحساب",
+            signupSuccessDesc: "يمكنك الآن تسجيل الدخول",
+            signupFailed: "فشل التسجيل",
+            sessionExpired: "انتهت الجلسة",
+            swalConfirm: "موافق",
+            swalCancel: "إلغاء",
 
             /* ================= SignUp ================= */
             signupTitle: "سجل باستخدام الرقم القومي",
@@ -353,6 +361,14 @@ const resources = {
             loginButton: "Login",
             noAccount: "Don't have an account?",
             signup: "Sign Up",
+            loginFailed: "Login failed",
+            loginFailedDesc: "Check national ID and password",
+            signupSuccess: "Account created",
+            signupSuccessDesc: "You can now log in",
+            signupFailed: "Signup failed",
+            sessionExpired: "Session expired",
+            swalConfirm: "OK",
+            swalCancel: "Cancel",
 
             /* ================= SignUp ================= */
             signupTitle: "Register using National ID",

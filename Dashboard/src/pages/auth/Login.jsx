@@ -10,7 +10,7 @@ function Login() {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
 
-    const [email, setEmail] = useState("");
+    const [nationalId, setNationalId] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
@@ -36,9 +36,9 @@ function Login() {
         e.preventDefault();
         try {
             const data = await login({
-                email,
-                password
-            });
+            national_id: nationalId,
+            password
+});
 
             localStorage.setItem("access", data.tokens.access);
             localStorage.setItem("refresh", data.tokens.refresh);
@@ -46,20 +46,22 @@ function Login() {
 
             navigate("/dashboard", { replace: true });
         } catch (err) {
-            const msg = err.response?.data?.detail ?? err.response?.data?.message ?? "Login failed";
-            swalError("Login failed", typeof msg === "string" ? msg : JSON.stringify(msg));
+            const msg = err.response?.data?.detail ?? err.response?.data?.message ?? t("loginFailedDesc");
+            swalError(t("loginFailed"), typeof msg === "string" ? msg : JSON.stringify(msg));
         }
     }}>
 
                 <div>
                     <label className="block text-sm mb-1">
-                        {t("email")}
+                        {t("nationalId")}
                     </label>
                     <input
-                        type="email"
-                        placeholder={t("enterEmail")}
+                        type="text"
+                        maxLength="14"
+                        inputMode="numeric"
+                        placeholder={t("enterNationalId")}
                         className="w-full px-3 py-2 border rounded-md text-sm"
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setNationalId(e.target.value)}
                     />
                 </div>
 

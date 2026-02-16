@@ -2,7 +2,7 @@ import axios from "axios";
 import { toast } from "../utils/swal";
 
 // Base URL - use env or default to backend
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const BASE_URL = import.meta.env.VITE_API_URL || "https://abdullahgouda.pythonanywhere.com";
 
 const api = axios.create({
     baseURL: BASE_URL,
@@ -27,7 +27,8 @@ api.interceptors.response.use(
             localStorage.removeItem("refresh");
             localStorage.removeItem("user");
             if (!window.location.pathname.includes("/login")) {
-                toast({ icon: "error", title: "Session expired", timer: 2000 }).then(() => {
+                const isAr = typeof window !== "undefined" && localStorage.getItem("lang") === "ar";
+                toast({ icon: "error", title: isAr ? "انتهت الجلسة" : "Session expired", timer: 2000 }).then(() => {
                     window.location.href = "/login";
                 });
             }

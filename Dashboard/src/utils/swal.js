@@ -1,22 +1,31 @@
 import Swal from "sweetalert2";
 
-const defaultOptions = {
+const isRTL = () => typeof window !== "undefined" && localStorage.getItem("lang") === "ar";
+
+const defaultOptions = () => ({
     confirmButtonColor: "#00816F",
     cancelButtonColor: "#6b7280",
-};
+    customClass: {
+        popup: isRTL() ? "swal2-rtl" : "",
+        title: isRTL() ? "swal2-rtl" : "",
+        htmlContainer: isRTL() ? "swal2-rtl" : "",
+        confirmButton: isRTL() ? "swal2-rtl" : "",
+        cancelButton: isRTL() ? "swal2-rtl" : "",
+    },
+});
 
 export const toast = (options = {}) => {
     return Swal.fire({
         toast: true,
-        position: "top-end",
+        position: isRTL() ? "top-start" : "top-end",
         showConfirmButton: false,
         timer: 3000,
         timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
+        didOpen: (toastEl) => {
+            toastEl.onmouseenter = Swal.stopTimer;
+            toastEl.onmouseleave = Swal.resumeTimer;
         },
-        ...defaultOptions,
+        ...defaultOptions(),
         ...options,
     });
 };
@@ -26,7 +35,7 @@ export const success = (title, text) => {
         icon: "success",
         title: title ?? "Success",
         text: text ?? "",
-        ...defaultOptions,
+        ...defaultOptions(),
     });
 };
 
@@ -35,7 +44,7 @@ export const error = (title, text) => {
         icon: "error",
         title: title ?? "Error",
         text: text ?? "",
-        ...defaultOptions,
+        ...defaultOptions(),
     });
 };
 
@@ -45,7 +54,7 @@ export const confirm = (options = {}) => {
         showCancelButton: true,
         confirmButtonText: options.confirmText ?? "Confirm",
         cancelButtonText: options.cancelText ?? "Cancel",
-        ...defaultOptions,
+        ...defaultOptions(),
         ...options,
     });
 };

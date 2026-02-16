@@ -37,3 +37,12 @@ body,
     -webkit-overflow-scrolling: touch;
   }
 }
+
+/* SweetAlert2 RTL (عربي) */
+.swal2-rtl {
+  direction: rtl;
+  text-align: right;
+}
+.swal2-rtl .swal2-actions {
+  flex-direction: row-reverse;
+}
