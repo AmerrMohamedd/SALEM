@@ -30,18 +30,11 @@ export async function getStreetsHistory(params = {}) {
     try {
         const res = await getIncidentHistory(params);
 
-        // Pagination structure handling
         const count = res?.count ?? 0;
-        const stats = res?.results?.stats ?? null;
-        const rawList = res?.results?.results ?? [];
-
-        const mapped = rawList.map(mapHistoryToRecord);
-
-        return {
-            count,
-            stats,
-            records: mapped
-        };
+        const stats = res?.results?.stats ?? res?.stats ?? null;
+        const rawList = Array.isArray(res?.results) ? res.results : (res?.results?.results ?? []);
+        const records = rawList.map(mapHistoryToRecord);
+        return { count, stats, records };
 
     } catch (err) {
         console.error("Streets history API error:", err);

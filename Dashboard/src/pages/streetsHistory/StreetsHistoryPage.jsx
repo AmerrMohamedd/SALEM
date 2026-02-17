@@ -44,11 +44,11 @@ function StreetsHistoryPage() {
 
                 if (!isMounted) return;
 
-                setRecords(data.results?.results || []);
-                setStats(data.results?.stats || null);
+                setRecords(data.records ?? []);
+                setStats(data.stats ?? null);
 
-                const totalCount = data.count || 0;
-                setTotalPages(Math.ceil(totalCount / 10) || 1);
+                const totalCount = data.count ?? 0;
+                setTotalPages(Math.max(1, Math.ceil(totalCount / 10)));
 
             } catch (error) {
                 console.error("History Fetch Error:", error);

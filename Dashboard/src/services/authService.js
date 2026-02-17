@@ -17,12 +17,15 @@ export const login = async (data) => {
 
 export const logout = async () => {
     const refresh = localStorage.getItem("refresh");
-    if (refresh) {
-        try {
+
+    try {
+        if (refresh) {
             await api.post("/logout/", { refresh });
-        } catch (_) {}
+        }
+    } catch (error) {
+        console.error("Logout API error:", error);
+    } finally {
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
     }
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    localStorage.removeItem("user");
 };

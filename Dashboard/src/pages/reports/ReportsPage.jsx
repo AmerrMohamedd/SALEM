@@ -6,29 +6,39 @@ import ReportsTableRows from "./ReportsTableRows";
 import EmptyState from "./EmptyState";
 import ReportDetailsPage from "./ReportDetailsPage";
 import ReportMapPage from "./ReportMapPage";
-import { getReports } from "../../services/reportsService";
+import { getReports, getReportById } from "../../services/reportsService";
+import { getDepartments } from "../../services/incidentsService";
+import { getIncidentStatuses } from "../../services/incidentsService";
 
 function ReportsPage() {
     const { t } = useTranslation();
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
+    const [departments, setDepartments] = useState([]);
+    const [statuses, setStatuses] = useState([]);
 
     /* ===== Filters State ===== */
     const [searchId, setSearchId] = useState("");
     const [selectedDate, setSelectedDate] = useState(null);
-    const [selectedEntity, setSelectedEntity] = useState("");
+    const [selectedDepartmentId, setSelectedDepartmentId] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("");
+
+    useEffect(() => {
+        getDepartments().then((d) => setDepartments(Array.isArray(d) ? d : d?.results ?? []));
+        getIncidentStatuses().then((s) => setStatuses(Array.isArray(s) ? s : s?.results ?? []));
+    }, []);
 
     useEffect(() => {
         let cancelled = false;
         queueMicrotask(() => { if (!cancelled) setLoading(true); });
+        const dateFrom = selectedDate ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}` : "";
         getReports({
-            search: searchId,
-            status: selectedStatus,
-            department: selectedEntity,
-            dateFrom: selectedDate ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}` : "",
-            dateTo: "",
+            search: searchId.trim() || undefined,
+            status: selectedStatus || undefined,
+            department: selectedDepartmentId || undefined,
+            dateFrom: dateFrom || undefined,
+            dateTo: undefined,
         }).then((data) => {
             if (!cancelled) {
                 setReports(data ?? []);
@@ -37,7 +47,7 @@ function ReportsPage() {
             }
         }).catch(() => { if (!cancelled) setLoading(false); });
         return () => { cancelled = true; };
-    }, [searchId, selectedStatus, selectedEntity, selectedDate]);
+    }, [searchId, selectedStatus, selectedDepartmentId, selectedDate]);
 
     /* ========= Reports from API are already filtered ========= */
     const filteredReports = reports;
@@ -50,6 +60,7 @@ function ReportsPage() {
     const [openDetails, setOpenDetails] = useState(false);
     const [showMap, setShowMap] = useState(false);
     const [selectedReport, setSelectedReport] = useState(null);
+    const [detailLoading, setDetailLoading] = useState(false);
 
     /* ========= Pagination ========= */
     const startIndex = (page - 1) * rowsPerPage;
@@ -61,9 +72,11 @@ function ReportsPage() {
         <>
             <div className={`px-6 py-4 ${openDetails ? "blur-sm" : ""}`}>
                 <ReportsFilters
+                    departments={departments}
+                    statuses={statuses}
                     onSearchChange={setSearchId}
                     onDateChange={setSelectedDate}
-                    onEntityChange={setSelectedEntity}
+                    onDepartmentChange={setSelectedDepartmentId}
                     onStatusChange={setSelectedStatus}
                 />
 
@@ -76,10 +89,18 @@ function ReportsPage() {
                         <>
                             <ReportsTableRows
                                 reports={visibleReports}
-                                onView={(report) => {
-                                    setSelectedReport(report);
-                                    setOpenDetails(true);
+                                onView={async (report) => {
                                     setShowMap(false);
+                                    setOpenDetails(true);
+                                    setSelectedReport(null);
+                                    setDetailLoading(true);
+                                    try {
+                                        const full = await getReportById(report.id);
+                                        setSelectedReport(full ?? report);
+                                    } catch {
+                                        setSelectedReport(report);
+                                    }
+                                    setDetailLoading(false);
                                 }}
                             />
 
@@ -126,10 +147,14 @@ function ReportsPage() {
                         </button>
 
                         {!showMap ? (
-                            <ReportDetailsPage
-                                report={selectedReport}
-                                onOpenMap={() => setShowMap(true)}
-                            />
+                            detailLoading ? (
+                                <p className="py-12 text-center text-gray-500">{t("loading") || "Loading..."}</p>
+                            ) : (
+                                <ReportDetailsPage
+                                    report={selectedReport}
+                                    onOpenMap={() => setShowMap(true)}
+                                />
+                            )
                         ) : (
                             <ReportMapPage
                                 location={selectedReport?.location}

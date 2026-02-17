@@ -23,6 +23,7 @@ const resources = {
             sessionExpired: "انتهت الجلسة",
             swalConfirm: "موافق",
             swalCancel: "إلغاء",
+            loading: "جاري التحميل...",
 
             /* ================= SignUp ================= */
             signupTitle: "سجل باستخدام الرقم القومي",
@@ -369,6 +370,7 @@ const resources = {
             sessionExpired: "Session expired",
             swalConfirm: "OK",
             swalCancel: "Cancel",
+            loading: "Loading...",
 
             /* ================= SignUp ================= */
             signupTitle: "Register using National ID",

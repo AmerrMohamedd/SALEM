@@ -8,7 +8,9 @@ import filterIcon from "../../assets/icons/filter-icon.png";
 import calendarIcon from "../../assets/icons/calendar.png";
 
 function ReportsFilters({
-    onEntityChange,
+    departments = [],
+    statuses = [],
+    onDepartmentChange,
     onStatusChange,
     onDateChange,
     onSearchChange,
@@ -78,29 +80,38 @@ function ReportsFilters({
                         />
                     </div>
 
-                    {/*  Entity */}
+                    {/*  Department (API: assigned_to__employee_profile__department = ID) */}
                     <select
-                        onChange={(e) => onEntityChange(e.target.value)}
+                        onChange={(e) => onDepartmentChange(e.target.value)}
                         className="h-8 w-40 px-3 text-sm border border-gray-200 rounded-full
                         shadow-[0_2px_4px_rgba(0,0,0,0.12)]
                         focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]">
                         <option value="">{t("entityFilter")}</option>
-                        <option value="roads">{t("roads")}</option>
-                        <option value="water">{t("water")}</option>
-                        <option value="electricity">{t("electricity")}</option>
-                        <option value="lighting">{t("lighting")}</option>
+                        {departments.map((dept) => (
+                            <option key={dept.id} value={dept.id}>
+                                {dept.name ?? dept.department_name ?? dept.title ?? `#${dept.id}`}
+                            </option>
+                        ))}
                     </select>
 
-                    {/*  Status */}
+                    {/*  Status (API: status = ID or name) */}
                     <select
                         onChange={(e) => onStatusChange(e.target.value)}
                         className="h-8 w-40 px-3 text-sm border border-gray-200 rounded-full
                         shadow-[0_2px_4px_rgba(0,0,0,0.12)]
                         focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]">
                         <option value="">{t("statusFilter")}</option>
-                        <option value="inProgress">{t("inProgress")}</option>
-                        <option value="solved">{t("solved")}</option>
-                        <option value="rejected">{t("rejected")}</option>
+                        {statuses.length > 0 ? statuses.map((st) => (
+                            <option key={st.id} value={st.id ?? st.name}>
+                                {st.name ?? st.title ?? `#${st.id}`}
+                            </option>
+                        )) : (
+                            <>
+                                <option value="inProgress">{t("inProgress")}</option>
+                                <option value="solved">{t("solved")}</option>
+                                <option value="rejected">{t("rejected")}</option>
+                            </>
+                        )}
                     </select>
 
                 </div>

@@ -8,22 +8,29 @@ import {
 /* Map API response to UI format */
 function mapStatsToCards(apiStats = {}) {
     return {
-        solvedToday: apiStats.solved_today ?? apiStats.solvedToday ?? 0,
-        transferred: apiStats.transferred ?? 0,
-        inReview: apiStats.in_review ?? apiStats.inReview ?? 0,
-        open: apiStats.open ?? 0,
+        solvedToday: apiStats.resolved_today ?? 0,
+        transferred: apiStats.rejected ?? 0,
+        inReview: apiStats.in_progress ?? 0,
+        open: apiStats.pending ?? 0,
         total: apiStats.total ?? 0,
     };
 }
 
 function mapWeeklyToLineChart(apiData = []) {
     if (Array.isArray(apiData) && apiData.length > 0) {
-        const dayKeys = ["sat", "sun", "mon", "tue", "wed", "thu", "fri"];
-        return apiData.map((item, i) => ({
-            day: item.day ?? dayKeys[i] ?? `day${i}`,
-            value: Number(item.value ?? item.count ?? 0),
-        }));
+        return apiData.map((item) => {
+            const date = new Date(item.day);
+            const day = date
+                .toLocaleDateString("en-US", { weekday: "short" })
+                .toLowerCase();
+
+            return {
+                day: day,
+                value: Number(item.count ?? 0),
+            };
+        });
     }
+
     return [
         { day: "sat", value: 0 },
         { day: "sun", value: 0 },
@@ -35,20 +42,21 @@ function mapWeeklyToLineChart(apiData = []) {
     ];
 }
 
+
 function mapByDeptToDonut(apiData = []) {
     const colors = ["#6C7CFF", "#6FD08C", "#FFB547", "#00C9FF"];
     if (Array.isArray(apiData) && apiData.length > 0) {
         return apiData.map((item, i) => ({
-            name: item.name ?? item.department ?? item.label ?? `dept${i}`,
+            name: item.department || "Unknown",
             value: Number(item.value ?? item.count ?? 0),
             color: item.color ?? colors[i % colors.length],
         }));
     }
     return [
-        { name: "roads", value: 0, color: "#6C7CFF" },
-        { name: "electricity", value: 0, color: "#6FD08C" },
+        { name: "road", value: 0, color: "#6C7CFF" },
+        { name: "elec", value: 0, color: "#6FD08C" },
         { name: "water", value: 0, color: "#FFB547" },
-        { name: "lighting", value: 0, color: "#00C9FF" },
+        { name: "gas", value: 0, color: "#00C9FF" },
     ];
 }
 
@@ -56,11 +64,12 @@ function mapRecentToReports(apiData = []) {
     if (!Array.isArray(apiData)) return [];
     return apiData.map((item) => ({
         id: item.id,
-        date: item.created_at?.split?.("T")?.[0] ?? item.date ?? "",
+        date: item.date?.split?.("T")?.[0] ?? "",
         status: mapApiStatusToUi(item.status),
-        entity: item.department_name ?? item.entity ?? "roads",
+        entity: item.department ?? "roads",
     }));
 }
+
 
 function mapApiStatusToUi(status) {
     if (!status) return "inProgress";
@@ -101,10 +110,10 @@ export const getHomeData = async () => {
                 { day: "fri", value: 0 },
             ],
             donutChart: [
-                { name: "roads", value: 0, color: "#6C7CFF" },
-                { name: "electricity", value: 0, color: "#6FD08C" },
+                { name: "road", value: 0, color: "#6C7CFF" },
+                { name: "elec", value: 0, color: "#6FD08C" },
                 { name: "water", value: 0, color: "#FFB547" },
-                { name: "lighting", value: 0, color: "#00C9FF" },
+                { name: "gas", value: 0, color: "#00C9FF" },
             ],
             reports: [],
             notifications: [],

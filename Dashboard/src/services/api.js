@@ -1,8 +1,8 @@
 import axios from "axios";
 import { toast } from "../utils/swal";
 
-// Base URL - use env or default to backend
-const BASE_URL = import.meta.env.VITE_API_URL || "https://abdullahgouda.pythonanywhere.com";
+// Base URL - use env or default to backend (Postman: base_url)
+export const BASE_URL = import.meta.env.VITE_API_URL || "https://abdullahgouda.pythonanywhere.com";
 
 const api = axios.create({
     baseURL: BASE_URL,
@@ -38,23 +38,3 @@ api.interceptors.response.use(
 );
 
 export default api;
-
-// screen 4 - get incident history with params and auth
-export const getIncidentHistory = async (params = {}, token) => {
-  try {
-    const response = await axios.get(
-      `${BASE_URL}/incidents/history/`,
-      {
-        params: params,
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error("History API Error:", error);
-    throw error;
-  }
-};

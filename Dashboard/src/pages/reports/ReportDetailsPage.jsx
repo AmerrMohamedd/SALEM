@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import avatar from "../../assets/avatar.png";
+import placeholderImg from "../../assets/avatar.png";
 
 export default function ReportDetailsPage({ report, onOpenMap }) {
   const { t, i18n } = useTranslation();
@@ -16,18 +16,18 @@ export default function ReportDetailsPage({ report, onOpenMap }) {
       </h2>
 
       {/* ===== CONTENT ===== */}
-      <div className="flex-1 grid grid-cols-12 gap-6">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
         {/* ===== LEFT : IMAGES ===== */}
-        <div className="col-span-7 space-y-4">
+        <div className="lg:col-span-7 space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <ImageCard title={t("after")} />
-            <ImageCard title={t("before")} />
+            <ImageCard title={t("before")} src={report.beforeImage} />
+            <ImageCard title={t("after")} src={report.afterImage} />
           </div>
 
           <TextArea
             label={t("aiAnalysis")}
-            value={`${t("initialClassification")} ${t(report.category)}`}
+            value={report.aiAnalysis ? `${t("initialClassification")} ${report.aiAnalysis}` : `${t("initialClassification")} ${t(report.category)}`}
           />
 
           <TextArea
@@ -37,7 +37,7 @@ export default function ReportDetailsPage({ report, onOpenMap }) {
         </div>
 
         {/* ===== RIGHT : DETAILS ===== */}
-        <div className="col-span-5 space-y-3">
+        <div className="lg:col-span-5 space-y-3">
           <Field label={t("reportNumber")} value={report.id} />
           <Field label={t("category")} value={t(report.category)} />
           <Field label={t("location")} value={t(report.location)} />
@@ -88,16 +88,17 @@ function Field({ label, value }) {
   );
 }
 
-function ImageCard({ title }) {
+function ImageCard({ title, src }) {
   return (
     <div className="text-center">
       <p className="mb-1 text-sm font-medium text-gray-700">
         {title}
       </p>
       <img
-        src={avatar}
+        src={src || placeholderImg}
         alt={title}
-        className="w-full h-44 object-cover rounded-lg border"
+        className="w-full h-44 object-cover rounded-lg border bg-gray-100"
+        onError={(e) => { e.target.onerror = null; e.target.src = placeholderImg; }}
       />
     </div>
   );

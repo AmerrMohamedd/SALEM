@@ -1,5 +1,4 @@
 import api from "./api";
-import axios from "axios";
 
 
 /* ================= Incident Statuses ================= */
@@ -18,16 +17,13 @@ export const getIncidents = async (params = {}) => {
         dateTo = "",
         ordering = "-created_at",
     } = params;
-    const { data } = await api.get("/incidents/", {
-        params: {
-            search,
-            status,
-            "assigned_to__employee_profile__department": department,
-            "created_at__date__gte": dateFrom,
-            "created_at__date__lte": dateTo,
-            ordering,
-        },
-    });
+    const query = { ordering };
+    if (search) query.search = search;
+    if (status) query.status = status;
+    if (department) query.assigned_to__employee_profile__department = department;
+    if (dateFrom) query["created_at__date__gte"] = dateFrom;
+    if (dateTo) query["created_at__date__lte"] = dateTo;
+    const { data } = await api.get("/incidents/", { params: query });
     return data;
 };
 
@@ -72,28 +68,18 @@ export const changeIncidentStatus = async (incidentId, status) => {
 };
 
 /* ================= Incident History ================= */
-
 export const getIncidentHistory = async (params = {}) => {
-    const cleanParams = Object.fromEntries(
-        Object.entries(params).filter(
-            entry =>
-                entry[1] !== undefined &&
-                entry[1] !== "" &&
-                entry[1] !== null
-        )
-    );
+    const { street = "", date = "", priority = "" } = params;
+    const { data } = await api.get("/incidents/history/", {
+        params: { street, date, priority },
+    });
+    return data;
+};
 
-    const response = await axios.get(
-        "http://127.0.0.1:8000/incidents/history/",
-        {
-            params: cleanParams,
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("access")}`
-            }
-        }
-    );
-
-    return response.data;
+/* ================= Departments (Postman: Department List) ================= */
+export const getDepartments = async () => {
+    const { data } = await api.get("/departments/");
+    return data;
 };
 
 /* ================= Dashboard APIs ================= */
