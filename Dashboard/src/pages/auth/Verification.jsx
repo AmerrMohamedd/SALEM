@@ -2,6 +2,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { error as swalError } from "../../utils/swal";
 
 function Verification() {
     const navigate = useNavigate();
@@ -40,7 +41,14 @@ function Verification() {
                 whileHover={{ scale: 1.015 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.12 }}
-                onClick={() => navigate("/set-new-password")}
+                onClick={() => {
+                    if (!code) {
+                        swalError(t("verificationTitle"), t("enterCode"));
+                        return;
+                    }
+                    localStorage.setItem("reset_token", code);
+                    navigate("/set-new-password");
+                }}
                 className="w-full py-2.5 rounded-xl text-white font-semibold
                 bg-gradient-to-r from-[#00816F] to-[#2DDBC9]">
                 {t("verify")}

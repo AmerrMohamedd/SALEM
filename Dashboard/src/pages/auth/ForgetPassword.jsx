@@ -1,11 +1,16 @@
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { requestPasswordResetToken } from "../../services/authService";
+import { success as swalSuccess, error as swalError } from "../../utils/swal";
 
 function ForgetPassword() {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
     const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false);
 
     return (
         <motion.div
@@ -22,7 +27,11 @@ function ForgetPassword() {
                 {t("forgetPasswordDesc")}
             </p>
 
-            <input type="email" placeholder={t("email")}
+            <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder={t("email")}
                 className="w-full px-4 py-2.5 border rounded-xl text-sm mb-4
                 transition-colors duration-200
                 hover:border-[#2DDBC9] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]" />
@@ -31,10 +40,24 @@ function ForgetPassword() {
                 whileHover={{ scale: 1.015 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.12 }}
-                onClick={() => navigate("/verification")}
+                onClick={async () => {
+                    if (!email) return;
+                    setLoading(true);
+                    try {
+                        await requestPasswordResetToken(email);
+                        localStorage.setItem("reset_email", email);
+                        await swalSuccess(t("sendCode"), t("verificationDesc"));
+                        navigate("/verification");
+                    } catch (err) {
+                        const msg = err.response?.data?.detail ?? err.response?.data?.message ?? "Request failed";
+                        swalError(t("forgetPassword"), typeof msg === "string" ? msg : JSON.stringify(msg));
+                    } finally {
+                        setLoading(false);
+                    }
+                }}
                 className="w-full py-2.5 rounded-xl text-white font-semibold
                 bg-gradient-to-r from-[#00816F] to-[#2DDBC9]">
-                {t("sendCode")}
+                {loading ? (t("loading") || "Loading...") : t("sendCode")}
             </motion.button>
 
             <div className="mt-6 flex justify-between text-xs">

@@ -84,21 +84,27 @@ export const getDepartments = async () => {
 
 /* ================= Dashboard APIs ================= */
 export const getDashboardStats = async () => {
-    const { data } = await api.get("/incidents/dashboard/stats/");
+    const { data } = await api.get("/incidents/stats/");
     return data;
 };
 
 export const getDashboardWeekly = async () => {
-    const { data } = await api.get("/incidents/dashboard/weekly/");
+    const { data } = await api.get("/incidents/weekly/");
     return data;
 };
 
 export const getDashboardRecent = async () => {
-    const { data } = await api.get("/incidents/dashboard/recent/");
+    const { data } = await api.get("/incidents/recent/");
     return data;
 };
 
 export const getDashboardByDepartment = async () => {
-    const { data } = await api.get("/incidents/dashboard/by-department/");
+    const { data } = await api.get("/incidents/by-department/");
+    return data;
+};
+
+/* ================= Workflow Board (Employees only) ================= */
+export const getWorkflowBoard = async () => {
+    const { data } = await api.get("/incidents/workflow/");
     return data;
 };

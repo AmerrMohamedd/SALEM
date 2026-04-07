@@ -1,4 +1,4 @@
-import { getIncidents, getMyIncidents, getIncidentStatuses } from "./incidentsService";
+import { getWorkflowBoard, getMyIncidents, getIncidentStatuses, getIncidents } from "./incidentsService";
 
 /* Map API incident to workflow card format */
 function mapIncidentToWorkflow(inc) {
@@ -36,12 +36,20 @@ function mapIncidentToWorkflow(inc) {
 
 export async function getWorkflowReports() {
     try {
-        const res = await getIncidents({ ordering: "-created_at" });
-        const list = res?.results ?? res?.data ?? (Array.isArray(res) ? res : []);
+        // Preferred: backend workflow board endpoint (employees only)
+        const data = await getWorkflowBoard();
+        const list = data?.results ?? data?.data ?? (Array.isArray(data) ? data : []);
         return list.map(mapIncidentToWorkflow);
     } catch (err) {
-        console.error("Workflow API error:", err);
-        return [];
+        // Fallback to incidents list if workflow endpoint is unavailable
+        try {
+            const res = await getIncidents({ ordering: "-created_at" });
+            const list = res?.results ?? res?.data ?? (Array.isArray(res) ? res : []);
+            return list.map(mapIncidentToWorkflow);
+        } catch {
+            console.error("Workflow API error:", err);
+            return [];
+        }
     }
 }
 

@@ -97,7 +97,7 @@ function ImageCard({ title, src }) {
       <img
         src={src || placeholderImg}
         alt={title}
-        className="w-full h-44 object-cover rounded-lg border bg-gray-100"
+        className="w-full h-64 object-contain rounded-lg border bg-gray-100"
         onError={(e) => { e.target.onerror = null; e.target.src = placeholderImg; }}
       />
     </div>
@@ -113,7 +113,7 @@ function TextArea({ label, value }) {
       <textarea
         disabled
         value={value}
-        className="w-full h-20 rounded-md border p-2 text-sm bg-gray-50 resize-none"
+        className="w-full h-10 rounded-md border p-2 text-sm bg-gray-50 resize-none"
       />
     </div>
   );
