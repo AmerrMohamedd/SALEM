@@ -1,8 +1,11 @@
 from datetime import timedelta
+from collections import defaultdict
+
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from django.utils.dateparse import parse_date
 from django.db.models.functions import TruncDate
-from django.db.models import Count, DurationField, ExpressionWrapper
+from django.db.models import Count, Avg, F, ExpressionWrapper, DurationField
 
 from rest_framework import generics, filters, status
 from rest_framework.permissions import IsAuthenticated
@@ -10,6 +13,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.pagination import PageNumberPagination
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -21,18 +25,16 @@ from .serializers import (
     IncidentSerializer,
     IncidentStatusSerializer,
 )
-from django.db.models import Count, Avg, F, ExpressionWrapper, DurationField
-from django.utils.dateparse import parse_date
 
-
-
-# =========================
-# Core APIs
-# =========================
-
-# Api #1 - Incident Detail
+# =========================================================
+# 🧩 Core APIs
+# =========================================================
 
 class IncidentDetailAPIView(generics.RetrieveAPIView):
+    """
+    Retrieve full details of a single incident.
+    Optimized with select_related + prefetch_related.
+    """
     permission_classes = [IsAuthenticated]
 
     queryset = Incident.objects.select_related(
@@ -43,13 +45,16 @@ class IncidentDetailAPIView(generics.RetrieveAPIView):
 
     serializer_class = IncidentDetailSerializer
 
-# =========================
-# Citizen APIs
-# =========================
 
-# API #1 - Create Incident
+# =========================================================
+# 👤 Citizen APIs
+# =========================================================
 
 class IncidentCreateAPIView(generics.CreateAPIView):
+    """
+    Create a new incident.
+    The citizen is automatically assigned from the authenticated user.
+    """
     permission_classes = [IsAuthenticated]
     queryset = Incident.objects.all()
     serializer_class = IncidentSerializer
@@ -58,9 +63,10 @@ class IncidentCreateAPIView(generics.CreateAPIView):
         serializer.save(citizen=self.request.user)
 
 
-# API #2 - Get My Incidents for citizen
-
 class MyIncidentsAPIView(generics.ListAPIView):
+    """
+    Retrieve all incidents created by the logged-in citizen.
+    """
     permission_classes = [IsAuthenticated]
     serializer_class = IncidentSerializer
 
@@ -68,9 +74,11 @@ class MyIncidentsAPIView(generics.ListAPIView):
         return Incident.objects.filter(citizen=self.request.user)
 
 
-# API #3 - Upload Image
-
 class IncidentImageUploadAPIView(generics.CreateAPIView):
+    """
+    Upload images related to a specific incident.
+    Only the owner of the incident can upload images.
+    """
     permission_classes = [IsAuthenticated]
     serializer_class = IncidentImageSerializer
     parser_classes = [MultiPartParser, FormParser]
@@ -86,12 +94,20 @@ class IncidentImageUploadAPIView(generics.CreateAPIView):
 
         serializer.save(incident=incident)
 
-# =========================
-# Dashboard APIs (Employees Only)
-# =========================        
 
-# Dashboard Api #1 - (Total,Pending,In Progress,Rejected,Resolved Today)
+# =========================================================
+# 📊 Dashboard APIs (Employees Only)
+# =========================================================
+
 class DashboardStatsAPIView(APIView):
+    """
+    Provides dashboard summary statistics:
+    - Total incidents
+    - Pending
+    - In Progress
+    - Rejected
+    - Resolved today (based on resolved_at)
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -100,35 +116,23 @@ class DashboardStatsAPIView(APIView):
 
         today = timezone.now().date()
 
-        total = Incident.objects.count()
-
-        pending = Incident.objects.filter(
-            status__name__iexact="Pending"
-        ).count()
-
-        in_progress = Incident.objects.filter(
-            status__name__iexact="In Progress"
-        ).count()
-
-        rejected = Incident.objects.filter(
-            status__name__iexact="Rejected"
-        ).count()
-
-        resolved_today = Incident.objects.filter(
-            status__name__iexact="Resolved",
-            created_at__date=today
-        ).count()
-
         return Response({
-            "total": total,
-            "pending": pending,
-            "in_progress": in_progress,
-            "rejected": rejected,
-            "resolved_today": resolved_today
+            "total": Incident.objects.count(),
+            "pending": Incident.objects.filter(status__name__iexact="Pending").count(),
+            "in_progress": Incident.objects.filter(status__name__iexact="In Progress").count(),
+            "rejected": Incident.objects.filter(status__name__iexact="Rejected").count(),
+            "resolved_today": Incident.objects.filter(
+                status__name__iexact="Resolved",
+                resolved_at__date=today
+            ).count()
         })
-    
-# Dashboard Api #2 -Line Chart
+
+
 class WeeklyStatsAPIView(APIView):
+    """
+    Returns number of incidents created per day (last 7 days).
+    Used for line chart visualization.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -148,10 +152,12 @@ class WeeklyStatsAPIView(APIView):
         )
 
         return Response(list(data))
-    
 
-# Dashboard Api #3 - latest 4 Recent Incidents
+
 class RecentIncidentsAPIView(APIView):
+    """
+    Returns the latest 3 incidents for quick dashboard preview.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -160,31 +166,29 @@ class RecentIncidentsAPIView(APIView):
 
         incidents = (
             Incident.objects
-            .select_related(
-                "status",
-                "assigned_to__employee_profile__department"
-            )
+            .select_related("status", "assigned_to__employee_profile__department")
             .order_by("-created_at")[:3]
         )
 
-        data = [
+        return Response([
             {
-                "id": incident.id,
-                "date": incident.created_at,
-                "status": incident.status.name,
+                "id": i.id,
+                "date": i.created_at,
+                "status": i.status.name,
                 "department": (
-                    incident.assigned_to.employee_profile.department.department_name
-                    if incident.assigned_to else None
+                    i.assigned_to.employee_profile.department.department_name
+                    if i.assigned_to else None
                 )
             }
-            for incident in incidents
-        ]
+            for i in incidents
+        ])
 
-        return Response(data)    
-    
 
-# Dashboard Api #4 -Pie Chart
 class IncidentsByDepartmentAPIView(APIView):
+    """
+    Returns number of incidents grouped by department.
+    Used for pie chart.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -198,31 +202,27 @@ class IncidentsByDepartmentAPIView(APIView):
             .annotate(count=Count("id"))
         )
 
-        formatted_data = [
+        return Response([
             {
                 "department": item["assigned_to__employee_profile__department__department_name"],
                 "count": item["count"]
             }
             for item in data
-        ]
+        ])
 
-        return Response(formatted_data)
-    
-# =========================
-# Incident List + Filtering
-# =========================
 
-# Dashboard Api #5 - List Incidents and filtering
+# =========================================================
+# 📋 Incident List + Filtering
+# =========================================================
+
 class IncidentListAPIView(generics.ListAPIView):
+    """
+    List incidents with filtering, search, and ordering support.
+    """
     permission_classes = [IsAuthenticated]
-
     serializer_class = IncidentListSerializer
 
-    filter_backends = [
-        DjangoFilterBackend,
-        filters.SearchFilter,
-        filters.OrderingFilter
-    ]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
 
     filterset_fields = {
         "status": ["exact"],
@@ -240,50 +240,46 @@ class IncidentListAPIView(generics.ListAPIView):
         )
 
 
-# Dashboard Api #7 -Get Incident Statuses
 class IncidentStatusListAPIView(generics.ListAPIView):
+    """
+    Returns all available incident statuses.
+    """
     permission_classes = [IsAuthenticated]
     queryset = IncidentStatus.objects.all()
     serializer_class = IncidentStatusSerializer
 
 
-# =========================
-# Employee Workflow APIs
-# =========================
-
+# =========================================================
+# 🔁 Workflow APIs
+# =========================================================
 
 class AcceptIncidentAPIView(APIView):
+    """
+    Assign an incident to the current employee.
+    Only Pending incidents can be accepted.
+    """
     permission_classes = [IsAuthenticated]
 
     def patch(self, request, pk):
         incident = get_object_or_404(Incident, pk=pk)
 
         if not hasattr(request.user, "employee_profile"):
-            raise PermissionDenied("Only employees can accept incidents.")
+            raise PermissionDenied("Employees only.")
 
         if incident.citizen == request.user:
-            raise PermissionDenied("You cannot accept your own incident.")
+            raise PermissionDenied("Cannot accept your own incident.")
 
         if incident.assigned_to:
-            return Response(
-                {"error": "Incident already assigned."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"error": "Already assigned."}, status=400)
 
         if incident.status.name.lower() != "pending":
-            return Response(
-                {"error": "Only pending incidents can be accepted."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"error": "Only pending allowed."}, status=400)
 
         incident.assigned_to = request.user
-
-        assigned_status = IncidentStatus.objects.get(name__iexact="Assigned")
-        incident.status = assigned_status
-
+        incident.status = IncidentStatus.objects.get(name__iexact="Assigned")
         incident.save()
 
-        return Response({"message": "Incident accepted successfully."})
+        return Response({"message": "Accepted successfully."})
 
 
 ALLOWED_TRANSITIONS = {
@@ -292,146 +288,143 @@ ALLOWED_TRANSITIONS = {
     "Review": ["Completed"],
 }
 
-# Dashboard Api #8 -Get Incident Statuses
+
 class ChangeIncidentStatusAPIView(APIView):
+    """
+    Change incident status with strict transition rules.
+    """
     permission_classes = [IsAuthenticated]
 
     def patch(self, request, pk):
         incident = get_object_or_404(Incident, pk=pk)
 
-        # لازم البلاغ يكون اتقبل واتعين لموظف
         if not incident.assigned_to:
-            return Response(
-                {"error": "Incident must be accepted first."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"error": "Accept first."}, status=400)
 
-        # لازم الموظف اللي بيغير الحالة هو نفسه المتعين
         if incident.assigned_to != request.user:
-            raise PermissionDenied("You are not assigned to this incident.")
+            raise PermissionDenied("Not your incident.")
 
         new_status_name = request.data.get("status")
 
-        if not new_status_name:
-            return Response(
-                {"error": "Status is required."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # نجيب الحالة الجديدة
         try:
             new_status = IncidentStatus.objects.get(name__iexact=new_status_name)
         except IncidentStatus.DoesNotExist:
-            return Response(
-                {"error": "Invalid status."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"error": "Invalid status."}, status=400)
 
-        current_status = incident.status.name
-        allowed = ALLOWED_TRANSITIONS.get(current_status, [])
+        allowed = ALLOWED_TRANSITIONS.get(incident.status.name, [])
 
-        # نتحقق من الانتقال المسموح
         if new_status.name not in allowed:
-            return Response(
-                {"error": "Invalid status transition."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"error": "Invalid transition."}, status=400)
 
-        # تحديث الحالة
         incident.status = new_status
-
-        # لو الحالة الجديدة "Completed" (تم الحل) نحط وقت الحل
-        if new_status.name in ("Completed", "تم الحل", "Resolved"):
-            incident.resolved_at = timezone.now()
-        else:
-            incident.resolved_at = None
-
+        incident.resolved_at = timezone.now() if new_status.name == "Completed" else None
         incident.save()
 
-        return Response({
-            "message": "Status updated successfully.",
-            "incident_id": incident.id,
-            "new_status": incident.status.name,
-            "resolved_at": incident.resolved_at
-        })
-    
+        return Response({"message": "Updated successfully."})
+
+
+# =========================================================
+# 📜 History API
+# =========================================================
+
 class IncidentHistoryAPIView(APIView):
+    """
+    Returns resolved incidents with:
+    - Filters
+    - Statistics
+    - Pagination
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
 
         queryset = Incident.objects.filter(
             resolved_at__isnull=False
-        ).order_by("-created_at")
+        ).select_related("incident_type").order_by("-created_at")
 
-        # -------------------------
         # Filters
-        # -------------------------
+        if request.GET.get("street"):
+            queryset = queryset.filter(location__icontains=request.GET["street"])
 
-        street = request.GET.get("street")
-        date = request.GET.get("date")
-        priority = request.GET.get("priority")
+        if request.GET.get("date"):
+            parsed = parse_date(request.GET["date"])
+            if parsed:
+                queryset = queryset.filter(created_at__date=parsed)
 
-        if street:
-            queryset = queryset.filter(location__icontains=street)
+        if request.GET.get("priority"):
+            queryset = queryset.filter(priority=request.GET["priority"])
 
-        if date:
-            parsed_date = parse_date(date)
-            if parsed_date:
-                queryset = queryset.filter(created_at__date=parsed_date)
+        # Stats
+        total = queryset.count()
 
-        if priority:
-            queryset = queryset.filter(priority=priority)
-
-        # -------------------------
-        # Statistics
-        # -------------------------
-
-        total_incidents = queryset.count()
-
-        most_common_priority = (
-            queryset.values("priority")
+        most_common = (
+            queryset.values("incident_type__name")
             .annotate(count=Count("id"))
             .order_by("-count")
             .first()
         )
 
-        avg_resolution = queryset.annotate(
+        avg = queryset.annotate(
             duration=ExpressionWrapper(
                 F("resolved_at") - F("created_at"),
                 output_field=DurationField()
             )
         ).aggregate(avg_duration=Avg("duration"))
 
-        # -------------------------
         # Pagination
-        # -------------------------
-
         paginator = PageNumberPagination()
-        paginator.page_size = 10
-
         page = paginator.paginate_queryset(queryset, request)
 
-        incidents_data = []
-
-        for incident in page:
-            resolution_time = incident.resolved_at - incident.created_at
-
-            incidents_data.append({
-                "id": incident.id,
-                "title": incident.title,
-                "location": incident.location,
-                "priority": incident.priority,
-                "created_at": incident.created_at,
-                "resolved_at": incident.resolved_at,
-                "resolution_time": str(resolution_time)
-            })
+        data = [
+            {
+                "id": i.id,
+                "title": i.title,
+                "location": i.location,
+                "priority": i.priority,
+                "incident_type": i.incident_type.name if i.incident_type else None,
+                "resolution_time": str(i.resolved_at - i.created_at)
+            }
+            for i in page
+        ]
 
         return paginator.get_paginated_response({
             "stats": {
-                "total_incidents": total_incidents,
-                "most_common_priority": most_common_priority["priority"] if most_common_priority else None,
-                "average_resolution_time": str(avg_resolution["avg_duration"]) if avg_resolution["avg_duration"] else None
+                "total_incidents": total,
+                "most_common_incident_type": most_common["incident_type__name"] if most_common else None,
+                "average_resolution_time": str(avg["avg_duration"]) if avg["avg_duration"] else None
             },
-            "results": incidents_data
-        })    
+            "results": data
+        })
+
+
+# =========================================================
+# 📌 Workflow Board API
+# =========================================================
+
+class WorkflowAPIView(APIView):
+    """
+    Returns incidents grouped by status for Kanban board.
+    Optimized using dictionary grouping (O(n)).
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not hasattr(request.user, "employee_profile"):
+            raise PermissionDenied("Employees only.")
+
+        incidents = Incident.objects.select_related("status")
+
+        grouped = defaultdict(list)
+
+        for i in incidents:
+            grouped[i.status_id].append(i)
+
+        statuses = IncidentStatus.objects.all()
+
+        return Response({
+            s.name: {
+                "count": len(grouped[s.id]),
+                "incidents": IncidentListSerializer(grouped[s.id], many=True).data
+            }
+            for s in statuses
+        })

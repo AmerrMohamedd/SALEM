@@ -10,6 +10,13 @@ class IncidentStatus(models.Model):
     def __str__(self):
         return self.name
 
+
+class IncidentType(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name    
+    
 # Report: title, description, latitude, longitude, status, created_at
 class Incident(models.Model):
     citizen = models.ForeignKey(
@@ -49,6 +56,14 @@ class Incident(models.Model):
     max_length=10,
     choices=PRIORITY_CHOICES,
     default='medium'
+    )
+
+    incident_type = models.ForeignKey(
+        IncidentType,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="incidents"
     )
 
 
@@ -94,3 +109,4 @@ class RepairVerification(models.Model):
 
     def __str__(self):
         return f"Verification for Incident {self.incident.id}"
+    
