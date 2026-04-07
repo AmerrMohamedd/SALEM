@@ -1,13 +1,17 @@
 {
   "info": {
-    "name": "SALEM API",
-    "description": "Full API collection for SALEM backend.\n\n1. Set base_url (default: http://localhost:8000).\n2. Run Login → copy 'tokens.access' to access_token, 'tokens.refresh' to refresh_token.\n3. incident_id: use for detail/accept/change-status/image upload.",
+    "name": "SALEM API (Frontend)",
+    "description": "Postman collection aligned with current backend URLs.\n\n1) Set base_url (default: http://localhost:8000)\n2) Run Login → copy tokens.access to access_token and tokens.refresh to refresh_token\n3) Bearer token is applied at collection level\n\nNotes:\n- Employee-only endpoints will return 403 for citizen accounts.\n- incident_id variable is used in detail/accept/change-status/image upload.\n",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
     "type": "bearer",
     "bearer": [
-      { "key": "token", "value": "{{access_token}}", "type": "string" }
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
     ]
   },
   "variable": [
@@ -56,7 +60,7 @@
           }
         },
         {
-          "name": "Login",
+          "name": "Login (by email)",
           "request": {
             "auth": { "type": "noauth" },
             "method": "POST",
@@ -64,6 +68,19 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"citizen@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": "{{base_url}}/login/"
+          }
+        },
+        {
+          "name": "Login (by national_id)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"national_id\": \"12345678901234\",\n  \"password\": \"SecurePass123!\"\n}"
             },
             "url": "{{base_url}}/login/"
           }
@@ -90,6 +107,37 @@
       ]
     },
     {
+      "name": "Password Reset (django-rest-passwordreset)",
+      "item": [
+        {
+          "name": "Request reset token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"citizen@example.com\"\n}"
+            },
+            "url": "{{base_url}}/forgot-password/reset_password/"
+          }
+        },
+        {
+          "name": "Confirm reset password",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"PASTE_TOKEN_HERE\",\n  \"password\": \"NewSecurePass123!\"\n}"
+            },
+            "url": "{{base_url}}/forgot-password/reset_password_confirm/"
+          }
+        }
+      ]
+    },
+    {
       "name": "Incidents",
       "item": [
         {
@@ -100,7 +148,7 @@
           }
         },
         {
-          "name": "Incident List",
+          "name": "Incident List (filters/search/order)",
           "request": {
             "method": "GET",
             "url": {
@@ -108,7 +156,7 @@
               "host": ["{{base_url}}"],
               "path": ["incidents", ""],
               "query": [
-                { "key": "search", "value": "", "disabled": true },
+                { "key": "search", "value": "", "disabled": true, "description": "Search in description/location" },
                 { "key": "status", "value": "", "description": "Status ID" },
                 { "key": "assigned_to__employee_profile__department", "value": "", "description": "Department ID" },
                 { "key": "created_at__date__gte", "value": "", "description": "YYYY-MM-DD" },
@@ -132,7 +180,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Street light broken\",\n  \"description\": \"The light at the corner is not working.\",\n  \"latitude\": \"31.200092\",\n  \"longitude\": \"29.918739\",\n  \"location\": \"Main Street, Block 5\",\n  \"status\": 1,\n  \"priority\": \"medium\"\n}"
+              "raw": "{\n  \"title\": \"Street light broken\",\n  \"description\": \"The light at the corner is not working.\",\n  \"latitude\": \"31.200092\",\n  \"longitude\": \"29.918739\",\n  \"location\": \"Main Street, Block 5\",\n  \"status\": 1,\n  \"priority\": \"medium\",\n  \"incident_type\": null\n}"
             },
             "url": "{{base_url}}/incidents/create/"
           }
@@ -159,47 +207,44 @@
           }
         },
         {
-          "name": "Dashboard Stats",
+          "name": "Dashboard Stats (Employees only)",
           "request": {
             "method": "GET",
-            "url": "{{base_url}}/incidents/dashboard/stats/"
+            "url": "{{base_url}}/incidents/stats/"
           }
         },
         {
-          "name": "Dashboard Weekly Stats",
+          "name": "Dashboard Weekly Stats (Employees only)",
           "request": {
             "method": "GET",
-            "url": "{{base_url}}/incidents/dashboard/weekly/"
+            "url": "{{base_url}}/incidents/weekly/"
           }
         },
         {
-          "name": "Dashboard Recent Incidents",
+          "name": "Dashboard Recent Incidents (Employees only)",
           "request": {
             "method": "GET",
-            "url": "{{base_url}}/incidents/dashboard/recent/"
+            "url": "{{base_url}}/incidents/recent/"
           }
         },
         {
-          "name": "Dashboard By Department",
+          "name": "Dashboard By Department (Employees only)",
           "request": {
             "method": "GET",
-            "url": "{{base_url}}/incidents/dashboard/by-department/"
+            "url": "{{base_url}}/incidents/by-department/"
           }
         },
         {
-          "name": "Accept Incident",
+          "name": "Accept Incident (Employees only)",
           "request": {
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            },
+            "body": { "mode": "raw", "raw": "{}" },
             "url": "{{base_url}}/incidents/{{incident_id}}/accept/"
           }
         },
         {
-          "name": "Change Incident Status",
+          "name": "Change Incident Status (Assigned employee only)",
           "request": {
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -211,7 +256,7 @@
           }
         },
         {
-          "name": "Incident History",
+          "name": "Incident History (resolved incidents)",
           "request": {
             "method": "GET",
             "url": {
@@ -219,11 +264,18 @@
               "host": ["{{base_url}}"],
               "path": ["incidents", "history", ""],
               "query": [
-                { "key": "street", "value": "" },
+                { "key": "street", "value": "", "description": "location contains" },
                 { "key": "date", "value": "", "description": "YYYY-MM-DD" },
                 { "key": "priority", "value": "", "description": "low | medium | high" }
               ]
             }
+          }
+        },
+        {
+          "name": "Workflow Board (Employees only)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/incidents/workflow/"
           }
         }
       ]
