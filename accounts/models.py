@@ -63,6 +63,8 @@ class User(AbstractUser):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     user_type = models.CharField(max_length=20, choices=user_type_choices, default='citizen')
     national_id = models.CharField(max_length=14, unique=True)
+    # we must add a phone number for the both user's
+    phone_number = models.CharField(max_length=11, unique=True, null=True, blank=True)
 
     # the other fields is already exist in the abstractuser model like email , password , username , ....)
 
@@ -89,7 +91,6 @@ class EmployeeProfile(models.Model):
 class CitizenProfile(models.Model):
 
     citizen_id = models.OneToOneField(User, on_delete=models.CASCADE, related_name='citizen_profile')
-    phone_number = models.CharField(max_length=11 ,  unique=True)
     birth_date = models.DateField()
 
 

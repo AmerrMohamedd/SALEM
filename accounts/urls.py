@@ -9,6 +9,8 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     # path('forgetpassword/', forget_password_view, name='forget_password'),
     path("departments/", DepartmentListAPIView.as_view(), name='dashboard-department-list'),
+    path('change-password/', ChangePasswordView.as_view(), name='change_password'),
+    path('profile-update/', UpdateProfileView.as_view(), name='profile_update'),
 
 ]
 

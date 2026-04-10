@@ -59,7 +59,6 @@ class SignUpView(APIView):    # user_local_host_port/signup ---> the Api
         return Response(serializer.errors , status = status.HTTP_400_BAD_REQUEST)
 
 
-
 class LoginView(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -68,12 +67,12 @@ class LoginView(APIView):
             user = serializer.validated_data['user']
             refresh = RefreshToken.for_user(user)
 
-
             role = None
             department_name = None
             region_name = None
-            phone_number = None
-
+            
+            # التعديل هنا: هنجيب رقم التليفون مباشرة من الـ User
+            phone_number = user.phone_number 
 
             if user.user_type == 'employee' and hasattr(user, 'employee_profile'):
                 profile = user.employee_profile
@@ -84,14 +83,9 @@ class LoginView(APIView):
                 if profile.region:
                     region_name = profile.region.region_name
             
-
             elif user.user_type == 'citizen':
                 role = "citizen"
-
-                if hasattr(user, 'citizen_profile') and user.citizen_profile.phone_number:
-                    phone_number = user.citizen_profile.phone_number
-
-
+                # مش محتاجين نفتح الـ profile عشان نجيب التليفون خلاص
             
             return Response({
                 "message": "تم تسجيل الدخول بنجاح",
@@ -107,7 +101,7 @@ class LoginView(APIView):
                     "role": role,
                     "department": department_name,
                     "region": region_name,  
-                    "phone_number": phone_number     
+                    "phone_number": phone_number # هيظهر هنا سواء كان موظف أو مواطن
                 }
             }, status=status.HTTP_200_OK)
         
@@ -140,3 +134,40 @@ class DepartmentListAPIView(generics.ListAPIView):
 
 
     
+
+# 1. Api تعديل بيانات الملف الشخصي (الاسم، التليفون، الإيميل، تاريخ الميلاد)
+class UpdateProfileView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserUpdateSerializer
+
+    def get_object(self):
+        # السطر ده بيخلي الـ API تعدل بيانات الشخص اللي عامل Login حالياً بس
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        return Response({
+            "message": "تم تحديث البيانات بنجاح",
+            "user_data": response.data
+        }, status=status.HTTP_200_OK)
+
+
+# 2. Api تغيير كلمة المرور (الباسورد القديم والجديد)
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user = request.user
+            # التأكد إن الباسورد القديم صح
+            if not user.check_password(serializer.validated_data['old_password']):
+                return Response({"old_password": ["كلمة المرور القديمة غير صحيحة."]}, 
+                                status=status.HTTP_400_BAD_REQUEST)
+            
+            # حفظ الباسورد الجديد مشفر
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+            return Response({"message": "تم تغيير كلمة المرور بنجاح"}, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
