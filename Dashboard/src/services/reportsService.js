@@ -4,41 +4,14 @@ import {
     acceptIncident,
     changeIncidentStatus,
 } from "./incidentsService";
-import { BASE_URL } from "./api"; 
-
-/* -----------------------------
-   Helpers
------------------------------- */
-
-function mapStatusToUi(status) {
-    const statusMap = {
-        pending: "inProgress",
-        assigned: "inProgress",
-        "in progress": "inProgress",
-        review: "underReview",
-        rejected: "rejected",
-        completed: "solved",
-        resolved: "solved",
-    };
-
-    const s = String(status ?? "").toLowerCase();
-    return statusMap[s] ?? "inProgress";
-}
+import { API_ORIGIN } from "./api";
+import { normalizePriorityKey, toReportsStatusKey } from "../utils/apiMapping";
 
 function normalizeImage(path) {
     if (!path) return null;
     if (path.startsWith("http")) return path;
-    return `${BASE_URL}${path}`;
-}
-
-/* -----------------------------
-   Mapping
------------------------------- */
-
-function mapStatusFromApi(status) {
-    if (status == null) return "inProgress";
-    const s = typeof status === "object" ? status?.name ?? status?.id ?? "" : String(status);
-    return mapStatusToUi(s);
+    if (path.startsWith("/")) return `${API_ORIGIN.replace(/\/$/, "")}${path}`;
+    return `${API_ORIGIN.replace(/\/$/, "")}/${path}`;
 }
 
 function mapIncidentToReport(item) {
@@ -47,9 +20,9 @@ function mapIncidentToReport(item) {
         category: item.title ?? item.category ?? "report",
         location: item.location ?? "unknown",
         date: item.created_at?.split?.("T")?.[0] ?? "",
-        status: mapStatusFromApi(item.status),
+        status: toReportsStatusKey(item.status),
         entity: item.department_name ?? item.department ?? item.assigned_to?.employee_profile?.department_name ?? "Unknown",
-        priority: (item.priority ?? "medium").toLowerCase(),
+        priority: normalizePriorityKey(item.priority),
     };
 }
 

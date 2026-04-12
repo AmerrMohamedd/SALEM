@@ -56,6 +56,7 @@ function StreetsHistoryFilters({
                         onDateChange(newDate);
                     }}
                     placeholderText={t("dateFilter")}
+                    dateFormat="yyyy-MM-dd"
                     className={`h-7w-full lg:w-40
                     text-sm text-gray-900 border border-gray-200 rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.12)]
                     focus:outline-none focus:ring-2 focus:ring-[#2DDBC9] cursor-pointer ${isArabic ? "text-right pr-8" : "text-left pl-8"}`}/>
@@ -68,25 +69,16 @@ function StreetsHistoryFilters({
             </div>
 
 
-            {/*  Category */}
+            {/*  Priority (API expects: low | medium | high) */}
             <select
                 onChange={(e) => onCategoryChange(e.target.value)}
                 className={`h-7 w-40 px-3 text-sm border border-gray-200 rounded-full
                 shadow-[0_2px_4px_rgba(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]
                 ${isArabic ? "text-right" : "text-left"}`}>
                 <option value="">{t("problemType")}</option>
-                <option value="حفرة طريق">
-                    {isArabic ? "حفرة طريق" : "Road Hole"}
-                </option>
-                <option value="كسر ماسورة مياه">
-                    {isArabic ? "كسر ماسورة مياه" : "Water Pipe Break"}
-                </option>
-                <option value="انقطاع إنارة">
-                    {isArabic ? "انقطاع إنارة" : "Lighting Outage"}
-                </option>
-                <option value="تلف رصيف">
-                    {isArabic ? "تلف رصيف" : "Sidewalk Damage"}
-                </option>
+                <option value="high">{t("high")}</option>
+                <option value="medium">{t("medium")}</option>
+                <option value="low">{t("low")}</option>
             </select>
 
         </div>

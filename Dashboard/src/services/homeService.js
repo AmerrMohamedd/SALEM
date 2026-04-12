@@ -4,6 +4,7 @@ import {
     getDashboardRecent,
     getDashboardByDepartment,
 } from "./incidentsService";
+import { toReportsStatusKey } from "../utils/apiMapping";
 
 /* Map API response to UI format */
 function mapStatsToCards(apiStats = {}) {
@@ -64,20 +65,10 @@ function mapRecentToReports(apiData = []) {
     if (!Array.isArray(apiData)) return [];
     return apiData.map((item) => ({
         id: item.id,
-        date: item.date?.split?.("T")?.[0] ?? "",
-        status: mapApiStatusToUi(item.status),
+        date: item.date?.split?.("T")?.[0] ?? item.created_at?.split?.("T")?.[0] ?? "",
+        status: toReportsStatusKey(item.status),
         entity: item.department ?? "roads",
     }));
-}
-
-
-function mapApiStatusToUi(status) {
-    if (!status) return "inProgress";
-    const s = String(status).toLowerCase();
-    if (s.includes("progress") || s.includes("open")) return "inProgress";
-    if (s.includes("review")) return "underReview";
-    if (s.includes("solved") || s.includes("closed") || s.includes("done")) return "solved";
-    return "inProgress";
 }
 
 export const getHomeData = async () => {

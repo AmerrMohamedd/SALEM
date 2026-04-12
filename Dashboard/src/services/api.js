@@ -1,8 +1,16 @@
 import axios from "axios";
 import { toast } from "../utils/swal";
 
-// Base URL - use env or default to backend (Postman: base_url)
-export const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+/**
+ * API layer (SALEM Dashboard)
+ * - Production API is served under /api (e.g. incidents: /api/incidents/…)
+ * - Static/media files are usually on the site origin (not under /api)
+ */
+export const API_ORIGIN =
+    import.meta.env.VITE_API_ORIGIN || "https://salemproject.pythonanywhere.com";
+
+export const BASE_URL =
+    import.meta.env.VITE_API_URL || `${API_ORIGIN.replace(/\/$/, "")}/api`;
 
 const api = axios.create({
     baseURL: BASE_URL,

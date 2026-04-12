@@ -14,6 +14,7 @@ function StreetsHistoryPage() {
 
     const [records, setRecords] = useState([]);
     const [stats, setStats] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const [selectedReport, setSelectedReport] = useState(null);
     const [openDetails, setOpenDetails] = useState(false);
@@ -31,7 +32,6 @@ function StreetsHistoryPage() {
 
         const loadData = async () => {
             const params = {
-                page,
                 street: searchId || undefined,
                 priority: filterCategory || undefined,
                 date: filterDate
@@ -40,6 +40,7 @@ function StreetsHistoryPage() {
             };
 
             try {
+                setLoading(true);
                 const data = await getStreetsHistory(params);
 
                 if (!isMounted) return;
@@ -47,11 +48,13 @@ function StreetsHistoryPage() {
                 setRecords(data.records ?? []);
                 setStats(data.stats ?? null);
 
-                const totalCount = data.count ?? 0;
+                const totalCount = (data.count ?? (data.records?.length ?? 0));
                 setTotalPages(Math.max(1, Math.ceil(totalCount / 10)));
 
             } catch (error) {
                 console.error("History Fetch Error:", error);
+            } finally {
+                if (isMounted) setLoading(false);
             }
         };
 
@@ -61,7 +64,11 @@ function StreetsHistoryPage() {
             isMounted = false;
         };
 
-    }, [page, searchId, filterDate, filterCategory]);
+    }, [searchId, filterDate, filterCategory]);
+
+    const rowsPerPage = 10;
+    const startIndex = (page - 1) * rowsPerPage;
+    const visibleRecords = records.slice(startIndex, startIndex + rowsPerPage);
 
     return (
         <>
@@ -76,14 +83,18 @@ function StreetsHistoryPage() {
             <div className="mt-4">
                 <StreetsHistoryTable />
 
-                <StreetsHistoryTableRows
-                    records={records}
-                    onView={(report) => {
-                        setSelectedReport(report);
-                        setOpenDetails(true);
-                        setShowMap(false);
-                    }}
-                />
+                {loading ? (
+                    <p className="py-8 text-center text-gray-500">{t("loading") || "Loading..."}</p>
+                ) : (
+                    <StreetsHistoryTableRows
+                        records={visibleRecords}
+                        onView={(report) => {
+                            setSelectedReport(report);
+                            setOpenDetails(true);
+                            setShowMap(false);
+                        }}
+                    />
+                )}
 
                 <div
                     dir={isArabic ? "rtl" : "ltr"}

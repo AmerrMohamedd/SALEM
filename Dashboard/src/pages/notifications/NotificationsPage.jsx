@@ -1,37 +1,58 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import NotificationsFilters from "./NotificationsFilters";
 import NotificationsTableHeader from "./NotificationsTableHeader";
 import NotificationsTableRows from "./NotificationsTableRows";
-import { getNotifications } from "../../services/notificationsService";
+import { getNotifications, markNotificationRead } from "../../services/notificationsService";
+import { getApiErrorMessage } from "../../utils/apiErrors";
+import { error as swalError } from "../../utils/swal";
 
 function NotificationsPage() {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
 
-    /* ===== Data ===== */
-    const [notifications, setNotifications] = useState(() =>
-        getNotifications()
-    );
-
-    /* ===== State ===== */
+    const [notifications, setNotifications] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [searchName, setSearchName] = useState("");
 
     const rowsPerPage = 12;
-    const totalPages = 50;
 
-    /* ===== Filter ===== */
+    useEffect(() => {
+        let cancelled = false;
+        (async () => {
+            try {
+                setLoading(true);
+                const list = await getNotifications();
+                if (!cancelled) setNotifications(Array.isArray(list) ? list : []);
+            } catch (err) {
+                if (!cancelled) {
+                    setNotifications([]);
+                    swalError(t("notifications") || "Notifications", getApiErrorMessage(err, t("noReports") || "Error"));
+                }
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
     const filteredData = notifications.filter((item) => {
         const name = item.name[i18n.language] || "";
         return name.toLowerCase().includes(searchName.toLowerCase());
     });
 
+    const totalPages = Math.max(1, Math.ceil(filteredData.length / rowsPerPage) || 1);
 
-    /* ===== Pagination ===== */
+    useEffect(() => {
+        setPage((p) => Math.min(p, totalPages));
+    }, [totalPages]);
+
     const startIndex = (page - 1) * rowsPerPage;
     const visibleData = filteredData.slice(
         startIndex,
@@ -39,9 +60,8 @@ function NotificationsPage() {
     );
 
     const isNextDisabled =
-        startIndex + rowsPerPage >= filteredData.length;
+        startIndex + rowsPerPage >= filteredData.length || page >= totalPages;
 
-    /* ===== Actions ===== */
     const handleSelect = (id) => {
         setNotifications((prev) =>
             prev.map((item) =>
@@ -58,6 +78,22 @@ function NotificationsPage() {
         );
     };
 
+    const handleGo = async (reportId) => {
+        const row = notifications.find((n) => n.reportId === reportId);
+        const notifyId = row?.id;
+        if (notifyId != null) {
+            try {
+                await markNotificationRead(notifyId);
+                setNotifications((prev) =>
+                    prev.map((n) => (n.id === notifyId ? { ...n, read: true } : n))
+                );
+            } catch {
+                /* still navigate; read state is best-effort */
+            }
+        }
+        navigate(`/dashboard/reports/${reportId}`);
+    };
+
     return (
         <div
             dir={isArabic ? "rtl" : "ltr"}
@@ -71,12 +107,18 @@ function NotificationsPage() {
 
             <NotificationsTableHeader />
 
-            <NotificationsTableRows
-                notifications={visibleData}
-                onSelect={handleSelect}
-                onDelete={handleDelete}
-                onGo={(id) => navigate(`/dashboard/reports/${id}`)}
-            />
+            {loading ? (
+                <p className="py-8 text-center text-gray-500">
+                    {t("loading") || "Loading..."}
+                </p>
+            ) : (
+                <NotificationsTableRows
+                    notifications={visibleData}
+                    onSelect={handleSelect}
+                    onDelete={handleDelete}
+                    onGo={handleGo}
+                />
+            )}
 
             {/* ===== Pagination ===== */}
             <div className="mt-auto pt-6 flex items-center justify-between text-sm">
@@ -97,7 +139,7 @@ function NotificationsPage() {
                     <button
                         disabled={isNextDisabled}
                         onClick={() =>
-                            setPage((p) => p + 1)
+                            setPage((p) => Math.min(p + 1, totalPages))
                         }
                         className="px-3 py-1 border rounded disabled:opacity-40">
                         {t("next")}

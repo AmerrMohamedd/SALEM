@@ -1,6 +1,14 @@
 import { useTranslation } from "react-i18next";
 import eyeIcon from "../../assets/icons/eyes.png";
 
+const statusMap = {
+    "Pending": "new",
+    "Assigned": "assigned",
+    "In Progress": "inProgress",
+    "Review": "review",
+    "Completed": "solved",
+};
+
 function ReportsTableRows({ reports = [], onView }) {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
@@ -60,10 +68,22 @@ function ReportsTableRows({ reports = [], onView }) {
                         {report.date}
                     </div>
 
+                    
                     {/* Status */}
-                    <div className={`font-semibold truncate ${statusColor( report.status)}`}>
-                        {t(report.status)}
-                    </div>
+                    {(() => {
+                        const rawStatus =
+        typeof report.status === "object"
+            ? report.status?.name
+            : report.status;
+
+    const normalizedStatus = statusMap[rawStatus] || "new";
+
+    return (
+        <div className={`font-semibold truncate ${statusColor(normalizedStatus)}`}>
+            {t(normalizedStatus)}
+        </div>
+                        );
+                    })()}
 
                     {/* Entity */}
                     <div className="truncate">
