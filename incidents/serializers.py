@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import IncidentImage, IncidentStatus, Incident
+from .models import IncidentImage, IncidentStatus, Incident, Notification
 
 
 # =========================================================
