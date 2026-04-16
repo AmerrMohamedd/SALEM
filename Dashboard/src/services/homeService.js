@@ -3,6 +3,8 @@ import {
     getDashboardWeekly,
     getDashboardRecent,
     getDashboardByDepartment,
+    mapPriorityToArabic,
+    mapStatusToArabic,
 } from "./incidentsService";
 import { toReportsStatusKey } from "../utils/apiMapping";
 
@@ -10,9 +12,9 @@ import { toReportsStatusKey } from "../utils/apiMapping";
 function mapStatsToCards(apiStats = {}) {
     return {
         solvedToday: apiStats.resolved_today ?? 0,
-        transferred: apiStats.rejected ?? 0,
+        transferred: apiStats.assigned ?? 0,
         inReview: apiStats.in_progress ?? 0,
-        open: apiStats.pending ?? 0,
+        open: apiStats.new ?? 0,
         total: apiStats.total ?? 0,
     };
 }
@@ -67,7 +69,9 @@ function mapRecentToReports(apiData = []) {
         id: item.id,
         date: item.date?.split?.("T")?.[0] ?? item.created_at?.split?.("T")?.[0] ?? "",
         status: toReportsStatusKey(item.status),
-        entity: item.department ?? "roads",
+        statusLabel: mapStatusToArabic(item.status),
+        entity: item.department ?? item.department_name ?? "roads",
+        priorityLabel: mapPriorityToArabic(item.priority),
     }));
 }
 
@@ -82,9 +86,9 @@ export const getHomeData = async () => {
 
         return {
             cards: mapStatsToCards(stats),
-            lineChart: mapWeeklyToLineChart(weekly?.data ?? weekly),
-            donutChart: mapByDeptToDonut(byDept?.data ?? byDept),
-            reports: mapRecentToReports(recent?.data ?? recent ?? []),
+            lineChart: mapWeeklyToLineChart(weekly),
+            donutChart: mapByDeptToDonut(byDept),
+            reports: mapRecentToReports(recent ?? []),
             notifications: [], // API collection has no notifications - keep empty or add later
         };
     } catch (err) {

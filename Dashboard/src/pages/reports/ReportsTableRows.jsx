@@ -2,11 +2,20 @@ import { useTranslation } from "react-i18next";
 import eyeIcon from "../../assets/icons/eyes.png";
 
 const statusMap = {
+    NEW: "inProgress",
+    ASSIGNED: "inProgress",
+    IN_PROGRESS: "inProgress",
+    REVIEW: "underReview",
+    COMPLETED: "solved",
     "Pending": "new",
     "Assigned": "assigned",
     "In Progress": "inProgress",
     "Review": "review",
     "Completed": "solved",
+    inProgress: "inProgress",
+    underReview: "underReview",
+    solved: "solved",
+    rejected: "rejected",
 };
 
 function ReportsTableRows({ reports = [], onView }) {
@@ -18,6 +27,7 @@ function ReportsTableRows({ reports = [], onView }) {
             case "solved":
                 return "text-green-600";
             case "inProgress":
+            case "underReview":
                 return "text-orange-500";
             case "rejected":
                 return "text-red-500";
@@ -76,7 +86,7 @@ function ReportsTableRows({ reports = [], onView }) {
             ? report.status?.name
             : report.status;
 
-    const normalizedStatus = statusMap[rawStatus] || "new";
+    const normalizedStatus = statusMap[rawStatus] || "inProgress";
 
     return (
         <div className={`font-semibold truncate ${statusColor(normalizedStatus)}`}>

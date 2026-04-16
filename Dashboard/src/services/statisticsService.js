@@ -9,10 +9,10 @@ export const getStatisticsCards = async (period = "month") => {
     try {
         const stats = await getDashboardStats();
         return {
-            solvedToday: stats?.solved_today ?? stats?.solvedToday ?? 0,
-            transferred: stats?.transferred ?? 0,
-            inReview: stats?.in_review ?? stats?.inReview ?? 0,
-            open: stats?.open ?? 0,
+            solvedToday: stats?.resolved_today ?? stats?.solvedToday ?? 0,
+            transferred: stats?.assigned ?? stats?.transferred ?? 0,
+            inReview: stats?.in_progress ?? stats?.inReview ?? 0,
+            open: stats?.new ?? stats?.open ?? 0,
             total: stats?.total ?? 0,
         };
     } catch {
@@ -35,7 +35,7 @@ const months = [
 export const getLineChartData = async () => {
     try {
         const weekly = await getDashboardWeekly();
-        const raw = weekly?.data ?? weekly ?? [];
+        const raw = weekly ?? [];
         if (Array.isArray(raw) && raw.length > 0) {
             return raw.map((item, i) => ({
                 month: item.month ?? months[i] ?? months[i % 12],
@@ -51,7 +51,7 @@ const donutColors = ["#6C7CFF", "#6FD08C", "#FFB547", "#00C9FF"];
 export const getDonutData = async () => {
     try {
         const byDept = await getDashboardByDepartment();
-        const raw = byDept?.data ?? byDept ?? [];
+        const raw = byDept ?? [];
         if (Array.isArray(raw) && raw.length > 0) {
             return raw.map((item, i) => ({
                 name: item.name ?? item.department ?? `dept${i}`,

@@ -40,13 +40,9 @@ function Login() {
             password
 });
 
-            localStorage.setItem("access", data.tokens.access);
-            localStorage.setItem("refresh", data.tokens.refresh);
-            localStorage.setItem("user", JSON.stringify(data.user_info));
-
             navigate("/dashboard", { replace: true });
         } catch (err) {
-            const msg = err.response?.data?.detail ?? err.response?.data?.message ?? t("loginFailedDesc");
+            const msg = err.response?.data?.detail ?? err.response?.data?.errors ?? err.response?.data?.message ?? t("loginFailedDesc");
             swalError(t("loginFailed"), typeof msg === "string" ? msg : JSON.stringify(msg));
         }
     }}>

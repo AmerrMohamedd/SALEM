@@ -3,6 +3,8 @@ import {
     getMyIncidents,
     getIncidentStatuses,
     getIncidents,
+    mapPriorityToArabic,
+    mapStatusToArabic,
 } from "./incidentsService";
 import { normalizePriorityKey, toWorkflowStatusKey } from "../utils/apiMapping";
 
@@ -21,11 +23,13 @@ function mapIncidentToWorkflow(inc, forcedStatusKey) {
     return {
         id: inc.id,
         status,
+        statusLabel: mapStatusToArabic(inc.status),
         title: inc.title ?? inc.category ?? "report",
         location: inc.location ?? inc.region ?? "unknown",
         time: displayTime,
         unit,
         priority: normalizePriorityKey(inc.priority),
+        priorityLabel: mapPriorityToArabic(inc.priority),
         created_at: inc.created_at,
     };
 }
@@ -38,7 +42,7 @@ function mapIncidentToWorkflow(inc, forcedStatusKey) {
 function normalizeWorkflowBoardResponse(data) {
     if (!data) return [];
 
-    const asArray = data?.results ?? data?.data;
+    const asArray = data?.results;
     if (Array.isArray(asArray)) return asArray.map((inc) => mapIncidentToWorkflow(inc));
 
     if (Array.isArray(data)) return data.map((inc) => mapIncidentToWorkflow(inc));
@@ -75,7 +79,7 @@ export async function getWorkflowReports() {
 
     try {
         const res = await getIncidents({ ordering: "-created_at" });
-        const raw = res?.results ?? res?.data ?? (Array.isArray(res) ? res : []);
+        const raw = res?.results ?? (Array.isArray(res) ? res : []);
         return raw.map((inc) => mapIncidentToWorkflow(inc));
     } catch (e2) {
         console.error("Workflow fallback (incidents list) error:", e2);
@@ -86,7 +90,7 @@ export async function getWorkflowReports() {
 export async function getMyWorkflowReports() {
     try {
         const res = await getMyIncidents();
-        const list = res?.results ?? res?.data ?? (Array.isArray(res) ? res : []);
+        const list = res?.results ?? (Array.isArray(res) ? res : []);
         return list.map((inc) => mapIncidentToWorkflow(inc));
     } catch (err) {
         console.error("My incidents API error:", err);

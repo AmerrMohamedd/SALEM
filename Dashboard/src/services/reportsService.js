@@ -3,15 +3,17 @@ import {
     getIncidentById,
     acceptIncident,
     changeIncidentStatus,
+    mapPriorityToArabic,
+    mapStatusToArabic,
 } from "./incidentsService";
-import { API_ORIGIN } from "./api";
+import { BASE_URL } from "../api/axiosInstance";
 import { normalizePriorityKey, toReportsStatusKey } from "../utils/apiMapping";
 
 function normalizeImage(path) {
     if (!path) return null;
     if (path.startsWith("http")) return path;
-    if (path.startsWith("/")) return `${API_ORIGIN.replace(/\/$/, "")}${path}`;
-    return `${API_ORIGIN.replace(/\/$/, "")}/${path}`;
+    if (path.startsWith("/")) return `${BASE_URL.replace(/\/$/, "")}${path}`;
+    return `${BASE_URL.replace(/\/$/, "")}/${path}`;
 }
 
 function mapIncidentToReport(item) {
@@ -21,8 +23,10 @@ function mapIncidentToReport(item) {
         location: item.location ?? "unknown",
         date: item.created_at?.split?.("T")?.[0] ?? "",
         status: toReportsStatusKey(item.status),
+        statusLabel: mapStatusToArabic(item.status),
         entity: item.department_name ?? item.department ?? item.assigned_to?.employee_profile?.department_name ?? "Unknown",
         priority: normalizePriorityKey(item.priority),
+        priorityLabel: mapPriorityToArabic(item.priority),
     };
 }
 
@@ -36,7 +40,6 @@ export async function getReports(params = {}) {
 
         const list =
             res?.results ??
-            res?.data ??
             (Array.isArray(res) ? res : []);
 
         return list.map(mapIncidentToReport);

@@ -2,6 +2,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { validatePasswordResetToken } from "../../services/authService";
 import { error as swalError } from "../../utils/swal";
 
 function Verification() {
@@ -41,13 +42,19 @@ function Verification() {
                 whileHover={{ scale: 1.015 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.12 }}
-                onClick={() => {
+                onClick={async () => {
                     if (!code) {
                         swalError(t("verificationTitle"), t("enterCode"));
                         return;
                     }
-                    localStorage.setItem("reset_token", code);
-                    navigate("/set-new-password");
+                    try {
+                        await validatePasswordResetToken(code);
+                        localStorage.setItem("reset_token", code);
+                        navigate("/set-new-password");
+                    } catch (err) {
+                        const msg = err.response?.data?.detail ?? err.response?.data?.errors ?? err.response?.data?.message ?? t("enterCode");
+                        swalError(t("verificationTitle"), typeof msg === "string" ? msg : JSON.stringify(msg));
+                    }
                 }}
                 className="w-full py-2.5 rounded-xl text-white font-semibold
                 bg-gradient-to-r from-[#00816F] to-[#2DDBC9]">

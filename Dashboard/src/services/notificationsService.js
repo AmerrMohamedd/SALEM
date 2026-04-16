@@ -1,4 +1,5 @@
-import api from "./api";
+import { getNotifications as fetchNotifications, markNotificationRead as readNotification } from "../api/notificationService";
+import { mapPriorityToArabic } from "./incidentsService";
 
 /**
  * Map API notification → shape expected by NotificationsTableRows (name/subject/message as { ar, en }).
@@ -23,6 +24,7 @@ function mapNotificationItem(raw, index) {
         subject: { ar: String(title), en: String(title) },
         message: { ar: String(body), en: String(body) },
         priority,
+        priorityLabel: mapPriorityToArabic(raw.priority ?? raw.level),
         read: Boolean(raw.read ?? raw.is_read),
         selected: false,
     };
@@ -32,8 +34,8 @@ function mapNotificationItem(raw, index) {
  * GET …/api/incidents/notifications/ (Postman: {{base_url}}/notifications/)
  */
 export async function getNotifications() {
-    const { data } = await api.get("/incidents/notifications/");
-    const list = data?.results ?? data?.data ?? (Array.isArray(data) ? data : []);
+    const data = await fetchNotifications();
+    const list = data?.results ?? (Array.isArray(data) ? data : []);
     return list.map((item, i) => mapNotificationItem(item, i));
 }
 
@@ -41,6 +43,5 @@ export async function getNotifications() {
  * PATCH …/api/incidents/notifications/:id/read/
  */
 export async function markNotificationRead(id) {
-    const { data } = await api.patch(`/incidents/notifications/${id}/read/`, {});
-    return data;
+    return readNotification(id);
 }
