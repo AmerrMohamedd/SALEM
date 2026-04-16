@@ -168,7 +168,50 @@ class RepairVerification(models.Model):
 
     def __str__(self):
         return f"Verification for Incident #{self.incident.id}"
-    
+
+
+# =========================================================
+# 📜 Incident history (audit trail)
+# =========================================================
+class IncidentHistory(models.Model):
+    """
+    Append-only log of status changes and key workflow events.
+    """
+
+    incident = models.ForeignKey(
+        Incident,
+        on_delete=models.CASCADE,
+        related_name="history_entries",
+    )
+    actor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="incident_history_actions",
+    )
+    old_status = models.ForeignKey(
+        IncidentStatus,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="+",
+    )
+    new_status = models.ForeignKey(
+        IncidentStatus,
+        on_delete=models.PROTECT,
+        related_name="+",
+    )
+    note = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"History #{self.pk} — Incident {self.incident_id}"
+
+
 # =========================================================
 # 🔔 Notification Model
 # =========================================================

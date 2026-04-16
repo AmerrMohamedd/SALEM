@@ -3,7 +3,10 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-@j=gru+8@%0nf6ou1!(v24tc3==6y#lz3r_+d6_v%s4q&5-h+%"
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-@j=gru+8@%0nf6ou1!(v24tc3==6y#lz3r_+d6_v%s4q&5-h+%",
+)
 
 DEBUG = True  # محلياً دايماً True
 
@@ -48,11 +51,19 @@ REST_FRAMEWORK = {
     ),
 
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny', 
+        'rest_framework.permissions.AllowAny',
     ],
 
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    ],
+
+    "EXCEPTION_HANDLER": "core.handlers.custom_exception_handler",
 }
 
 

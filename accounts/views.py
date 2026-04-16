@@ -115,14 +115,23 @@ class LogoutView(APIView):
 
     def post(self, request):
         try:
-            refresh_token = request.data["refresh"]
+            refresh_token = request.data.get("refresh")
+            if not refresh_token:
+                return Response(
+                    {"message": "refresh token is required"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             token = RefreshToken(refresh_token)
-            
             token.blacklist()
-            
-            return Response({"message": "تم تسجيل الخروج بنجاح"}, status=status.HTTP_205_RESET_CONTENT)
-        except Exception as e:
-            return Response({"message": "التوكن غير صالح أو تم استخدامه من قبل"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": "تم تسجيل الخروج بنجاح"},
+                status=status.HTTP_205_RESET_CONTENT,
+            )
+        except Exception:
+            return Response(
+                {"message": "التوكن غير صالح أو تم استخدامه من قبل"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         
 
 # Dashboard Api #6 -Get Incident departments

@@ -43,6 +43,7 @@ class EmployeeSignupSerializer(BaseSingupSerializer):
         dep = validated_data.pop('department')
         reg = validated_data.pop('region')
         role = validated_data.pop('role')
+        validated_data["user_type"] = "employee"
         with transaction.atomic():
             user = User.objects.create_user(**validated_data)
             EmployeeProfile.objects.create(
@@ -62,6 +63,7 @@ class CitizenSignupSerializer(BaseSingupSerializer):
 
     def create(self, validated_data):
         birth_date = validated_data.pop('birth_date')
+        validated_data["user_type"] = "citizen"
         with transaction.atomic():
             user = User.objects.create_user(**validated_data)
             CitizenProfile.objects.create(
