@@ -1,156 +1,30 @@
-import { useState } from "react";
-import avatar from "../../assets/avatar.png";
+import Signup from "../auth/Signup"; 
 
-export default function AddUserModal({ onClose, onAdd }) {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "",
-    image: "",
-  });
-
-  const handleSubmit = () => {
-    if (!form.name || !form.email || !form.password || !form.role) return;
-
-    onAdd({
-      id: Date.now(),
-      name: form.name,
-      email: form.email,
-      role: form.role,
-      image: form.image || avatar,
-    });
-
-    onClose();
-  };
-
+export default function AddUserModal({ onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="absolute inset-0 backdrop-blur-sm"></div>
 
-      <div className="relative bg-white w-[90%] max-w-6xl rounded-2xl shadow-2xl p-6">
-
-        {/* ❌ CLOSE */}
+      <div
+      className="relative bg-white  w-[95%] sm:w-[85%] md:w-[700px] lg:w-[850px] 
+  rounded-2xl shadow-2xl px-4 py-3"
+      >
+        {/* ❌ close */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-xl font-bold"
+          className="absolute top-3 right-3 text-lg font-bold"
         >
           ✕
         </button>
 
-        {/* TITLE */}
-        <h2 className="text-lg font-bold text-center mb-6">
+        {/* title */}
+        <h2 className="text-base sm:text-lg font-bold text-center mb-3">
           إضافة موظف جديد
         </h2>
 
-        <div className="grid grid-cols-12 gap-8">
-
-          {/* IMAGE — LEFT */}
-          <div className="col-span-4">
-            <div className="bg-gray-50 rounded-xl p-4 text-center">
-              <img
-                src={form.image || avatar}
-                className="w-full h-60 object-cover rounded-xl mb-3"
-              />
-
-              <label className="text-sm underline cursor-pointer">
-                ارفق الصورة
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      image: URL.createObjectURL(e.target.files[0]),
-                    })
-                  }
-                />
-              </label>
-            </div>
-          </div>
-
-          {/* FORM — RIGHT */}
-          <div className="col-span-8 grid grid-cols-2 gap-4">
-
-            <Input
-              label="الاسم كاملًا"
-              value={form.name}
-              onChange={(e) =>
-                setForm({ ...form, name: e.target.value })
-              }
-            />
-
-            <Input
-              label="البريد الإلكتروني"
-              value={form.email}
-              onChange={(e) =>
-                setForm({ ...form, email: e.target.value })
-              }
-            />
-
-            {/* PASSWORD */}
-            <div className="col-span-2">
-              <Input
-                label="كلمة المرور"
-                type="password"
-                value={form.password}
-                onChange={(e) =>
-                  setForm({ ...form, password: e.target.value })
-                }
-              />
-            </div>
-
-            {/* ROLE */}
-            <div className="col-span-2">
-              <label className="text-xs font-medium mb-1 block">
-                الوظيفة / الدور
-              </label>
-              <select
-                value={form.role}
-                onChange={(e) =>
-                  setForm({ ...form, role: e.target.value })
-                }
-                className="w-full border rounded-lg px-3 py-1.5 text-xs"
-              >
-                <option value="">اختر الدور</option>
-                <option>المديرون</option>
-                <option>الموظفون</option>
-                <option>الميدانيون</option>
-                <option>مسؤولو التوزيع</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* ACTION */}
-        <div className="mt-8 flex justify-end">
-          <button
-            onClick={handleSubmit}
-            className="px-8 py-2 bg-gradient-to-r from-[#00816F] to-[#2DDBC9]
-            text-white rounded-lg text-sm"
-          >
-            إضافة
-          </button>
-        </div>
+        {/* 👇 signup form */}
+        <Signup />
       </div>
-    </div>
-  );
-}
-
-/* INPUT */
-function Input({ label, value, onChange, type = "text" }) {
-  return (
-    <div>
-      <label className="text-xs font-medium mb-1 block">
-        {label}
-      </label>
-      <input
-        type={type}
-        value={value}
-        onChange={onChange}
-        className="w-full border rounded-lg px-3 py-2 text-sm"
-      />
     </div>
   );
 }

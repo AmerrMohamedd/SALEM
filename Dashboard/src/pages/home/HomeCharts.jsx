@@ -13,10 +13,17 @@ import {
     Cell,
 } from "recharts";
 
-
 function ChartsHome({ lineData = [], donutData = [] }) {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
+
+    const arabicNames = {
+        roads: "الطرق",
+        road: "الطرق",
+        water: "المياه",
+        electricity: "الكهرباء",
+        lighting: "الإنارة",
+    };
 
     const months = [
         t("jan"),
@@ -33,11 +40,20 @@ function ChartsHome({ lineData = [], donutData = [] }) {
         t("dec"),
     ];
 
-
-
     const [selectedMonth, setSelectedMonth] = useState(months[0]);
     const [open, setOpen] = useState(false);
+
     const total = donutData.reduce((sum, item) => sum + item.value, 0);
+
+    const fullMonthData = Array.from({ length: 30 }, (_, i) => {
+        const original = lineData[i % (lineData.length || 1)];
+
+        return {
+            ...original,
+            day: i + 1,
+            value: original?.value ?? 0,
+        };
+    });
 
     const renderCustomLabel = ({
         cx,
@@ -62,13 +78,14 @@ function ChartsHome({ lineData = [], donutData = [] }) {
 
         return (
             <g>
-                <path
-                    d={`M${x1},${y1} L${x2},${y2} L${x3},${y3}`}
-                    stroke={fill} fill="none" />
+                <path d={`M${x1},${y1} L${x2},${y2} L${x3},${y3}`} stroke={fill} fill="none" />
 
-                <text x={x3} y={y3 - 4}
+                <text
+                    x={x3}
+                    y={y3 - 4}
                     textAnchor={x3 > cx ? "start" : "end"}
-                    className="text-xs fill-gray-700">
+                    className="text-xs fill-gray-700"
+                >
                     {t(name)}
                 </text>
 
@@ -77,148 +94,157 @@ function ChartsHome({ lineData = [], donutData = [] }) {
                     y={y3 + 10}
                     textAnchor={x3 > cx ? "start" : "end"}
                     className="text-xs font-bold"
-                    fill={fill}>
+                    fill={fill}
+                >
                     {value}
                 </text>
             </g>
         );
     };
 
-
-
     return (
-        <div dir={isArabic ? "ltr" : "rtl"} className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 sm:gap-6 w-full min-w-0">
+        <div
+            dir={isArabic ? "ltr" : "rtl"}
+            className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 sm:gap-6 w-full min-w-0"
+        >
             {/* ================= Line Chart ================= */}
             <div className="bg-white rounded-xl sm:rounded-2xl p-3 shadow-sm min-w-0 overflow-hidden">
 
                 {/* Header */}
-                <div
-                    className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-3">
                     <div className="relative">
                         <button
                             onClick={() => setOpen(!open)}
-                            className="text-xs px-3 py-1 rounded-full border border-gray-200 text-gray-600
-                            hover:bg-gray-100 transition">
+                            className="text-xs px-3 py-1 rounded-full border border-gray-200 text-gray-600 hover:bg-gray-100 transition"
+                        >
                             {selectedMonth}
                         </button>
 
                         {open && (
-                           <div className="absolute left-0 mt-2 w-32 bg-white
-                                border rounded-xl shadow-lg z-20 max-h-40 overflow-y-auto scrollbar-thin">
+                            <div className="absolute left-0 mt-2 w-32 bg-white border rounded-xl shadow-lg z-20 max-h-40 overflow-y-auto">
                                 {months.map((month) => (
-                                    <button key={month}
+                                    <button
+                                        key={month}
                                         onClick={() => {
                                             setSelectedMonth(month);
                                             setOpen(false);
                                         }}
-                                        className="block w-full text-right px-3 py-2
-                                        text-xs hover:bg-gray-100">
+                                        className="block w-full text-right px-3 py-2 text-xs hover:bg-gray-100"
+                                    >
                                         {month}
                                     </button>
                                 ))}
                             </div>
                         )}
                     </div>
+
                     <h3 className="font-bold text-sm text-gray-800">
-                        {t("homeTitle")}
+                        {t("monthlyReports")}
                     </h3>
                 </div>
 
-
                 {/* Chart */}
                 <div className="w-full h-[200px] sm:h-[220px] min-h-[180px]">
-                <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={lineData}>
-                        <XAxis
-                            dataKey="day"
-                            tickFormatter={(value) => t(value)}
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fontSize: 12, fill: "#9CA3AF" }}
-                        />
+                    <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={fullMonthData}>
 
-                        <YAxis
-                            tickFormatter={(v) => `${v}%`}
-                            domain={[0, 100]}
-                            ticks={[0, 25, 50, 75, 100]}
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fontSize: 12, fill: "#9CA3AF" }}
-                        />
+                            <XAxis
+                                dataKey="day"
+                                interval={0}
+                                tickFormatter={(value, index) => {
+                                    const days = [
+                                        "السبت",
+                                        "الأحد",
+                                        "الاثنين",
+                                        "الثلاثاء",
+                                        "الأربعاء",
+                                        "الخميس",
+                                        "الجمعة",
+                                    ];
 
-                        <Tooltip
-                            contentStyle={{
-                            borderRadius: "10px",
-                            border: "none",
-                            fontSize: "12px",
-                            }}
-                        />
+                                    return days[index % 7];
+                                }}
+                                angle={-45}
+                                textAnchor="end"
+                                height={60}
+                                axisLine={false}
+                                tickLine={false}
+                                tick={{ fontSize: 10, fill: "#9CA3AF" }}
+                            />
 
-                        <Line
-                            type="monotone"    
-                            dataKey="value"
-                            stroke="#00816F"
-                            strokeWidth={2}
-                            dot={{ r: 2 }}
-                            activeDot={{ r: 4 }}
-                            isAnimationActive={true}
-                            animationDuration={1200}
-                            animationEasing="ease-out"
-                            focusable={false} 
-                        />
-                    </LineChart>
-                </ResponsiveContainer>
+                            <YAxis
+                                tickFormatter={(v) => v}
+                                domain={[0, 20]}
+                                ticks={[0, 5, 10, 15, 20]}
+                                axisLine={false}
+                                tickLine={false}
+                                tick={{ fontSize: 12, fill: "#9CA3AF" }}
+                            />
+
+                            <Tooltip />
+
+                            <Line
+                                type="monotone"
+                                dataKey="value"
+                                stroke="#00816F"
+                                strokeWidth={2}
+                                dot={{ r: 2 }}
+                                activeDot={{ r: 4 }}
+                            />
+                        </LineChart>
+                    </ResponsiveContainer>
                 </div>
             </div>
 
             {/* ================= Donut Chart ================= */}
-            <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-sm flex flex-col items-center min-w-0">
-                <div className="w-full max-w-[280px] sm:max-w-[300px] mx-auto h-[200px] sm:h-[230px]">
-                <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                        <Pie
-                            data={donutData}
-                            dataKey="value"
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={40}
-                            outerRadius={90}
-                            labelLine={false}
-                            label={renderCustomLabel}
-                            isAnimationActive={true}
-                            animationDuration={1200} 
-                            animationEasing="ease-out" 
-                            focusable={false}>
-                            {donutData.map((item, i) => (
-                                <Cell key={i} fill={item.color} />
-                            ))}
-                        </Pie>
+            <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-sm flex flex-col items-center">
+                <div className="w-full max-w-[300px] h-[220px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                            <Pie
+                                data={donutData}
+                                dataKey="value"
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={40}
+                                outerRadius={90}
+                                labelLine={false}
+                                label={renderCustomLabel}
+                            >
+                                {donutData.map((item, i) => (
+                                    <Cell key={i} fill={item.color} />
+                                ))}
+                            </Pie>
 
-                        <text
-                            x="50%"
-                            y="50%"
-                            textAnchor="middle"
-                            dominantBaseline="middle"
-                            className="text-2xl font-extrabold fill-gray-800">
-                            {total}
-                        </text>
-                    </PieChart>
-                </ResponsiveContainer>
+                            <text
+                                x="50%"
+                                y="50%"
+                                textAnchor="middle"
+                                dominantBaseline="middle"
+                                className="text-2xl font-extrabold fill-gray-800"
+                            >
+                                {total}
+                            </text>
+                        </PieChart>
+                    </ResponsiveContainer>
                 </div>
 
-                {/* ===== Legend ===== */}
-                <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mt-2 text-xs">
+                <div className="flex flex-wrap justify-center gap-3 mt-2 text-xs">
                     {donutData.map((item, i) => (
                         <div key={i} className="flex items-center gap-1 text-gray-600">
-                            <span className="w-2.5 h-2.5 rounded-full"
-                            style={{ backgroundColor: item.color }}/>
-                            <span>{t(item.name)}</span>
+                            <span
+                                className="w-2.5 h-2.5 rounded-full"
+                                style={{ backgroundColor: item.color }}
+                            />
+                            <span>
+                                {arabicNames[item.name?.toLowerCase()] || "أخرى"}
+                            </span>                        
+                            
                         </div>
                     ))}
                 </div>
             </div>
         </div>
-
     );
 }
 

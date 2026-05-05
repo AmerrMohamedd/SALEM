@@ -3,7 +3,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { login } from "../../services/authService";
 import { error as swalError } from "../../utils/swal";
 
 function Login() {
@@ -16,12 +15,43 @@ function Login() {
 
     const navigate = useNavigate();
 
+    const handleLogin = (e) => {
+        e.preventDefault();
+
+        // تحقق بسيط
+        if (!nationalId || !password) {
+            return swalError("Please fill all fields");
+        }
+
+        // ✅ MOCK LOGIN (بدل API)
+        if (nationalId === "12345678901234" && password === "123456") {
+
+            // 👇 أهم حاجة عشان السيستم يرضى
+            localStorage.setItem("access", "mock-access-token");
+            localStorage.setItem("refresh", "mock-refresh-token");
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify({
+                    name: "Admin",
+                    user_type: "employee",
+                })
+            );
+
+            navigate("/dashboard", { replace: true });
+
+        } else {
+            swalError("Invalid data");
+        }
+    };
+
     return (
         <motion.div
             dir={isArabic ? "rtl" : "ltr"}
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}>
+            transition={{ duration: 0.25 }}
+        >
             <h2 className="text-base md:text-lg font-extrabold mb-2">
                 {t("loginTitle")}
             </h2>
@@ -30,23 +60,9 @@ function Login() {
                 {t("loginDesc")}
             </p>
 
-            <form
-    className="space-y-4"
-    onSubmit={async (e) => {
-        e.preventDefault();
-        try {
-            const data = await login({
-            national_id: nationalId,
-            password
-});
+            <form className="space-y-4" onSubmit={handleLogin}>
 
-            navigate("/dashboard", { replace: true });
-        } catch (err) {
-            const msg = err.response?.data?.detail ?? err.response?.data?.errors ?? err.response?.data?.message ?? t("loginFailedDesc");
-            swalError(t("loginFailed"), typeof msg === "string" ? msg : JSON.stringify(msg));
-        }
-    }}>
-
+                {/* National ID */}
                 <div>
                     <label className="block text-sm mb-1">
                         {t("nationalId")}
@@ -61,6 +77,7 @@ function Login() {
                     />
                 </div>
 
+                {/* Password */}
                 <div>
                     <label className="block text-sm mb-1">
                         {t("password")}
@@ -71,38 +88,40 @@ function Login() {
                             type={showPassword ? "text" : "password"}
                             placeholder={t("enterPassword")}
                             className="w-full px-3 py-2 border rounded-md text-sm"
-                            onChange={(e) => setPassword(e.target.value)}/>
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
 
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className={`absolute top-2 ${isArabic ? "left-3" : "right-3"}`}>
+                            className={`absolute top-2 ${isArabic ? "left-3" : "right-3"
+                                }`}
+                        >
                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
                     </div>
                 </div>
 
+                {/* Forgot Password */}
                 <div className={isArabic ? "text-right" : "text-left"}>
                     <Link
                         to="/forget-password"
-                        className="text-xs text-[#00816F]">
+                        className="text-xs text-[#00816F]"
+                    >
                         {t("forgotPassword")}
                     </Link>
                 </div>
 
-                <button type="submit"
-                    className="w-full py-2.5 rounded-xl text-white font-semibold bg-gradient-to-r from-[#00816F] to-[#2DDBC9]">
+                {/* Button */}
+                <button
+                    type="submit"
+                    className="w-full py-2.5 rounded-xl text-white font-semibold bg-gradient-to-r from-[#00816F] to-[#2DDBC9]"
+                >
                     {t("loginButton")}
                 </button>
             </form>
 
-            <div className="mt-6 text-center text-sm">
-                {t("noAccount")}{" "}
-                <Link to="/signup"
-                    className="text-[#00816F] font-semibold">
-                    {t("signup")}
-                </Link>
-            </div>
+           
         </motion.div>
     );
 }

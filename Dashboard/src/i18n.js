@@ -78,7 +78,7 @@ const resources = {
             dashboard: "لوحة التحكم",
 
             /* ================= Home ================= */
-            homeTitle: "البلاغات الأسبوعية",
+            monthlyReports: "البلاغات الشهرية",
             calendar: "التقويم",
             quickNotifications: "🔔 إشعارات سريعة",
 
@@ -116,6 +116,11 @@ const resources = {
             water: "المياه",
             electricity: "الكهرباء",
             lighting: "الإنارة",
+
+            roads: "Roads",
+            water: "Water",
+            electricity: "Electricity",
+            lighting: "Lighting",
 
             /* ================= Months ================= */
             jan: "يناير",
@@ -426,7 +431,7 @@ const resources = {
             dashboard: "Dashboard",
 
             /* ================= Home ================= */
-            homeTitle: "Weekly Reports",
+            monthlyReports: "Monthly Reports",
             calendar: "Calendar",
             quickNotifications: "🔔 Quick Notifications",
 
@@ -464,6 +469,8 @@ const resources = {
             water: "Water",
             electricity: "Electricity",
             lighting: "Lighting",
+
+            
 
             /* ================= Months ================= */
             jan: "January",

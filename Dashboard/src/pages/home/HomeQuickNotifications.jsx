@@ -13,9 +13,7 @@ function HomeQuickNotifications({ notifications = [] }) {
 
     return (
         <div dir={isArabic ? "rtl" : "ltr"}>
-            <h3 className="text-sm font-bold mb-3">
-                {t("quickNotifications")}
-            </h3>
+           
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                 {notifications.map((item, i) => (
