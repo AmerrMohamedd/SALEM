@@ -140,3 +140,6 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
 EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'False').lower() == 'true'
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'amerr.mohaamed209@gmail.com')
 EMAIL_TIMEOUT = int(os.getenv('EMAIL_TIMEOUT', '30'))
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

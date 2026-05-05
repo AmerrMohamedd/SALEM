@@ -74,7 +74,8 @@ class User(models.Model):
         constraints = [
             models.CheckConstraint(
                 name="employee_required_fields",
-                condition=(
+                # تم تغيير condition إلى check للتوافق مع Django 5.0
+                check=(
                     ~Q(user_type="employee")
                     | (
                         Q(role__isnull=False)
@@ -87,7 +88,8 @@ class User(models.Model):
             ),
             models.CheckConstraint(
                 name="citizin_required_fields",
-                condition=(
+                # تم تغيير condition إلى check للتوافق مع Django 5.0
+                check=(
                     ~Q(user_type="citizin")
                     | (
                         Q(birthdate__isnull=False)
@@ -277,11 +279,9 @@ class Incidence(models.Model):
             )
 
         if self.status == self.Status.FINISHED:
-            # Persist the latest completion moment when an incidence reaches Finished.
             if previous_status != self.Status.FINISHED or self.completed_at is None:
                 self.completed_at = timezone.now()
         elif previous_status == self.Status.FINISHED:
-            # If moved away from Finished, clear completion time until it is completed again.
             self.completed_at = None
 
         self.full_clean()
