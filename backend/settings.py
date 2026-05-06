@@ -176,3 +176,4 @@ BREVO_EMAIL_TIMEOUT = int(
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
