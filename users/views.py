@@ -9,12 +9,12 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.db.models import Q
-from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.utils import timezone as django_timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_http_methods
 
+from .brevo_api import BrevoEmailError, send_transactional_email
 from .models import Department, Incidence, OperatorNotification, PasswordResetOTP, User
 
 INCIDENCE_STATUS_FILTER_MAP = {
@@ -1078,16 +1078,16 @@ def forgot_password(request):
     )
 
     try:
-        # Returns number of successfully relayed messages to SMTP backend.
-        sent_count = send_mail(
+        send_transactional_email(
+            to_email=user.email,
+            to_name=user.name,
             subject="Password Reset OTP",
-            message=f"Your OTP is {otp_code}. It will expire in 10 minutes.",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[user.email],
-            fail_silently=False,
+            text_content=f"Your OTP is {otp_code}. It will expire in 10 minutes.",
         )
-        if sent_count != 1:
-            return JsonResponse({"message": "Failed to send OTP email."}, status=500)
+    except BrevoEmailError as exc:
+        if settings.DEBUG:
+            return JsonResponse({"message": "Failed to send OTP email.", "error": str(exc)}, status=500)
+        return JsonResponse({"message": "Failed to send OTP email."}, status=500)
     except Exception as exc:
         if settings.DEBUG:
             return JsonResponse({"message": "Failed to send OTP email.", "error": str(exc)}, status=500)
