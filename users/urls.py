@@ -45,11 +45,11 @@ urlpatterns = [
     name="get-operator-notifications",
     ),
 
-path(
+    path(
     "notifications/<int:notification_id>/read/",
     mark_notification_as_read,
     name="mark-notification-read",
-),
+    ),
     path(
         "incidence/<int:incidence_id>/review/",
         move_incidence_to_review,

@@ -827,6 +827,16 @@ def employee_login(request):
             "Name": user.name,
             "Role": user.role,
             "User_type": user.user_type,
+
+            "Department": (
+                {
+                "id": user.department.id,
+                "name": user.department.name,
+                }
+                if user.department
+                else None
+            ),
+
             "Asscess_Token": access_token,
             "Refresh_Token": refresh_token,
         },
