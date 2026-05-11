@@ -89,7 +89,7 @@ function HomeRecentReportsTable({ reports = [] }) {
               </td>
 
               <td className="px-2 sm:px-4 py-2">
-                {r.Department?.name}
+                {t(r.Department?.name?.toLowerCase())}
               </td>
             </tr>
           ))}

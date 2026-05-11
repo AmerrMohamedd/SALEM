@@ -1,6 +1,8 @@
 import Signup from "./Signup"; 
+import { useTranslation } from "react-i18next";
 
 export default function AddUserModal({ onClose }) {
+  const { t } = useTranslation();
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="absolute inset-0 backdrop-blur-sm"></div>
@@ -19,7 +21,7 @@ export default function AddUserModal({ onClose }) {
 
         {/* title */}
         <h2 className="text-base sm:text-lg font-bold text-center mb-3">
-          إضافة موظف جديد
+          {t("addEmployeeTitle")}
         </h2>
 
         {/* 👇 signup form */}

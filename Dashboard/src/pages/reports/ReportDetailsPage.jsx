@@ -51,14 +51,6 @@ export default function ReportDetailsPage({ report, onOpenMap }) {
       {/* ===== ACTIONS ===== */}
       <div className="mt-4 pt-4 border-t flex justify-center">
         <div className="flex gap-4">
-          <button className="px-4 py-2 border border-red-500 text-red-500 rounded-lg text-sm">
-            {t("rejectReport")}
-          </button>
-
-          <button className="px-4 py-2 bg-gradient-to-r from-[#00816F] to-[#2DDBC9] text-white rounded-lg text-sm">
-            {t("assignToOther")}
-          </button>
-
           <button
             onClick={onOpenMap}
             className="px-4 py-2 bg-gradient-to-r from-[#00816F] to-[#2DDBC9] text-white rounded-lg text-sm"

@@ -58,8 +58,8 @@ function HeatLayer({ points }) {
 }
 
 function StatisticsChart({ filters }) {
-  const { i18n } =
-    useTranslation();
+
+  const { t, i18n } = useTranslation();
 
   const isArabic =
     i18n.language === "ar";
@@ -105,6 +105,84 @@ function StatisticsChart({ filters }) {
     loadCharts();
   }, [filters]);
 
+  const COLORS = {
+    road: "#6377F1",
+    electricity: "#69C78C",
+    gas: "#F4A949",
+    other: "#8B5CF6",
+  };
+
+  const renderCustomLabel = ({
+    cx,
+    cy,
+    midAngle,
+    outerRadius,
+    name,
+    value,
+    fill,
+  }) => {
+    const RADIAN = Math.PI / 180;
+
+    const radius = outerRadius + 5;
+
+    const x1 =
+      cx +
+      outerRadius *
+      Math.cos(-midAngle * RADIAN);
+
+    const y1 =
+      cy +
+      outerRadius *
+      Math.sin(-midAngle * RADIAN);
+
+    const x2 =
+      cx +
+      radius *
+      Math.cos(-midAngle * RADIAN);
+
+    const y2 =
+      cy +
+      radius *
+      Math.sin(-midAngle * RADIAN);
+
+    const x3 = x2 + (x2 > cx ? 30 : -30);
+
+    const y3 = y2;
+
+    return (
+      <g>
+        <path
+          d={`M${x1},${y1} L${x2},${y2} L${x3},${y3}`}
+          stroke={fill}
+          fill="none"
+        />
+
+        <text
+          x={x3}
+          y={y3 - 4}
+          textAnchor={
+            x3 > cx ? "start" : "end"
+          }
+          className="text-xs fill-gray-700"
+        >
+          {t(name.toLowerCase())}
+        </text>
+
+        <text
+          x={x3}
+          y={y3 + 10}
+          textAnchor={
+            x3 > cx ? "start" : "end"
+          }
+          className="text-xs font-bold"
+          fill={fill}
+        >
+          {value}
+        </text>
+      </g>
+    );
+  };
+
   const total = donutData.reduce(
     (s, i) => s + i.value,
     0
@@ -113,19 +191,22 @@ function StatisticsChart({ filters }) {
   return (
     <div
       dir={isArabic ? "rtl" : "ltr"}
-      className="space-y-6"
+      className="space-y-2"
     >
       {/* ===== LINE CHART ===== */}
       <div className="bg-white rounded-2xl p-4 shadow-sm">
         <ResponsiveContainer
           width="100%"
-          height={320}
+          height={200}
         >
           <LineChart data={lineData}>
             <XAxis dataKey="day" />
 
-            <YAxis allowDecimals={false} />
-
+            <YAxis
+              allowDecimals={false}
+              tickMargin={15}
+            />
+            
             <Tooltip />
 
             <Line
@@ -143,7 +224,7 @@ function StatisticsChart({ filters }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* ===== MAP ===== */}
-        <div className="bg-white rounded-2xl p-3 shadow-sm h-[350px] overflow-hidden">
+        <div className="bg-white rounded-2xl p-3 shadow-sm h-[300px] overflow-hidden">
           <MapContainer
             center={[30.0444, 31.2357]}
             zoom={11}
@@ -161,10 +242,10 @@ function StatisticsChart({ filters }) {
         </div>
 
         {/* ===== DONUT ===== */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center">
+        <div className="bg-white rounded-2xl p-2 shadow-sm flex flex-col items-center justify-center">
           <ResponsiveContainer
             width="100%"
-            height={260}
+            height={220}
           >
             <PieChart>
               <Pie
@@ -172,20 +253,21 @@ function StatisticsChart({ filters }) {
                 dataKey="value"
                 cx="50%"
                 cy="50%"
-                innerRadius={50}
+                innerRadius={40}
                 outerRadius={90}
-                label
+                labelLine={false}
+                label={renderCustomLabel}
               >
-                {donutData.map(
-                  (item, i) => (
-                    <Cell
-                      key={i}
-                      fill={
-                        item.color
-                      }
-                    />
-                  )
-                )}
+                {donutData.map((item, i) => (
+                  <Cell
+                    key={i}
+                    fill={
+                      COLORS[
+                      item.name.toLowerCase()
+                      ]
+                    }
+                  />
+                ))}
               </Pie>
 
               <text
@@ -205,19 +287,17 @@ function StatisticsChart({ filters }) {
               (item, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-1"
-                >
+                  className="flex items-center gap-1 text-gray-600"                >
                   <span
                     className="w-3 h-3 rounded-full"
                     style={{
                       backgroundColor:
-                        item.color,
+                        COLORS[item.name.toLowerCase()],
                     }}
                   />
 
                   <span>
-                    {item.name}
-                  </span>
+                    {t(item.name.toLowerCase())}                  </span>
                 </div>
               )
             )}

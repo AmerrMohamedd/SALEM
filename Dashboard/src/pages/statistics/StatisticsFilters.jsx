@@ -26,28 +26,28 @@ function StatisticsFilters({ onChange }) {
   return (
     <div
       dir={isArabic ? "rtl" : "ltr"}
-      className="bg-white rounded-2xl shadow-sm p-4 mb-5"
-    >
+      className="bg-white rounded-xl shadow-sm p-1 mb-2  overflow-hidden">
+        
       <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end justify-between">
         
         {/* ===== TITLE ===== */}
         <div>
-          <h2 className="text-lg font-bold text-gray-800">
+          <h2 className="text-base sm:text-lg font-bold text-gray-800">            
             {t("statistics")}
           </h2>
 
           <p className="text-sm text-gray-500 mt-1">
-            اختر الفترة الزمنية لعرض الإحصائيات
+            {t("statisticsDescription")}
           </p>
         </div>
 
         {/* ===== FILTERS ===== */}
-        <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+        <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto ">
           
           {/* START DATE */}
-          <div className="flex flex-col gap-1">
+          <div className="h-7 flex flex-col gap-1">
             <label className="text-xs text-gray-500 font-medium">
-              من تاريخ
+              {t("fromDate")}
             </label>
 
             <input
@@ -58,14 +58,14 @@ function StatisticsFilters({ onChange }) {
               onChange={(e) =>
                 setStartDate(e.target.value)
               }
-              className="h-10 px-4 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"
+              className="h-7 px-4 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"
             />
           </div>
 
           {/* END DATE */}
           <div className="flex flex-col gap-1">
             <label className="text-xs text-gray-500 font-medium">
-              إلى تاريخ
+              {t("toDate")}
             </label>
 
             <input
@@ -76,7 +76,7 @@ function StatisticsFilters({ onChange }) {
               onChange={(e) =>
                 setEndDate(e.target.value)
               }
-              className="h-10 px-4 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"
+              className="h-6 px-4 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"
             />
           </div>
         </div>

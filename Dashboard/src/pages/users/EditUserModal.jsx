@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import avatar from "../../assets/avatar.png";
+import { useTranslation } from "react-i18next";
 
 export default function EditUserModal({ user, onClose, onSave }) {
+    const { t } = useTranslation();
     const [form, setForm] = useState({
         id: "",
         name: "",
@@ -47,7 +49,7 @@ export default function EditUserModal({ user, onClose, onSave }) {
 
                 {/* TITLE */}
                 <h2 className="text-lg font-bold text-center mb-6">
-                    تعديل بيانات الموظف
+                    {t("editEmployeeTitle")}
                 </h2>
 
                 <div className="grid grid-cols-12 gap-8">
@@ -61,7 +63,7 @@ export default function EditUserModal({ user, onClose, onSave }) {
                             />
 
                             <label className="text-sm underline cursor-pointer">
-                                تغيير الصورة
+                                {t("changeImage")}
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -81,7 +83,7 @@ export default function EditUserModal({ user, onClose, onSave }) {
                     <div className="col-span-8 grid grid-cols-2 gap-4">
 
                         <Input
-                            label="الاسم كاملًا"
+                            label={t("fullName")}
                             value={form.name}
                             onChange={(e) =>
                                 setForm({ ...form, name: e.target.value })
@@ -89,7 +91,7 @@ export default function EditUserModal({ user, onClose, onSave }) {
                         />
 
                         <Input
-                            label="البريد الإلكتروني"
+                            label={t("email")}
                             value={form.email}
                             onChange={(e) =>
                                 setForm({ ...form, email: e.target.value })
@@ -99,7 +101,7 @@ export default function EditUserModal({ user, onClose, onSave }) {
                         {/* ROLE */}
                         <div className="col-span-2">
                             <label className="text-xs font-medium mb-1 block">
-                                الوظيفة / الدور
+                                {t("roleDepartment")}
                             </label>
                             <select
                                 value={form.role}
@@ -108,11 +110,11 @@ export default function EditUserModal({ user, onClose, onSave }) {
                                 }
                                 className="w-full border rounded-lg px-3 py-1.5 text-xs"
                             >
-                                <option value="">اختر الدور</option>
-                                <option>المديرون</option>
-                                <option>الموظفون</option>
-                                <option>الميدانيون</option>
-                                <option>مسؤولو التوزيع</option>
+                                <option value="">{t("selectRole")}</option>
+                                <option>{t("admin")}</option>
+                                <option>{t("employee")}</option>
+                                <option>{t("fieldWorker")}</option>
+                                <option>{t("distributionOfficer")}</option>
                             </select>
                         </div>
                     </div>
@@ -124,7 +126,7 @@ export default function EditUserModal({ user, onClose, onSave }) {
                         onClick={onClose}
                         className="px-6 py-2 border rounded-lg text-sm"
                     >
-                        إلغاء
+                        {t("cancel")}
                     </button>
 
                     <button
@@ -132,7 +134,7 @@ export default function EditUserModal({ user, onClose, onSave }) {
                         className="px-8 py-2 bg-gradient-to-r from-[#00816F] to-[#2DDBC9]
             text-white rounded-lg text-sm"
                     >
-                        حفظ التعديلات
+                        {t("saveChanges")}
                     </button>
                 </div>
             </div>

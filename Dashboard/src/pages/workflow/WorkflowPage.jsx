@@ -9,7 +9,7 @@ import { getWorkflowReports } from "../../api/workflow_api";
 
 import { error as swalError } from "../../utils/swal";
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 5;
 
 function WorkflowPage() {
     const { t, i18n } = useTranslation();
@@ -124,7 +124,7 @@ function WorkflowPage() {
             {/* PAGINATION */}
             <div
                 dir={i18n.language === "ar" ? "rtl" : "ltr"}
-                className="flex justify-between items-center mt-6 text-sm"
+                className="flex justify-between items-center mt-1 text-sm"
             >
                 <span className="text-gray-500">
                     {t("page")} {page} {t("of")} {totalPages}

@@ -26,20 +26,29 @@ const resources = {
             loading: "جاري التحميل...",
 
             /* ================= SignUp ================= */
-            signupTitle: "سجل باستخدام الرقم القومي",
-            profileName: "اسم الملف الشخصي",
-            enterProfileName: "أدخل اسم ملفك الشخصي",
-            enterEmail:"ادخل البريد الاكتروني",
-            department: "الإدارة / الجهة",
-            role: "الوظيفة / الدور",
-            city: "المنطقة / المدينة",
-            enterCity: "ادخل المنطقة / المدينة ",
-            passwordHint: "استخدم 12 حرفًا أو أكثر مع مزيج من الأحرف والأرقام والرموز",
-            managers: "المديرون",
-            employees:"الموظفون",
-            fieldStaff: "المسؤولون",
-            distributionOfficers:"مسؤلو التوزيع",
-            alreadyHaveAccount: " لديه حساب بالفعل..",
+            addEmployeeTitle: "إضافة موظف جديد",
+            editEmployeeTitle: "تعديل بيانات الموظف",
+
+            changeImage: "تغيير الصورة",
+
+            fullName: "الاسم كاملًا",
+            nationalId: "الرقم القومي",
+            phoneNumber: "رقم الهاتف",
+            password: "كلمة المرور",
+
+            roleDepartment: "الوظيفة / الدور",
+            selectRole: "اختر الدور",
+
+            region: "المنطقة",
+            department: "القسم",
+
+            cancel: "إلغاء",
+            saveChanges: "حفظ التعديلات",
+
+            signupTitle: "إنشاء حساب جديد",
+            signup: "إنشاء الحساب",
+
+            accountStatus: "نشط",
 
 
 
@@ -121,6 +130,9 @@ const resources = {
             water: "المياه",
             electricity: "الكهرباء",
             lighting: "الإنارة",
+            road: "الطرق",
+            gas: "الغاز",
+            other: "أخرى",
 
         
 
@@ -174,25 +186,7 @@ const resources = {
             back: "رجوع",
             mapTitle: "الخريطة",
 
-            // ===== Mock Report Values (Temporary Until API) =====
-            // Categories
-            roadHole: "حفرة طريق",
-            pipeBreak: "كسر ماسورة",
-            lightingPole: "عمود إنارة",
-            // Locations
-            nasrCity: "مدينة نصر",
-            maadi: "المعادي",
-            abbasia: "العباسية",
-            heliopolis: "مصر الجديدة",
-            dokki: "الدقي",
-            shobra: "شبرا",
-            // Priority
-            high: "عالية",
-            medium: "متوسطة",
-            low: "منخفضة",
-
-
-
+           
             /* ================= Details Page ================= */
             reportDetails: "تفاصيل البلاغ",
             rejectReport: "رفض البلاغ",
@@ -206,7 +200,7 @@ const resources = {
 
             /* ================= Streets History ================= */
             streetsHistoryEmpty: "لا يوجد سجل الشوارع والصيانات السابقة حتى الآن",
-            searchStreetHistory:"البحث عن سجل الشوارع والصيانات السابقة برقم البلاغ...",
+            searchStreetHistory: "البحث عن سجل الشوارع والصيانات السابقة باسم الشارع...",
             problemType: "نوع المشكلة",
             dateTime: "التاريخ والوقت",
             finalStatus: "الحالة النهائية",
@@ -241,26 +235,7 @@ const resources = {
             solved: "تم الحل",
             rejected: "مرفوض",
 
-            /* =============== Mock data=============== */
-            mock_avgTimeValue: "4 ساعات و50 دقيقة",
-            mock_mostFrequentDesc:"80% من الإجمالي (2,004): مشاكل تسريب مياه",
-            mock_aiInitial:"تصنيف مبدئي للمشكلة",
-            mock_aiNoChange:"لا يوجد تغيير ملحوظ حتى الآن",
-            threeDays: "3 أيام",
-            twoDays: "يومان",
-            oneDay: "يوم واحد",
-            fourDays: "4 أيام",
-            fiveDays: "5 أيام",
-            noTime: "—",
-            waterLeak: "تسريب مياه",
-            groundSubsidence: "هبوط أرضي",
-            trafficSignalFailure: "عطل إشارة مرور",
-            lightingPoleDamage: "تلف أعمدة إنارة",
-            sewageBlockage: "انسداد صرف صحي",
-            asphaltCracks: "تشققات إسفلت",
-            speedBumpDamage: "تلف مطبات",
-            rainWaterAccumulation: "تجمع مياه أمطار",
-            traffic: "المرور",
+          
 
             /* ================= Workflow Page ================= */
             new: "بلاغات جديدة",
@@ -272,6 +247,12 @@ const resources = {
             hours: "ساعة",
 
             /* ================= Statistics ================= */
+
+            
+            statisticsDescription: "اختر الفترة الزمنية لعرض الإحصائيات",
+            fromDate: "من تاريخ",
+            toDate: "إلى تاريخ",
+
 
             statistics: "الإحصائيات",
             thisMonth: "هذا الشهر",
@@ -285,6 +266,8 @@ const resources = {
             excellent: "ممتاز",
             highLevel: "عالي",
             professional: "احترافي",
+
+            
 
             /* ================= Notifications ================= */
 
@@ -316,20 +299,30 @@ const resources = {
 
             /* ================= Users Page ================= */
             searchUsers: "البحث عن الموظفين بالاسم أو البريد الإلكتروني...",
-            addUser: "إضافة موظف جديد",
-            active: "نشط",
-            managers: "المديرون",
-            employees: "الموظفون",
-            fieldStaff: "الميدانيون",
-            distribution: "مسؤولو التوزيع",
-            searchUsers: "البحث عن الموظفين بالاسم أو البريد الإلكتروني...",
             role: "الوظيفة",
+
             admin: "المديرون",
             employee: "الموظفون",
             fieldWorker: "الميدانيون",
             distributionOfficer: "مسؤولو التوزيع",
+
             addNewUser: "إضافة موظف جديد",
+
+            name: "الاسم",
+            email: "البريد",
+            rolePermission: "الصلاحية / الدور",
+            status: "الحالة",
+            lastLogin: "آخر دخول",
+            procedures: "الإجراءات",
+
             active: "نشط",
+
+            page: "صفحة",
+            of: "من",
+            previous: "السابق",
+            next: "التالي",
+
+            loading: "جارٍ التحميل...",
 
             /* ================= Settings Page ================= */
             incidentRules: "إدارة قواعد البلاغات",
@@ -380,20 +373,29 @@ const resources = {
             loading: "Loading...",
 
             /* ================= SignUp ================= */
-            signupTitle: "Register using National ID",
-            profileName: "Profile Name",
-            enterProfileName: "Enter profile name",
-            enterEmail: "Enter Email",
+            addEmployeeTitle: "Add New Employee",
+            editEmployeeTitle: "Edit Employee Information",
+
+            changeImage: "Change Image",
+
+            fullName: "Full Name",
+            nationalId: "National ID",
+            phoneNumber: "Phone Number",
+            password: "Password",
+
+            roleDepartment: "Role / Department",
+            selectRole: "Select Role",
+
+            region: "Region",
             department: "Department",
-            role: "Role",
-            city: "City / Area",
-            enterCity: "Enter City",
-            passwordHint: "Use 12 or more characters with a mix of letters, numbers & symbols",
-            managers: "Managers",
-            employees: "Employee",
-            fieldStaff: "Field Staff",
-            distributionOfficers: " Distribution Officers",
-            alreadyHaveAccount:"Already Have Account..",
+
+            cancel: "Cancel",
+            saveChanges: "Save Changes",
+
+            signupTitle: "Create New Account",
+            signup: "Create Account",
+
+            accountStatus: "Active",
 
 
             /* ================= forgetPassword ================= */
@@ -469,8 +471,12 @@ const resources = {
             /* ================= Entities ================= */
             roads: "Roads",
             water: "Water",
-            electricity: "Electricity",
+            electricity: "Elec",
             lighting: "Lighting",
+
+            road: "Roads",
+            gas: "Gas",
+            other: "Other",
 
             
 
@@ -516,26 +522,7 @@ const resources = {
             page: "Page",
             of: "of",
 
-            // ===== Mock Report Values (Temporary Until API) =====
-
-            // Categories
-            roadHole: "Road Hole",
-            pipeBreak: "Pipe Break",
-            lightingPole: "Lighting Pole",
-
-            // Locations
-            nasrCity: "Nasr City",
-            maadi: "Maadi",
-            abbasia: "Abbasia",
-            heliopolis: "Heliopolis",
-            dokki: "Dokki",
-            shobra: "Shobra",
-
-            // Priority
-            high: "High",
-            medium: "Medium",
-            low: "Low",
-
+           
             /* ================= Details Page ================= */
             reportDetails: "Report Details",
             rejectReport: "Reject Report",
@@ -549,8 +536,7 @@ const resources = {
             /* ================= Streets History Page ================= */
             streetsHistoryEmpty: "No streets and maintenance history available yet",
 
-            searchStreetHistory: "Search streets and previous maintenance by Report ID...",
-            problemType: "Problem Type",
+            searchStreetHistory: "Search streets and previous maintenance by street name...",            problemType: "Problem Type",
 
             finalStatus: "Final Status",
             repairTime: "Repair Time",
@@ -577,19 +563,6 @@ const resources = {
 
             /* ================= MOCK DATA (FAKE DATA - FOR UI TESTING ONLY) ================= */
 
-            // Categories
-            mock_roadHole: "Road Hole",
-            mock_waterPipeBreak: "Water Pipe Break",
-            mock_lightingOutage: "Lighting Outage",
-            mock_sidewalkDamage: "Sidewalk Damage",
-            mock_waterLeak: "Water Leakage",
-            mock_groundSubsidence: "Ground Subsidence",
-            mock_trafficSignalFailure: "Traffic Signal Failure",
-            mock_lightingPoleDamage: "Lighting Pole Damage",
-            mock_sewageBlockage: "Sewage Blockage",
-            mock_asphaltCracks: "Asphalt Cracks",
-            mock_speedBumpDamage: "Speed Bump Damage",
-            mock_rainWaterAccumulation: "Rainwater Accumulation",
 
             // Status
             mock_inProgress: "In Progress",
@@ -609,29 +582,6 @@ const resources = {
             mock_4days: "4 Days",
             mock_5days: "5 Days",
 
-            // AI Mock Text
-            mock_aiInitial: "Preliminary classification of the issue",
-            mock_aiNoChange: "No noticeable change detected yet",
-
-            // Stats Mock
-            mock_avgTimeValue: "4 Hours 50 Minutes",
-            mock_mostFrequentDesc: "80% of total (2,004): Water Leakage Issues",
-            threeDays: "3 Days",
-            twoDays: "2 Days",
-            oneDay: "1 Day",
-            fourDays: "4 Days",
-            fiveDays: "5 Days",
-            noTime: "—",
-
-            waterLeak: "Water Leak",
-            groundSubsidence: "Ground Subsidence",
-            trafficSignalFailure: "Traffic Signal Failure",
-            lightingPoleDamage: "Lighting Pole Damage",
-            sewageBlockage: "Sewage Blockage",
-            asphaltCracks: "Asphalt Cracks",
-            speedBumpDamage: "Speed Bump Damage",
-            rainWaterAccumulation: "Rainwater Accumulation",
-            traffic: "Traffic Department",
 
             /* ================= Workflow Page ================= */
             new: "New Reports",
@@ -643,6 +593,10 @@ const resources = {
             hours: "hour",
 
             /* ================= Statistics ================= */
+
+            statisticsDescription: "Choose the time period to display statistics",
+            fromDate: "From Date",
+            toDate: "To Date",
 
             statistics: "Statistics",
             thisMonth: "This Month",
@@ -687,20 +641,30 @@ const resources = {
 
             /* ================= Users Page ================= */
             searchUsers: "Search employees by name or email...",
-            addUser: "Add New User",
-            active: "Active",
-            managers: "Managers",
-            employees: "Employees",
-            fieldStaff: "Field Staff",
-            distribution: "Distribution Officers",
-            searchUsers: "Search employees by name or email...",
             role: "Role",
+
             admin: "Admins",
             employee: "Employees",
             fieldWorker: "Field Workers",
             distributionOfficer: "Distribution Officers",
+
             addNewUser: "Add New User",
+
+            name: "Name",
+            email: "Email",
+            rolePermission: "Role / Permission",
+            status: "Status",
+            lastLogin: "Last Login",
+            procedures: "Actions",
+
             active: "Active",
+
+            page: "Page",
+            of: "of",
+            previous: "Previous",
+            next: "Next",
+
+            loading: "Loading...",
 
 
 

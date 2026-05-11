@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import searchIcon from "../../assets/icons/search-icon.png";
 
@@ -10,22 +11,27 @@ function UsersFilters({
     const [search, setSearch] = useState("");
     const [focused, setFocused] = useState(false);
 
+    const { t } = useTranslation();
 
     return (
-        <div className="flex items-center gap-3 mb-6 -mt-4">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 mb-5 -mt-4">
 
             {/* Search */}
             <div
                 className={`
-                flex items-center gap-2
-                bg-white px-3 py-1
-                rounded-full
-                shadow-[0_2px_4px_rgba(0,0,0,0.12)]
-                w-[860px]
-                ${focused ? "ring-2 ring-[#2DDBC9]" : ""}
-            `}
+                    flex items-center gap-2
+                    bg-white px-3 py-2
+                    rounded-full
+                    shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                    w-full lg:flex-1
+                    ${focused ? "ring-2 ring-[#2DDBC9]" : ""}
+                `}
             >
-                <img src={searchIcon} alt="search" className="w-4 h-4" />
+                <img
+                    src={searchIcon}
+                    alt="search"
+                    className="w-4 h-4"
+                />
 
                 <input
                     type="text"
@@ -36,7 +42,7 @@ function UsersFilters({
                         setSearch(e.target.value);
                         onSearchChange(e.target.value);
                     }}
-                    placeholder="البحث عن الموظفين بالاسم أو البريد الإلكتروني..."
+                    placeholder={t("searchUsers")}                    
                     className="w-full text-sm outline-none bg-transparent"
                 />
             </div>
@@ -45,32 +51,35 @@ function UsersFilters({
             <select
                 onChange={(e) => onRoleChange(e.target.value)}
                 className="
-                h-7 w-40
-                px-3 text-sm
-                border border-gray-200
-                rounded-full
-                shadow-[0_2px_4px_rgba(0,0,0,0.12)]
-                focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]
-            "
+                    h-10 w-full lg:w-44
+                    px-3 text-sm
+                    border border-gray-200
+                    rounded-full
+                    shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+                    focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]
+                "
             >
-                <option value="">الوظيفة</option>
-                <option value="المديرون">المديرون</option>
-                <option value="الموظفون">الموظفون</option>
-                <option value="الميدانيون">الميدانيون</option>
-                <option value="مسؤولو التوزيع">مسؤولو التوزيع</option>
+                <option value="">{t("role")}</option>
+                <option value="المديرون">{t("admin")}</option>
+                <option value="الموظفون">{t("employee")}</option>
+                <option value="الميدانيون">{t("fieldWorker")}</option>
+                <option value="مسؤولو التوزيع">{t("distributionOfficer")}</option>
             </select>
 
             {/* Add User */}
             <button
                 onClick={onAddUser}
-                className=" h-10 px-3   rounded        flex items-center gap-2      text-xs font-semibold
-                text-white
-                bg-gradient-to-t from-[#00816F] to-[#2DDBC9]
-            "
+                className="
+                    h-10 px-4 rounded-xl
+                    flex items-center justify-center gap-2
+                    text-sm font-semibold
+                    text-white
+                    bg-gradient-to-t from-[#00816F] to-[#2DDBC9]
+                    whitespace-nowrap
+                "
             >
-                إضافة موظف جديد
+                {t("addNewUser")}
             </button>
-
         </div>
     );
 }

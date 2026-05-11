@@ -128,7 +128,7 @@ function ReportsFilters({
                 key={dept.id}
                 value={dept.id}
               >
-                {dept.name}
+                {t(dept.name.toLowerCase())}
               </option>
             ))}
           </select>

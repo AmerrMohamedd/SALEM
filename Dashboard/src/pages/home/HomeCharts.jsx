@@ -17,6 +17,13 @@ function ChartsHome({ lineData = [], donutData = [] }) {
 
   const isArabic = i18n.language === "ar";
 
+  const COLORS = {
+    road: "#6377F1",
+    electricity: "#69C78C",
+    gas: "#F4A949",
+    other: "#8B5CF6",
+  };
+
   const total = donutData.reduce((sum, item) => sum + item.value, 0);
 
   const renderCustomLabel = ({
@@ -30,7 +37,7 @@ function ChartsHome({ lineData = [], donutData = [] }) {
   }) => {
     const RADIAN = Math.PI / 180;
 
-    const radius = outerRadius + 15;
+    const radius = outerRadius + 5;
 
     const x1 = cx + outerRadius * Math.cos(-midAngle * RADIAN);
     const y1 = cy + outerRadius * Math.sin(-midAngle * RADIAN);
@@ -38,7 +45,7 @@ function ChartsHome({ lineData = [], donutData = [] }) {
     const x2 = cx + radius * Math.cos(-midAngle * RADIAN);
     const y2 = cy + radius * Math.sin(-midAngle * RADIAN);
 
-    const x3 = x2 + (x2 > cx ? 15 : -15);
+    const x3 = x2 + (x2 > cx ? 20 : -20);
     const y3 = y2;
 
     return (
@@ -55,7 +62,7 @@ function ChartsHome({ lineData = [], donutData = [] }) {
           textAnchor={x3 > cx ? "start" : "end"}
           className="text-xs fill-gray-700"
         >
-          {name}
+          {t(name.toLowerCase())}
         </text>
 
         <text
@@ -132,7 +139,10 @@ function ChartsHome({ lineData = [], donutData = [] }) {
                 label={renderCustomLabel}
               >
                 {donutData.map((item, i) => (
-                  <Cell key={i} fill={item.color} />
+                  <Cell
+                    key={i}
+                    fill={COLORS[item.name.toLowerCase()]}
+                  />
                 ))}
               </Pie>
 
@@ -154,10 +164,12 @@ function ChartsHome({ lineData = [], donutData = [] }) {
             <div key={i} className="flex items-center gap-1 text-gray-600">
               <span
                 className="w-2.5 h-2.5 rounded-full"
-                style={{ backgroundColor: item.color }}
+                style={{
+                  backgroundColor: COLORS[item.name.toLowerCase()]
+                }}
               />
 
-              <span>{item.name}</span>
+              <span>{t(item.name.toLowerCase())}</span>
             </div>
           ))}
         </div>

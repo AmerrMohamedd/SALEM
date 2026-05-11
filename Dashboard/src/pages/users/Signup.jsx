@@ -97,7 +97,7 @@ function Signup() {
 
                 <input
                     type="text"
-                    placeholder="Full Name"
+                    placeholder={t("fullName")}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="w-full px-3 py-2 border rounded-md"
@@ -106,7 +106,7 @@ function Signup() {
                 <input
                     type="text"
                     maxLength={14}
-                    placeholder="National ID"
+                    placeholder={t("nationalId")}
                     value={nationalId}
                     onChange={(e) =>
                         setNationalId(e.target.value)
@@ -116,7 +116,7 @@ function Signup() {
 
                 <input
                     type="text"
-                    placeholder="Phone Number"
+                    placeholder={t("phoneNumber")}
                     value={phoneNumber}
                     onChange={(e) =>
                         setPhoneNumber(e.target.value)
@@ -128,13 +128,13 @@ function Signup() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email"
+                    placeholder={t("email")}
                     className="w-full px-3 py-2 border rounded-md"
                 />
 
                 <input
                     type="password"
-                    placeholder="Password"
+                    placeholder={t("password")}
                     value={password}
                     onChange={(e) =>
                         setPassword(e.target.value)
@@ -144,7 +144,7 @@ function Signup() {
 
                 <input
                     type="text"
-                    placeholder="Role"
+                    placeholder={t("role")}
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
                     className="w-full px-3 py-2 border rounded-md"
@@ -152,7 +152,7 @@ function Signup() {
 
                 <input
                     type="text"
-                    placeholder="Region"
+                    placeholder={t("region")}
                     value={region}
                     onChange={(e) => setRegion(e.target.value)}
                     className="w-full px-3 py-2 border rounded-md"
@@ -160,7 +160,7 @@ function Signup() {
 
                 <input
                     type="text"
-                    placeholder="Department"
+                    placeholder={t("department")}
                     value={department}
                     onChange={(e) =>
                         setDepartment(e.target.value)
@@ -184,23 +184,6 @@ function Signup() {
                 </motion.button>
 
             </form>
-
-            <div className="mt-4 text-center text-xs">
-
-                {t("alreadyHaveAccount")}
-
-                <Link
-                    to="/login"
-                    className="
-                        text-[#00816F]
-                        font-semibold
-                        mr-1
-                    "
-                >
-                    {t("loginButton")}
-                </Link>
-
-            </div>
         </motion.div>
     );
 }

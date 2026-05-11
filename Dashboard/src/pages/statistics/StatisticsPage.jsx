@@ -11,11 +11,9 @@ function StatisticsPage() {
   });
 
   return (
-    <div className="space-y-5 pb-6">
+    <div className="space-y-2 pb-2 overflow-hidden">      
       <StatisticsFilters onChange={setFilters} />
-
       <StatisticsCards filters={filters} />
-
       <StatisticsChart filters={filters} />
     </div>
   );

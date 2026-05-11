@@ -24,11 +24,11 @@ function WorkflowCard({ report }) {
 
       <div className="flex flex-col gap-1 text-[11px] sm:text-xs md:text-sm">
         <span className="font-bold text-gray-800 truncate">
-          {t(report.title)}
+          {t(report.title.toLowerCase())}
         </span>
 
         <span className="text-gray-500 truncate">
-          {t(report.location)}
+          {report.location}
         </span>
 
         <span className="text-gray-400 text-[10px] sm:text-xs">

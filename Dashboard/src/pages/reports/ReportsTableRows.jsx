@@ -90,7 +90,7 @@ function ReportsTableRows({ reports = [], onView }) {
 
             {/* Category */}
             <div className="truncate">
-              {report.category}
+              {t(report.category?.toLowerCase().replace(/\s/g, ""))}
             </div>
 
             {/* Location */}
@@ -114,7 +114,7 @@ function ReportsTableRows({ reports = [], onView }) {
 
             {/* Entity */}
             <div className="truncate">
-              {report.entity}
+              {t(report.entity?.toLowerCase().replace(/\s/g, ""))}
             </div>
 
             {/* Priority */}

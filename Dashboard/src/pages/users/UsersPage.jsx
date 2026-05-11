@@ -7,6 +7,7 @@ import UsersTableHeader from "./UsersTableHeader";
 import UsersTableRows from "./UsersTableRows";
 import AddUserModal from "./AddUserPage";
 import EditUserModal from "./EditUserModal";
+import { useTranslation } from "react-i18next";
 
 import {
     getUsers,
@@ -16,6 +17,8 @@ import {
 } from "../../api/users_api";
 
 function UsersPage() {
+
+    const { t } = useTranslation();
 
     /* ===== USERS STATE ===== */
     const [users, setUsers] = useState([]);
@@ -142,7 +145,7 @@ function UsersPage() {
 
                 {loading ? (
                     <p className="text-center py-10 text-gray-500">
-                        Loading...
+                        {t("loading")}
                     </p>
                 ) : (
                     <>
@@ -151,56 +154,52 @@ function UsersPage() {
                             <>
                                 <UsersCards users={visibleUsers} />
 
-                                <div className="flex justify-between mt-4">
-
-                                    <span>
-                                        Page {page} of {totalPages}
-                                    </span>
-
-                                    <div className="flex gap-2">
-
-                                        <button
-                                            disabled={page === 1}
-                                            onClick={() =>
-                                                setPage((p) =>
-                                                    Math.max(p - 1, 1)
-                                                )
-                                            }
-                                        >
-                                            Prev
-                                        </button>
-
-                                        <button
-                                            disabled={page >= totalPages}
-                                            onClick={() =>
-                                                setPage((p) => p + 1)
-                                            }
-                                        >
-                                            Next
-                                        </button>
-
-                                    </div>
-                                </div>
+                               
+                                   
+                                
                             </>
                         )}
 
                         {/* ===== TABLE ===== */}
                         {isTableView && (
-                            <>
+                            <div className="overflow-x-auto">
                                 <UsersTableHeader />
 
                                 <UsersTableRows
-                                    users={filteredUsers}
+                                    users={visibleUsers}
                                     onEdit={(user) => {
                                         setSelectedUser(user);
                                         setOpenEdit(true);
                                     }}
                                     onDelete={handleDeleteUser}
                                 />
-                            </>
+                            </div>
                         )}
                     </>
                 )}
+            </div>
+
+            {/* ===== PAGINATION ===== */}
+            <div className="flex justify-between items-center mt-4 text-sm">
+                <span className="text-gray-500">
+                    {t("page")} {page} {t("of")} {totalPages}
+                </span>
+
+                <div className="flex gap-2">
+                    <button
+                        disabled={page === 1}
+                        onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                        className="px-3 py-1 rounded-lg border disabled:opacity-40">
+                        {t("previous")}
+                    </button>
+
+                    <button
+                        disabled={page === totalPages}
+                        onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                        className="px-3 py-1 rounded-lg border disabled:opacity-40">
+                        {t("next")}
+                    </button>
+                </div>
             </div>
 
             {/* ===== EDIT MODAL ===== */}

@@ -81,11 +81,17 @@ function StreetsHistoryPage() {
 
         if (!isMounted) return;
 
-        setRecords(
-          Array.isArray(data?.records)
-            ? data.records
-            : []
+        const allData = Array.isArray(data?.records)
+          ? data.records
+          : [];
+
+        const filtered = allData.filter((item) =>
+          item.street
+            ?.toLowerCase()
+            .includes(searchId.toLowerCase())
         );
+
+        setRecords(filtered);
 
         setStats(data?.stats || {});
 
@@ -130,8 +136,7 @@ function StreetsHistoryPage() {
   );
 
   return (
-    <>
-      <StreetsHistoryFilters
+    <div className="h-full overflow-y-auto lg:overflow-hidden">      <StreetsHistoryFilters
         onSearchChange={(val) => {
           setSearchId(val);
           setPage(1);
@@ -155,7 +160,7 @@ function StreetsHistoryPage() {
         <>
           <StreetsHistoryStats stats={stats} />
 
-          <div className="mt-4">
+          <div className="mt-4 overflow-hidden">
             <StreetsHistoryTable />
 
             {loading ? (
@@ -256,7 +261,7 @@ function StreetsHistoryPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
