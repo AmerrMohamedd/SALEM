@@ -824,6 +824,7 @@ def employee_login(request):
 
     return JsonResponse(
         {
+            "id": user.id,
             "Name": user.name,
             "Role": user.role,
             "User_type": user.user_type,
