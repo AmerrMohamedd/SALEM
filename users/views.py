@@ -1533,6 +1533,105 @@ def move_incidence_to_in_progress(request, incidence_id):
         status=200,
     )
 
+@csrf_exempt
+@require_http_methods(["GET"])
+@employee_access_token_required
+def get_operator_notifications(request):
+
+    employee = getattr(request, "employee_user", None)
+
+    if not employee:
+        return JsonResponse(
+            {"message": "Employee from token not found."},
+            status=401,
+        )
+
+    notifications = (
+        OperatorNotification.objects
+        .filter(operator=employee)
+        .select_related("incidence")
+        .order_by("-created_at")
+    )
+
+    data = []
+
+    for notification in notifications:
+        data.append({
+            "id": notification.id,
+
+            "name": notification.employee_name,
+
+            "email": notification.employee_email,
+
+            "subject": (
+                f"{notification.department_name} Incident"
+            ),
+
+            "message": (
+                f"{notification.location_name} | "
+                f"Priority: {notification.priority}"
+            ),
+
+            "priority": (
+                notification.priority.lower()
+                if notification.priority
+                else "low"
+            ),
+
+            "report_id": notification.incidence_id,
+
+            "read": notification.is_read,
+
+            "created_at": (
+                notification.created_at.isoformat()
+                if notification.created_at
+                else None
+            ),
+        })
+
+    return JsonResponse(data, safe=False, status=200)
+
+
+@csrf_exempt
+@require_http_methods(["PATCH"])
+@employee_access_token_required
+def mark_notification_as_read(request, notification_id):
+
+    employee = getattr(request, "employee_user", None)
+
+    if not employee:
+        return JsonResponse(
+            {"message": "Employee from token not found."},
+            status=401,
+        )
+
+    notification = (
+        OperatorNotification.objects
+        .filter(
+            id=notification_id,
+            operator=employee,
+        )
+        .first()
+    )
+
+    if not notification:
+        return JsonResponse(
+            {"message": "Notification not found."},
+            status=404,
+        )
+
+    notification.is_read = True
+    notification.save(update_fields=["is_read"])
+
+    return JsonResponse(
+        {
+            "message": "Notification marked as read successfully.",
+            "Notification_Id": notification.id,
+            "Is_Read": notification.is_read,
+        },
+        status=200,
+    )
+
 
 @csrf_exempt
 @require_POST

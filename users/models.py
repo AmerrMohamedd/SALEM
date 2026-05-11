@@ -21,9 +21,21 @@ class Department(models.Model):
 
 
 class User(models.Model):
+
+    USERNAME_FIELD = "national_id"
+    REQUIRED_FIELDS = []
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
     class UserType(models.TextChoices):
         CITIZIN = "citizin", "Citizin"
         EMPLOYEE = "employee", "Employee"
+
 
     class EmployeeRole(models.TextChoices):
         TECHNICAL = "technical", "Technical"

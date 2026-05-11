@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    
     get_department_incidences_summary_by_date_range,
     get_department_new_incidences,
     get_employee_completed_and_current_incidences,
@@ -16,6 +17,7 @@ from .views import (
 )
 
 urlpatterns = [
+    
     path("dashboard/", get_home_dashboard, name="home-dashboard"),
     path("incidence/status-overview/", get_incidences_status_overview, name="incidences-status-overview"),
     path("incidence/heatmap/", get_incidences_heatmap_data, name="incidences-heatmap"),

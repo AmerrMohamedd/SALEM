@@ -1,6 +1,8 @@
 from django.urls import path
 
 from .views import (
+    get_operator_notifications,
+    mark_notification_as_read,
     assign_incidence_to_employee,
     get_assigned_incidences,
     get_all_employees,
@@ -22,8 +24,10 @@ from .views import (
     get_incidence_by_id,
     get_incidences,
     get_new_incidences,
+    get_operator_notifications,
     get_review_incidences,
     get_incidence_status_by_id,
+    mark_notification_as_read,
     move_incidence_to_in_progress,
     move_incidence_to_completed,
     move_incidence_to_review,
@@ -35,6 +39,17 @@ from .views import (
 )
 
 urlpatterns = [
+    path(
+    "notifications/",
+    get_operator_notifications,
+    name="get-operator-notifications",
+    ),
+
+path(
+    "notifications/<int:notification_id>/read/",
+    mark_notification_as_read,
+    name="mark-notification-read",
+),
     path(
         "incidence/<int:incidence_id>/review/",
         move_incidence_to_review,
