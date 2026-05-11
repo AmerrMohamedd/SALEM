@@ -2,7 +2,11 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { requestPasswordResetToken } from "../../services/authService";
+
+
+// ✅ الجديد
+import { forgotPassword } from "../../api/auth_api";
+
 import { success as swalSuccess, error as swalError } from "../../utils/swal";
 
 function ForgetPassword() {
@@ -42,15 +46,27 @@ function ForgetPassword() {
                 transition={{ duration: 0.12 }}
                 onClick={async () => {
                     if (!email) return;
+
                     setLoading(true);
                     try {
-                        await requestPasswordResetToken(email);
+                        // ✅ الجديد
+                        await forgotPassword(email);
+
                         localStorage.setItem("reset_email", email);
+
                         await swalSuccess(t("sendCode"), t("verificationDesc"));
+
                         navigate("/verification");
                     } catch (err) {
-                        const msg = err.response?.data?.detail ?? err.response?.data?.message ?? "Request failed";
-                        swalError(t("forgetPassword"), typeof msg === "string" ? msg : JSON.stringify(msg));
+                        const msg =
+                            err.response?.data?.detail ||
+                            err.response?.data?.message ||
+                            "Request failed";
+
+                        swalError(
+                            t("forgetPassword"),
+                            typeof msg === "string" ? msg : JSON.stringify(msg)
+                        );
                     } finally {
                         setLoading(false);
                     }

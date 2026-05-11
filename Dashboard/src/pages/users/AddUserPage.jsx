@@ -1,4 +1,4 @@
-import Signup from "../auth/Signup"; 
+import Signup from "./Signup"; 
 
 export default function AddUserModal({ onClose }) {
   return (

@@ -8,6 +8,7 @@ function WorkflowHeader({ reports }) {
         { key: "assigned", color: "blue" },
         { key: "inProgress", color: "yellow" },
         { key: "review", color: "purple" },
+        { key: "forwarded", color: "indigo" },
         { key: "done", color: "green" },
     ];
 
@@ -16,6 +17,7 @@ function WorkflowHeader({ reports }) {
         blue: "bg-blue-500",
         yellow: "bg-yellow-400",
         purple: "bg-purple-500",
+        indigo: "bg-indigo-500",
         green: "bg-green-500",
     };
 
@@ -23,7 +25,7 @@ function WorkflowHeader({ reports }) {
         <div
             dir={i18n.language === "ar" ? "rtl" : "ltr"}
             className="bg-gradient-to-r from-[#00816F] to-[#2DDBC9] rounded-xl text-white px-2 sm:px-4 md:px-6 py-3">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">
                 {items.map((item) => {
                     const count = reports.filter(
                         (r) => r.status === item.key

@@ -6,9 +6,12 @@ import ReportsTableRows from "./ReportsTableRows";
 import EmptyState from "./EmptyState";
 import ReportDetailsPage from "./ReportDetailsPage";
 import ReportMapPage from "./ReportMapPage";
-import { getReports, getReportById } from "../../services/reportsService";
-import { getDepartments } from "../../services/incidentsService";
-import { getIncidentStatuses } from "../../services/incidentsService";
+import {
+  getReports,
+  getReportById,
+  getDepartments,
+  getIncidentStatuses,
+} from "../../api/reports_api";
 
 function ReportsPage() {
     const { t } = useTranslation();

@@ -84,9 +84,9 @@ const resources = {
 
             solvedToday: "البلاغات التي تم حلها اليوم",
             transferred: "البلاغات المحولة",
-            inReview: "قيد المراجعة",
             openReports: "البلاغات المفتوحة",
             totalReports: "إجمالي البلاغات",
+            
 
             /* ================= Repots ================= */
             reportId: "رقم البلاغ",
@@ -101,10 +101,15 @@ const resources = {
             actions: "الإجراءات",
 
             /* ================= Status ================= */
+            new: "بلاغ جديد",
+            assigned:"تم التعيين",
             inProgress: "قيد التنفيذ",
-            underReview: "تحت المراجعة",
+            inReview: "قيد المراجعة",
+            forwarded:"محول",
             solved: "تم الحل",
-            rejected: "مرفوض",
+            
+
+            
 
             /* ================= Priority ================= */
             high: "عالية",
@@ -117,10 +122,7 @@ const resources = {
             electricity: "الكهرباء",
             lighting: "الإنارة",
 
-            roads: "Roads",
-            water: "Water",
-            electricity: "Electricity",
-            lighting: "Lighting",
+        
 
             /* ================= Months ================= */
             jan: "يناير",
@@ -353,7 +355,7 @@ const resources = {
             add: "إضافة",
         }
     },
-
+    
     en: {
         translation: {
             /* ================= Login ================= */

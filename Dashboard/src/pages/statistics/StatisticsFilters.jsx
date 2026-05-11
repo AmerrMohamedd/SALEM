@@ -1,24 +1,88 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 function StatisticsFilters({ onChange }) {
-    const { t, i18n } = useTranslation();
-    const isArabic = i18n.language === "ar";
+  const { t, i18n } = useTranslation();
 
-    const [period, setPeriod] = useState("month");
+  const isArabic = i18n.language === "ar";
 
-    function handleChange(value) {
-        setPeriod(value);
-        onChange?.({ period: value });
-    }
+  const today = new Date()
+    .toISOString()
+    .split("T")[0];
 
-    return (
-        <div
-            dir={isArabic ? "rtl" : "ltr"}
-            className="flex items-center gap-3 mb-3 -mt-3">
-            
+  const [startDate, setStartDate] =
+    useState("2026-05-01");
+
+  const [endDate, setEndDate] =
+    useState("2026-05-10");
+
+  useEffect(() => {
+    onChange?.({
+      startDate,
+      endDate,
+    });
+  }, [startDate, endDate]);
+
+  return (
+    <div
+      dir={isArabic ? "rtl" : "ltr"}
+      className="bg-white rounded-2xl shadow-sm p-4 mb-5"
+    >
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end justify-between">
+        
+        {/* ===== TITLE ===== */}
+        <div>
+          <h2 className="text-lg font-bold text-gray-800">
+            {t("statistics")}
+          </h2>
+
+          <p className="text-sm text-gray-500 mt-1">
+            اختر الفترة الزمنية لعرض الإحصائيات
+          </p>
         </div>
-    );
+
+        {/* ===== FILTERS ===== */}
+        <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+          
+          {/* START DATE */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-gray-500 font-medium">
+              من تاريخ
+            </label>
+
+            <input
+              lang="en"
+              type="date"
+              value={startDate}
+              max={today}
+              onChange={(e) =>
+                setStartDate(e.target.value)
+              }
+              className="h-10 px-4 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"
+            />
+          </div>
+
+          {/* END DATE */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-gray-500 font-medium">
+              إلى تاريخ
+            </label>
+
+            <input
+              lang="en"
+              type="date"
+              value={endDate}
+              max={today}
+              onChange={(e) =>
+                setEndDate(e.target.value)
+              }
+              className="h-10 px-4 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default StatisticsFilters;

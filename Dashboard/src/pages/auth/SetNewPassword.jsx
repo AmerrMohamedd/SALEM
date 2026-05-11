@@ -2,7 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { confirmPasswordReset } from "../../services/authService";
+
+
+
+// ✅ الجديد
+import { resetPassword } from "../../api/auth_api";
+
 import { success as swalSuccess, error as swalError } from "../../utils/swal";
 
 function SetNewPassword() {
@@ -54,24 +59,41 @@ function SetNewPassword() {
                 transition={{ duration: 0.12 }}
                 onClick={async () => {
                     const token = localStorage.getItem("reset_token");
-                    if (!token) {
-                        swalError(t("setNewPassword"), "Missing reset token");
+                    const email = localStorage.getItem("reset_email");
+
+                    if (!token || !email) {
+                        swalError(t("setNewPassword"), "Missing reset data");
                         return;
                     }
+
                     if (!password || password !== confirmPassword) {
                         swalError(t("setNewPassword"), t("confirmPassword"));
                         return;
                     }
+
                     setLoading(true);
+
                     try {
-                        await confirmPasswordReset({ token, password });
+                        // ✅ الجديد
+                        await resetPassword(email, token, password);
+
                         localStorage.removeItem("reset_token");
                         localStorage.removeItem("reset_email");
+
                         await swalSuccess(t("setNewPassword"), t("loginButton"));
+
                         navigate("/login");
+
                     } catch (err) {
-                        const msg = err.response?.data?.detail ?? err.response?.data?.message ?? "Reset failed";
-                        swalError(t("setNewPassword"), typeof msg === "string" ? msg : JSON.stringify(msg));
+                        const msg =
+                            err.response?.data?.detail ||
+                            err.response?.data?.message ||
+                            "Reset failed";
+
+                        swalError(
+                            t("setNewPassword"),
+                            typeof msg === "string" ? msg : JSON.stringify(msg)
+                        );
                     } finally {
                         setLoading(false);
                     }

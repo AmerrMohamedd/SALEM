@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
@@ -32,25 +32,16 @@ export default function SettingsPage() {
 
   const ALL = ["electricityS", "waterS", "lightingS", "roadsS"];
 
-    const [categories, setCategories] = useState([
-        { id: 1, name: "electricityS", hidden: false },
-        { id: 2, name: "waterS", hidden: false },
-    ]);
+  /* ================= STATE ================= */
 
+  const [categories, setCategories] = useState([]); 
+  // 🔥 API: getCategories
 
-    const [priorities, setPriorities] = useState([
-        "electricityS",
-        "waterS",
-    ]);
+  const [priorities, setPriorities] = useState([]); 
+  // 🔥 API: getPriorities
 
-
-  const [showAdd, setShowAdd] = useState(false);
-
-    const [sla, setSla] = useState({
-        electricity: { hours: 1, days: 1 },
-        water: { hours: 1, days: 1 },
-    });
-
+  const [sla, setSla] = useState({}); 
+  // 🔥 API: getSLA
 
   const [overtime, setOvertime] = useState({
     alert: true,
@@ -66,6 +57,40 @@ export default function SettingsPage() {
 
   const [ai, setAi] = useState(20);
 
+  const [showAdd, setShowAdd] = useState(false);
+
+  /* ================= FETCH ================= */
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        // 🔥 اربط API هنا
+
+        /*
+        const data = await getSettings();
+
+        setCategories(data.categories);
+        setPriorities(data.priorities);
+        setSla(data.sla);
+        setOvertime(data.overtime);
+        setNotifications(data.notifications);
+        setAi(data.ai);
+        */
+
+        // مؤقت (بدون mock)
+        setCategories([]);
+        setPriorities([]);
+        setSla({});
+      } catch (err) {
+        console.error("Settings error", err);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
+  /* ================= ADD CATEGORY ================= */
+
   const addCategory = (c) => {
     if (categories.find((x) => x.name === c)) return;
 
@@ -80,12 +105,15 @@ export default function SettingsPage() {
       ...p,
       [c]: { hours: 1, days: 1 },
     }));
+
+    // 🔥 API: createCategory
   };
 
   return (
     <div
       dir={i18n.language === "ar" ? "rtl" : "ltr"}
-      className="min-h-screen flex flex-col px-4 sm:px-6 lg:px-8 py-3 text-sm" >
+      className="min-h-screen flex flex-col px-4 sm:px-6 lg:px-8 py-3 text-sm"
+    >
       {/* TITLE */}
       <h2 className="font-bold mb-4 -mt-3">
         {t("incidentRules")}
@@ -103,7 +131,8 @@ export default function SettingsPage() {
             <h3 className="font-semibold">{t("categories")}</h3>
             <button
               onClick={() => setShowAdd(!showAdd)}
-              className="border border-[#2DDBC9] text-[#00816F] px-2 py-0.5 rounded text-xs">
+              className="border border-[#2DDBC9] text-[#00816F] px-2 py-0.5 rounded text-xs"
+            >
               + {t("addNew")}
             </button>
           </div>
@@ -116,8 +145,9 @@ export default function SettingsPage() {
                 <button
                   key={c}
                   onClick={() => addCategory(c)}
-                  className="border px-2 py-0.5 rounded text-xs whitespace-nowrap">
-                    {t(c)}
+                  className="border px-2 py-0.5 rounded text-xs whitespace-nowrap"
+                >
+                  {t(c)}
                 </button>
               ))}
             </div>
@@ -127,9 +157,10 @@ export default function SettingsPage() {
             {categories.map((cat) => (
               <div
                 key={cat.id}
-                className="bg-white rounded px-3 py-2 flex justify-between items-center shadow-sm transition">
+                className="bg-white rounded px-3 py-2 flex justify-between items-center shadow-sm transition"
+              >
                 <span className={cat.hidden ? "opacity-40" : ""}>
-                    {t(cat.name)}
+                  {t(cat.name)}
                 </span>
 
                 <div className="flex gap-3 text-xs text-[#00816F]">
@@ -178,14 +209,18 @@ export default function SettingsPage() {
                     items.indexOf(over.id)
                   )
                 );
+
+                // 🔥 API: updatePriorities
               }
-            }}>
+            }}
+          >
             <SortableContext
               items={priorities}
-              strategy={verticalListSortingStrategy}>
+              strategy={verticalListSortingStrategy}
+            >
               <div className="space-y-1.5">
                 {priorities.map((p) => (
-                    <SortableItem key={p} id={p} label={t(p)} />
+                  <SortableItem key={p} id={p} label={t(p)} />
                 ))}
               </div>
             </SortableContext>
@@ -197,8 +232,10 @@ export default function SettingsPage() {
           {Object.keys(sla).map((key) => (
             <div
               key={key}
-              className="bg-white px-3 py-1.5 rounded shadow-sm flex justify-between items-center">
-                  <span>{t(key)}</span>
+              className="bg-white px-3 py-1.5 rounded shadow-sm flex justify-between items-center"
+            >
+              <span>{t(key)}</span>
+
               <div className="flex gap-3">
                 <TimeInput
                   value={sla[key].hours}
@@ -253,10 +290,10 @@ export default function SettingsPage() {
               value={ai}
               onChange={(e) => setAi(+e.target.value)}
               style={getSliderBg(ai)}
-              className="w-[420px] h-1.5 appearance-none rounded-full outline-none cursor-pointer accent-transparent"
+              className="w-[420px] h-1.5 rounded-full"
             />
 
-            <div className="px-3 py-1 border border-[#2DDBC9] rounded-xl text-sm font-semibold text-[#00816F] bg-white">
+            <div className="px-3 py-1 border rounded-xl text-sm font-semibold text-[#00816F]">
               {ai}%
             </div>
           </div>
@@ -296,11 +333,15 @@ export default function SettingsPage() {
           </div>
         </Section>
 
+        {/* SAVE */}
         <div className="flex justify-center gap-4 mt-6 mb-2">
           <button className="border px-10 py-1 rounded">
             {t("edit")}
           </button>
-          <button className="bg-gradient-to-r from-[#00816F] to-[#2DDBC9] text-white px-10 py-1 rounded">
+
+          <button
+            className="bg-gradient-to-r from-[#00816F] to-[#2DDBC9] text-white px-10 py-1 rounded"
+          >
             {t("add")}
           </button>
         </div>
@@ -355,24 +396,23 @@ function Toggle({ label, active, onClick }) {
 }
 
 function SortableItem({ id, label }) {
-    const { attributes, listeners, setNodeRef, transform, transition } =
-        useSortable({ id });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
 
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-    };
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
-    return (
-        <div
-            ref={setNodeRef}
-            style={style}
-            {...attributes}
-            {...listeners}
-            className="bg-white px-3 py-1.5 rounded shadow-sm cursor-grab"
-        >
-            ≡ {label}
-        </div>
-    );
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="bg-white px-3 py-1.5 rounded shadow-sm cursor-grab"
+    >
+      ≡ {label}
+    </div>
+  );
 }
-

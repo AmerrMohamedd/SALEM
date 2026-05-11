@@ -2,7 +2,13 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { validatePasswordResetToken } from "../../services/authService";
+
+// ❌ القديم
+// import { validatePasswordResetToken } from "../../services/authService";
+
+// ✅ الجديد
+import { verifyOtp } from "../../api/auth_api";
+
 import { error as swalError } from "../../utils/swal";
 
 function Verification() {
@@ -19,6 +25,7 @@ function Verification() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
             className="text-center">
+
             {/* Title */}
             <h2 className="text-base md:text-lg font-extrabold mb-2">
                 {t("verificationTitle")}
@@ -29,7 +36,9 @@ function Verification() {
                 {t("verificationDesc")}
             </p>
 
-            <input  type="text" value={code}
+            <input
+                type="text"
+                value={code}
                 onChange={(e) => setCode(e.target.value)}
                 placeholder={t("enterCode")}
                 className="w-full px-4 py-2 mb-2 border rounded-xl text-lg
@@ -47,13 +56,33 @@ function Verification() {
                         swalError(t("verificationTitle"), t("enterCode"));
                         return;
                     }
+
+                    const email = localStorage.getItem("reset_email");
+
+                    if (!email) {
+                        swalError(t("verificationTitle"), "Missing email");
+                        return;
+                    }
+
                     try {
-                        await validatePasswordResetToken(code);
+                        // ✅ الجديد
+                        await verifyOtp(email, code);
+
                         localStorage.setItem("reset_token", code);
+
                         navigate("/set-new-password");
+
                     } catch (err) {
-                        const msg = err.response?.data?.detail ?? err.response?.data?.errors ?? err.response?.data?.message ?? t("enterCode");
-                        swalError(t("verificationTitle"), typeof msg === "string" ? msg : JSON.stringify(msg));
+                        const msg =
+                            err.response?.data?.detail ||
+                            err.response?.data?.errors ||
+                            err.response?.data?.message ||
+                            t("enterCode");
+
+                        swalError(
+                            t("verificationTitle"),
+                            typeof msg === "string" ? msg : JSON.stringify(msg)
+                        );
                     }
                 }}
                 className="w-full py-2.5 rounded-xl text-white font-semibold
@@ -63,7 +92,8 @@ function Verification() {
 
             {/* Back */}
             <div className="mt-6 flex justify-between text-xs">
-                <Link to="/login"
+                <Link
+                    to="/login"
                     className="text-[#00816F] font-semibold hover:text-[#2DDBC9]">
                     {t("loginButton")}
                 </Link>

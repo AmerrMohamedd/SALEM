@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import Sidebar from "../components/common/Sidebar";
 import Header from "../components/common/Header";
-import { logout } from "../services/authService";
+
 
 function DashboardLayout() {
     const navigate = useNavigate();
