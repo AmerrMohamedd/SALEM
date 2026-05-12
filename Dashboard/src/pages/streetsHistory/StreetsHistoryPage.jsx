@@ -130,7 +130,7 @@ function StreetsHistoryPage() {
   );
 
   return (
-    <div className="h-full overflow-y-auto lg:overflow-hidden">      <StreetsHistoryFilters
+    <div className="h-full overflow-y-auto lg:overflow-hidden -mt-3">      <StreetsHistoryFilters
         onSearchChange={(val) => {
           setSearchId(val);
           setPage(1);
@@ -176,7 +176,7 @@ function StreetsHistoryPage() {
 
             <div
               dir={isArabic ? "rtl" : "ltr"}
-              className="flex justify-between items-center mt-4 text-sm"
+              className="flex justify-between items-center mt-2 text-sm"
             >
               <span className="text-gray-500">
                 {t("page")} {page} {t("of")}{" "}

@@ -133,6 +133,7 @@ const resources = {
             road: "الطرق",
             gas: "الغاز",
             other: "أخرى",
+            noDepartment: "بدون جهة",
 
         
 
@@ -234,6 +235,7 @@ const resources = {
             inProgress: "قيد التنفيذ",
             solved: "تم الحل",
             rejected: "مرفوض",
+            underreview: "قيد المراجعة",
 
           
 
@@ -323,6 +325,21 @@ const resources = {
             next: "التالي",
 
             loading: "جارٍ التحميل...",
+
+            passwordsNotMatch: "كلمتا المرور غير متطابقتين",
+
+            oldPassword: "كلمة المرور القديمة",
+            newPassword: "كلمة المرور الجديدة",
+            confirmNewPassword: "تأكيد كلمة المرور الجديدة",
+
+            enterPasswordHere: "ادخل كلمة المرور من هنا",
+
+            requestRoleChange: "طلب تعديل الدور إلى",
+            selectNextRole: "اختر دورك القادم من هنا",
+
+            exit: "خروج",
+            disableAccount: "إيقاف الحساب",
+            confirmChanges: "تأكيد التعديلات",
 
             /* ================= Settings Page ================= */
             incidentRules: "إدارة قواعد البلاغات",
@@ -459,7 +476,7 @@ const resources = {
 
             /* ================= Status ================= */
             inProgress: "In Progress",
-            underReview: "Under Review",
+            underreview: "Under Review",
             solved: "Solved",
             rejected: "Rejected",
 
@@ -477,6 +494,7 @@ const resources = {
             road: "Roads",
             gas: "Gas",
             other: "Other",
+            noDepartment: "No Department",
 
             
 
@@ -665,6 +683,21 @@ const resources = {
             next: "Next",
 
             loading: "Loading...",
+
+            passwordsNotMatch: "Passwords do not match",
+
+            oldPassword: "Old Password",
+            newPassword: "New Password",
+            confirmNewPassword: "Confirm New Password",
+
+            enterPasswordHere: "Enter password here",
+
+            requestRoleChange: "Request Role Change To",
+            selectNextRole: "Select your next role",
+
+            exit: "Exit",
+            disableAccount: "Disable Account",
+            confirmChanges: "Confirm Changes",
 
 
 

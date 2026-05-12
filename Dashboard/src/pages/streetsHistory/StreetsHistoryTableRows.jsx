@@ -19,14 +19,14 @@ function StreetsHistoryTableRows({ records = [], onView }) {
 
                     <div>{item.date}</div>
 
-                    <div>{t(item.category)}</div>
+                    <div>{t(item.category.toLowerCase())}</div>
 
                     <div
                         className={`font-semibold ${item.status === "solved"
                                 ? "text-green-600"
                                 : item.status === "inProgress"
                                 ? "text-orange-500" : "text-red-500"}`}>
-                        {t(item.status)}
+                        {t(item.status?.toLowerCase())}
                     </div>
 
                     <div>{t(item.repairTime)}</div>

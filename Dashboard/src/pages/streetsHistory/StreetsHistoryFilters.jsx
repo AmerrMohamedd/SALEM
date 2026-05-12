@@ -21,11 +21,11 @@ function StreetsHistoryFilters({
     return (
         <div
             dir={isArabic ? "rtl" : "ltr"}
-            className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 mb-6">
+            className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 mb-4 mt-1">
 
             {/*  Search */}
             <div
-                className={`flex items-center gap-2 bg-white px-3 py-1 rounded-full
+                className={`flex items-center gap-2 bg-white px-4 mr-1 py-1  rounded-full
                 shadow-[0_2px_4px_rgba(0,0,0,0.12)] w-full lg:flex-1
  ${focused ? "ring-2 ring-[#2DDBC9]" : ""}`}>
                 <img
@@ -57,7 +57,7 @@ function StreetsHistoryFilters({
                     }}
                     placeholderText={t("dateFilter")}
                     dateFormat="yyyy-MM-dd"
-                    className={`h-7w-full lg:w-40
+                    className={`h-7 w-full lg:w-40
                     text-sm text-gray-900 border border-gray-200 rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.12)]
                     focus:outline-none focus:ring-2 focus:ring-[#2DDBC9] cursor-pointer ${isArabic ? "text-right pr-8" : "text-left pl-8"}`}/>
                      

@@ -110,6 +110,18 @@ function StatisticsChart({ filters }) {
     electricity: "#69C78C",
     gas: "#F4A949",
     other: "#8B5CF6",
+    "no department": "#2DDBC9",
+  };
+
+  const getTranslatedName = (name) => {
+
+    const lower = name?.toLowerCase();
+
+    if (lower === "no department") {
+      return t("noDepartment");
+    }
+
+    return t(lower);
   };
 
   const renderCustomLabel = ({
@@ -145,7 +157,7 @@ function StatisticsChart({ filters }) {
       radius *
       Math.sin(-midAngle * RADIAN);
 
-    const x3 = x2 + (x2 > cx ? 30 : -30);
+    const x3 = x2 + (x2 > cx ? 80 : -80);
 
     const y3 = y2;
 
@@ -165,7 +177,7 @@ function StatisticsChart({ filters }) {
           }
           className="text-xs fill-gray-700"
         >
-          {t(name.toLowerCase())}
+          {getTranslatedName(name)}
         </text>
 
         <text
@@ -275,7 +287,7 @@ function StatisticsChart({ filters }) {
                 y="50%"
                 textAnchor="middle"
                 dominantBaseline="middle"
-                className="text-2xl font-bold fill-gray-800"
+                className="text-2xl font-extrabold fill-[#00816F]"
               >
                 {total}
               </text>
@@ -297,7 +309,7 @@ function StatisticsChart({ filters }) {
                   />
 
                   <span>
-                    {t(item.name.toLowerCase())}                  </span>
+                    {getTranslatedName(item.name)}</span>
                 </div>
               )
             )}

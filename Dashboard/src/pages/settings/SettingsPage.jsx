@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+
 import { DndContext, closestCenter } from "@dnd-kit/core";
+
 import {
   arrayMove,
   SortableContext,
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+
 import { CSS } from "@dnd-kit/utilities";
 
 import {
@@ -17,18 +20,20 @@ import {
 } from "../../api/settings_api";
 
 /* ================= HELPERS ================= */
+
 const getSliderBg = (value) => {
+
   let color =
     value < 25
       ? "#9F3A2C"
       : value < 50
-      ? "#F59E0B"
-      : value < 75
-      ? "#2563EB"
-      : "#16A34A";
+        ? "#F59E0B"
+        : value < 75
+          ? "#2563EB"
+          : "#16A34A";
 
   return {
-    background: `linear-gradient(to left,${color} ${value}%,#E5E7EB ${value}%)`,
+    background: `linear-gradient(to left, ${color} ${value}%, #E5E7EB ${value}%)`,
   };
 };
 
@@ -62,17 +67,13 @@ export default function SettingsPage() {
 
   /* ================= MODAL ================= */
 
-  const [showModal, setShowModal] =
-    useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  const [departmentName, setDepartmentName] =
-    useState("");
+  const [departmentName, setDepartmentName] = useState("");
 
-  const [departmentLogo, setDepartmentLogo] =
-    useState(null);
+  const [departmentLogo, setDepartmentLogo] = useState(null);
 
-  const [editData, setEditData] =
-    useState(null);
+  const [editData, setEditData] = useState(null);
 
   /* ================= FETCH ================= */
 
@@ -82,14 +83,12 @@ export default function SettingsPage() {
 
       const data = await getDepartments();
 
-      const departments = data.departments.map(
-        (d) => ({
-          id: d.id,
-          name: d.Name,
-          logo: d.Logo,
-          hidden: false,
-        })
-      );
+      const departments = data.departments.map((d) => ({
+        id: d.id,
+        name: d.Name,
+        logo: d.Logo,
+        hidden: false,
+      }));
 
       setCategories(departments);
 
@@ -111,129 +110,106 @@ export default function SettingsPage() {
 
     } catch (err) {
 
-      console.error(
-        "Settings error",
-        err
-      );
+      console.error("Settings error", err);
     }
   };
 
   useEffect(() => {
 
-  const loadData = async () => {
+    const loadData = async () => {
 
-    await fetchDepartments();
-  };
+      await fetchDepartments();
+    };
 
-  loadData();
+    loadData();
 
-}, []);
+  }, []);
 
   /* ================= DELETE ================= */
 
   const handleDelete = async (id) => {
 
-  try {
+    try {
 
-    await deleteDepartment(id);
+      await deleteDepartment(id);
 
-    setCategories((p) =>
-      p.filter((c) => c.id !== id)
-    );
-
-    alert(
-      "Department deleted successfully."
-    );
-
-  } catch (err) {
-
-    console.log(
-      err.response?.data
-    );
-
-    // BACKEND MESSAGE
-    if (
-      err.response?.data?.message
-    ) {
-
-      alert(
-        err.response.data.message
+      setCategories((p) =>
+        p.filter((c) => c.id !== id)
       );
 
-    } else {
-
       alert(
-        "Delete failed."
+        "Department deleted successfully."
       );
+
+    } catch (err) {
+
+      console.log(err.response?.data);
+
+      if (err.response?.data?.message) {
+
+        alert(err.response.data.message);
+
+      } else {
+
+        alert("Delete failed.");
+      }
+
+      console.error("Delete error", err);
     }
-
-    console.error(
-      "Delete error",
-      err
-    );
-  }
-};
+  };
 
   /* ================= SAVE ================= */
 
-  const handleSaveDepartment =
-    async () => {
+  const handleSaveDepartment = async () => {
 
-      try {
+    try {
 
-        if (!departmentName.trim())
-          return;
+      if (!departmentName.trim()) return;
 
-        const formData =
-          new FormData();
+      const formData = new FormData();
+
+      formData.append("Name", departmentName);
+
+      if (departmentLogo) {
 
         formData.append(
-          "Name",
-          departmentName
-        );
-
-        if (departmentLogo) {
-
-          formData.append(
-            "Logo",
-            departmentLogo
-          );
-        }
-
-        // CREATE
-        if (!editData) {
-
-          await createDepartment(
-            formData
-          );
-
-        } else {
-
-          // UPDATE
-          await updateDepartment(
-            editData.id,
-            formData
-          );
-        }
-
-        await fetchDepartments();
-
-        setShowModal(false);
-
-        setDepartmentName("");
-
-        setDepartmentLogo(null);
-
-        setEditData(null);
-
-      } catch (err) {
-
-        console.error(
-          "Department error",
-          err
+          "Logo",
+          departmentLogo
         );
       }
-    };
+
+      /* CREATE */
+      if (!editData) {
+
+        await createDepartment(formData);
+
+      } else {
+
+        /* UPDATE */
+        await updateDepartment(
+          editData.id,
+          formData
+        );
+      }
+
+      await fetchDepartments();
+
+      setShowModal(false);
+
+      setDepartmentName("");
+
+      setDepartmentLogo(null);
+
+      setEditData(null);
+
+    } catch (err) {
+
+      console.error(
+        "Department error",
+        err
+      );
+    }
+  };
 
   return (
 
@@ -243,438 +219,429 @@ export default function SettingsPage() {
           ? "rtl"
           : "ltr"
       }
-      className="min-h-screen flex flex-col px-4 sm:px-6 lg:px-8 py-3 text-sm"
-    >
+      className="w-full min-h-screen overflow-y-auto px-3 sm:px-4 lg:px-5 py-2 text-xs pb-32">
 
       {/* TITLE */}
-      <h2 className="font-bold mb-4 -mt-3">
+      <h2 className="font-bold mb-2 -mt-2">
         {t("incidentRules")}
-
         <span className="text-xs">
           {" "}
           (Incident Rules Management)
         </span>
       </h2>
 
-      <div className="flex-1 overflow-y-auto min-h-0 pb-20">
+      {/* ================= Categories ================= */}
 
-        {/* ================= Categories ================= */}
-        <Section>
+      <Section>
 
-          <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-center gap-2 mb-1">
 
-            <h3 className="font-semibold">
-              {t("categories")}
-            </h3>
+          <h3 className="font-semibold text-xs mb-1">
+            {t("categories")}
+          </h3>
 
-            {/* ADD */}
-            <button
-              onClick={() => {
+          <button
+            onClick={() => {
 
-                setEditData(null);
+              setEditData(null);
 
-                setDepartmentName("");
+              setDepartmentName("");
 
-                setDepartmentLogo(null);
+              setDepartmentLogo(null);
 
-                setShowModal(true);
-              }}
-              className="border border-[#2DDBC9] text-[#00816F] px-3 py-1 rounded text-xs"
-            >
-              + إضافة جديد
-            </button>
-          </div>
-
-          {/* LIST */}
-          <div className="max-h-60 overflow-y-auto space-y-1.5 pr-1">
-
-            {categories.map((cat) => (
-
-              <div
-                key={cat.id}
-                className="bg-white rounded px-3 py-2 flex justify-between items-center shadow-sm transition"
-              >
-
-                <div className="flex items-center gap-2">
-
-                  {cat.logo && (
-
-                    <img
-                      src={cat.logo}
-                      alt={cat.name}
-                      className="w-8 h-8 rounded-full object-cover"
-                    />
-                  )}
-
-                  <span>
-                    {cat.name}
-                  </span>
-                </div>
-
-                <div className="flex gap-3 text-xs text-[#00816F]">
-
-                  {/* UPDATE */}
-                  <button
-                    onClick={() => {
-
-                      setEditData(cat);
-
-                      setDepartmentName(
-                        cat.name
-                      );
-
-                      setDepartmentLogo(null);
-
-                      setShowModal(true);
-                    }}
-                  >
-                    update
-                  </button>
-
-                  {/* DELETE */}
-                  <button
-                    onClick={() =>
-                      handleDelete(cat.id)
-                    }
-                  >
-                    delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Section>
-
-        {/* ================= MODAL ================= */}
-        {showModal && (
-
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
-
-            {/* BLUR */}
-            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
-
-            {/* MODAL */}
-            <div className="relative bg-white rounded-2xl w-[420px] p-6 shadow-2xl">
-
-              {/* TITLE */}
-              <h2 className="text-xl font-bold mb-5 text-center">
-
-                {editData
-                  ? "Update Department"
-                  : "Add Department"}
-              </h2>
-
-              {/* NAME */}
-              <div className="mb-4">
-
-                <label className="block text-sm mb-1 font-medium">
-                  Name *
-                </label>
-
-                <input
-                  type="text"
-                  value={departmentName}
-                  onChange={(e) =>
-                    setDepartmentName(
-                      e.target.value
-                    )
-                  }
-                  className="w-full border rounded-xl px-3 py-2 outline-none focus:border-[#2DDBC9]"
-                  placeholder="Department Name"
-                />
-              </div>
-
-              {/* LOGO */}
-              <div className="mb-6">
-
-                <label className="block text-sm mb-1 font-medium">
-                  Logo
-                </label>
-
-                <input
-                  type="file"
-                  onChange={(e) =>
-                    setDepartmentLogo(
-                      e.target.files[0]
-                    )
-                  }
-                  className="w-full border rounded-xl px-3 py-2"
-                />
-              </div>
-
-              {/* BUTTONS */}
-              <div className="flex justify-center gap-4">
-
-                {/* CANCEL */}
-                <button
-                  onClick={() =>
-                    setShowModal(false)
-                  }
-                  className="px-6 py-2 rounded-xl border"
-                >
-                  Cancel
-                </button>
-
-                {/* SAVE */}
-                <button
-                  onClick={
-                    handleSaveDepartment
-                  }
-                  className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#00816F] to-[#2DDBC9] text-white"
-                >
-                  حفظ
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ================= Priorities ================= */}
-        <Section title={t("editPriorities")}>
-
-          <DndContext
-            collisionDetection={
-              closestCenter
-            }
-            onDragEnd={(e) => {
-
-              const {
-                active,
-                over,
-              } = e;
-
-              if (
-                over &&
-                active.id !== over.id
-              ) {
-
-                setPriorities((items) =>
-                  arrayMove(
-                    items,
-                    items.indexOf(
-                      active.id
-                    ),
-                    items.indexOf(
-                      over.id
-                    )
-                  )
-                );
-              }
+              setShowModal(true);
             }}
-          >
+            className="border border-[#2DDBC9] text-[#00816F] px-3 py- rounded text-xs">
+            + إضافة جديد
+          </button>
+        </div>
 
-            <SortableContext
-              items={priorities}
-              strategy={
-                verticalListSortingStrategy
-              }
-            >
+        {/* LIST */}
+        <div className="max-h-60 overflow-y-auto space-y-1.5 pr-1">
 
-              <div className="space-y-1.5">
-
-                {priorities.map((p) => (
-
-                  <SortableItem
-                    key={p}
-                    id={p}
-                    label={p}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
-        </Section>
-
-        {/* ================= SLA ================= */}
-        <Section title={t("sla")}>
-
-          {Object.keys(sla).map((key) => (
+          {categories.map((cat) => (
 
             <div
-              key={key}
-              className="bg-white px-3 py-1.5 rounded shadow-sm flex justify-between items-center"
-            >
+              key={cat.id}
+              className="bg-white rounded px-2 py-1 flex justify-between items-center shadow-sm">
 
-              <span>
-                {key}
-              </span>
+              <div className="flex items-center gap-2">
 
-              <div className="flex gap-3">
+                {cat.logo && (
 
-                <TimeInput
-                  value={
-                    sla[key].hours
-                  }
-                  unit={t("hour")}
-                  onChange={(v) =>
-                    setSla({
-                      ...sla,
-                      [key]: {
-                        ...sla[key],
-                        hours: v,
-                      },
-                    })
-                  }
-                />
+                  <img
+                    src={cat.logo}
+                    alt={cat.name}
+                    className="w-6 h-6 rounded-full object-cover"
+                  />
+                )}
 
-                <TimeInput
-                  value={
-                    sla[key].days
-                  }
-                  unit={t("day")}
-                  onChange={(v) =>
-                    setSla({
-                      ...sla,
-                      [key]: {
-                        ...sla[key],
-                        days: v,
-                      },
-                    })
-                  }
-                />
+                <span>
+                  {cat.name}
+                </span>
+
+              </div>
+
+              <div className="flex gap-2 text-[11px] text-[#00816F]">
+
+                <button
+                  onClick={() => {
+
+                    setEditData(cat);
+
+                    setDepartmentName(cat.name);
+
+                    setDepartmentLogo(null);
+
+                    setShowModal(true);
+                  }}>
+
+                  update
+
+                </button>
+
+                <button
+                  onClick={() =>
+                    handleDelete(cat.id)
+                  }>
+
+                  delete
+
+                </button>
+
               </div>
             </div>
           ))}
-        </Section>
+        </div>
+      </Section>
 
-        {/* ================= Overtime ================= */}
-        <Section title={t("overtime")}>
+      {/* ================= MODAL ================= */}
 
-          <Toggle
-            label={t("redAlert")}
-            active={overtime.alert}
-            onClick={() =>
-              setOvertime((p) => ({
-                ...p,
-                alert:
-                  !p.alert,
-              }))
-            }
-          />
+      {showModal && (
 
-          <Toggle
-            label={t("reassignTask")}
-            active={
-              overtime.reassign
-            }
-            onClick={() =>
-              setOvertime((p) => ({
-                ...p,
-                reassign:
-                  !p.reassign,
-              }))
-            }
-          />
-        </Section>
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
 
-        {/* ================= AI ================= */}
-        <Section title={t("aiSettings")}>
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
 
-          <div className="flex items-center gap-6">
+          <div className="relative bg-white rounded-2xl w-[360px] p-4 shadow-2xl">
 
-            <input
-              type="range"
-              min={0}
-              max={100}
-              value={ai}
-              onChange={(e) =>
-                setAi(
-                  +e.target.value
-                )
-              }
-              style={getSliderBg(ai)}
-              className="w-[420px] h-1.5 rounded-full"
-            />
+            <h2 className="text-xl font-bold mb-5 text-center">
 
-            <div className="px-3 py-1 border rounded-xl text-sm font-semibold text-[#00816F]">
+              {editData
+                ? "Update Department"
+                : "Add Department"}
 
-              {ai}%
+            </h2>
+
+            {/* NAME */}
+            <div className="mb-2">
+
+              <label className="block text-sm mb-1 font-medium">
+                Name *
+              </label>
+
+              <input
+                type="text"
+                value={departmentName}
+                onChange={(e) =>
+                  setDepartmentName(
+                    e.target.value
+                  )
+                }
+                className="w-full border rounded-xl px-2 py-1 outline-none focus:border-[#2DDBC9]"
+                placeholder="Department Name"
+              />
+            </div>
+
+            {/* LOGO */}
+            <div className="mb-6">
+
+              <label className="block text-sm mb-1 font-medium">
+                Logo
+              </label>
+
+              <input
+                type="file"
+                onChange={(e) =>
+                  setDepartmentLogo(
+                    e.target.files[0]
+                  )
+                }
+                className="w-full border rounded-xl px-3 py-2"
+              />
+            </div>
+
+            {/* BUTTONS */}
+            <div className="flex justify-center gap-4">
+
+              <button
+                onClick={() =>
+                  setShowModal(false)
+                }
+                className="px-6 py-2 rounded-xl border">
+
+                Cancel
+
+              </button>
+
+              <button
+                onClick={handleSaveDepartment}
+                className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#00816F] to-[#2DDBC9] text-white">
+
+                حفظ
+
+              </button>
+
             </div>
           </div>
-        </Section>
-
-        {/* ================= Notifications ================= */}
-        <Section
-          title={t(
-            "notificationSettings"
-          )}
-        >
-
-          <div className="grid grid-cols-2 gap-y-3 gap-x-10">
-
-            <Toggle
-              label="SMS"
-              active={
-                notifications.sms
-              }
-              onClick={() =>
-                setNotifications((p) => ({
-                  ...p,
-                  sms:
-                    !p.sms,
-                }))
-              }
-            />
-
-            <Toggle
-              label={t("email")}
-              active={
-                notifications.email
-              }
-              onClick={() =>
-                setNotifications((p) => ({
-                  ...p,
-                  email:
-                    !p.email,
-                }))
-              }
-            />
-
-            <Toggle
-              label={t(
-                "simpleUpdate"
-              )}
-              active={
-                notifications.update
-              }
-              onClick={() =>
-                setNotifications((p) => ({
-                  ...p,
-                  update:
-                    !p.update,
-                }))
-              }
-            />
-
-            <Toggle
-              label={t(
-                "assignNotify"
-              )}
-              active={
-                notifications.assign
-              }
-              onClick={() =>
-                setNotifications((p) => ({
-                  ...p,
-                  assign:
-                    !p.assign,
-                }))
-              }
-            />
-          </div>
-        </Section>
-
-        {/* SAVE */}
-        <div className="flex justify-center gap-4 mt-6 mb-2">
-
-          <button className="border px-10 py-1 rounded">
-            {t("edit")}
-          </button>
-
-          <button className="bg-gradient-to-r from-[#00816F] to-[#2DDBC9] text-white px-10 py-1 rounded">
-            {t("add")}
-          </button>
         </div>
+      )}
+
+      {/* ================= Priorities ================= */}
+
+      <Section title={t("editPriorities")}>
+
+        <DndContext
+          collisionDetection={closestCenter}
+          onDragEnd={(e) => {
+
+            const {
+              active,
+              over,
+            } = e;
+
+            if (
+              over &&
+              active.id !== over.id
+            ) {
+
+              setPriorities((items) =>
+                arrayMove(
+                  items,
+                  items.indexOf(active.id),
+                  items.indexOf(over.id)
+                )
+              );
+            }
+          }}>
+
+          <SortableContext
+            items={priorities}
+            strategy={verticalListSortingStrategy}>
+
+            <div className="space-y-1.5">
+
+              {priorities.map((p) => (
+
+                <SortableItem
+                  key={p}
+                  id={p}
+                  label={p}
+                />
+              ))}
+            </div>
+
+          </SortableContext>
+        </DndContext>
+      </Section>
+
+      {/* ================= SLA ================= */}
+
+      <Section title={t("sla")}>
+
+        {Object.keys(sla).map((key) => (
+
+          <div
+            key={key}
+            className="bg-white px-2 py-1 rounded shadow-sm flex justify-between items-center">
+
+            <span>
+              {key}
+            </span>
+
+            <div className="flex gap-3">
+
+              <TimeInput
+                value={sla[key].hours}
+                unit={t("hour")}
+                onChange={(v) =>
+                  setSla({
+                    ...sla,
+                    [key]: {
+                      ...sla[key],
+                      hours: v,
+                    },
+                  })
+                }
+              />
+
+              <TimeInput
+                value={sla[key].days}
+                unit={t("day")}
+                onChange={(v) =>
+                  setSla({
+                    ...sla,
+                    [key]: {
+                      ...sla[key],
+                      days: v,
+                    },
+                  })
+                }
+              />
+
+            </div>
+          </div>
+        ))}
+      </Section>
+
+      {/* ================= BOTTOM ================= */}
+
+      <div className="bg-white rounded-xl p-2 mt-1 mb-8">
+
+        <div className="flex justify-between items-start gap-4">
+
+          {/* RIGHT */}
+          <div className="flex flex-col gap-1 min-w-[220px]">
+
+            {/* OVERTIME */}
+            <div>
+
+              <h3 className="font-semibold text-xs mb-1">
+                {t("overtime")}
+              </h3>
+
+              <div className="space-y-1">
+
+                <Toggle
+                  small
+                  label={t("redAlert")}
+                  active={overtime.alert}
+                  onClick={() =>
+                    setOvertime((p) => ({
+                      ...p,
+                      alert: !p.alert,
+                    }))
+                  }
+                />
+
+                <Toggle
+                  small
+                  label={t("reassignTask")}
+                  active={overtime.reassign}
+                  onClick={() =>
+                    setOvertime((p) => ({
+                      ...p,
+                      reassign: !p.reassign,
+                    }))
+                  }
+                />
+
+              </div>
+            </div>
+
+            {/* AI */}
+            <div>
+
+              <h3 className="font-semibold text-xs mb-1">
+                {t("aiSettings")}
+              </h3>
+
+              <div className="flex items-center gap-2">
+
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={ai}
+                  onChange={(e) =>
+                    setAi(+e.target.value)
+                  }
+                  style={getSliderBg(ai)}
+                  className="w-[130px] h-1 rounded-full"
+                />
+
+                <div className="px-1 py-[1px] border rounded-lg text-[10px] font-semibold text-[#00816F]">
+                  {ai}%
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          {/* LEFT */}
+          <div className="flex-1">
+
+            <h3 className="font-semibold text-xs mb-1">
+              {t("notificationSettings")}
+            </h3>
+
+            <div className="grid grid-cols-2 gap-y-1 gap-x-4">
+
+              <Toggle
+                small
+                label="SMS"
+                active={notifications.sms}
+                onClick={() =>
+                  setNotifications((p) => ({
+                    ...p,
+                    sms: !p.sms,
+                  }))
+                }
+              />
+
+              <Toggle
+                small
+                label={t("email")}
+                active={notifications.email}
+                onClick={() =>
+                  setNotifications((p) => ({
+                    ...p,
+                    email: !p.email,
+                  }))
+                }
+              />
+
+              <Toggle
+                small
+                label={t("simpleUpdate")}
+                active={notifications.update}
+                onClick={() =>
+                  setNotifications((p) => ({
+                    ...p,
+                    update: !p.update,
+                  }))
+                }
+              />
+
+              <Toggle
+                small
+                label={t("assignNotify")}
+                active={notifications.assign}
+                onClick={() =>
+                  setNotifications((p) => ({
+                    ...p,
+                    assign: !p.assign,
+                  }))
+                }
+              />
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ================= BUTTONS ================= */}
+
+      <div className="flex justify-center gap-3 mb-10 -mt-6">
+
+        <button className="border px-12 py-1 rounded text-xs bg-white">
+          {t("edit")}
+        </button>
+
+        <button className="bg-gradient-to-r from-[#00816F] to-[#2DDBC9] text-white px-12 py-1 rounded text-xs">
+          {t("add")}
+        </button>
+
       </div>
     </div>
   );
@@ -692,7 +659,6 @@ function Section({
     <div className="mb-3">
 
       {title && (
-
         <h3 className="font-semibold mb-1">
           {title}
         </h3>
@@ -719,9 +685,7 @@ function TimeInput({
         type="number"
         value={value}
         onChange={(e) =>
-          onChange(
-            +e.target.value
-          )
+          onChange(+e.target.value)
         }
         className="w-8 text-center outline-none text-xs"
       />
@@ -729,6 +693,7 @@ function TimeInput({
       <span className="text-[10px]">
         {unit}
       </span>
+
     </div>
   );
 }
@@ -737,31 +702,42 @@ function Toggle({
   label,
   active,
   onClick,
+  small,
 }) {
 
   return (
 
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-2">
 
-      <span className="text-sm">
+      <span
+        className={
+          small
+            ? "text-[11px]"
+            : "text-sm"
+        }>
+
         {label}
+
       </span>
 
       <div
         onClick={onClick}
-        className={`w-9 h-4 rounded-full cursor-pointer relative ${
-          active
+        className={`${small
+            ? "w-7 h-3.5"
+            : "w-9 h-4"
+          } rounded-full cursor-pointer relative ${active
             ? "bg-gradient-to-r from-[#00816F] to-[#2DDBC9]"
             : "bg-gray-300"
-        }`}
-      >
+          }`}>
 
         <div
-          className={`absolute top-0.5 w-3 h-3 bg-white rounded-full ${
-            active
+          className={`absolute top-[2px] ${small
+              ? "w-2.5 h-2.5"
+              : "w-3 h-3"
+            } bg-white rounded-full ${active
               ? "right-0.5"
               : "left-0.5"
-          }`}
+            }`}
         />
       </div>
     </div>
@@ -782,12 +758,8 @@ function SortableItem({
   } = useSortable({ id });
 
   const style = {
-
     transform:
-      CSS.Transform.toString(
-        transform
-      ),
-
+      CSS.Transform.toString(transform),
     transition,
   };
 
@@ -798,9 +770,10 @@ function SortableItem({
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-white px-3 py-1.5 rounded shadow-sm cursor-grab"
-    >
+      className="bg-white px-3 py-1.5 rounded shadow-sm cursor-grab">
+
       ≡ {label}
+
     </div>
   );
 }
