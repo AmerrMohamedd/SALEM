@@ -137,42 +137,30 @@ AUTH_USER_MODEL = 'users.User'
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 EMAIL_HOST = 'smtp-relay.brevo.com'
+
 EMAIL_PORT = 587
+
 EMAIL_HOST_USER = 'aa31da001@smtp-brevo.com'
-EMAIL_HOST_PASSWORD = 'ZB7nNqk0RyhzAK6C'
+
+EMAIL_HOST_PASSWORD = "ZB7nNqk0RyhzAK6C"
+
 EMAIL_USE_TLS = True
 
 
 # Brevo API Settings
-DEFAULT_FROM_EMAIL = os.getenv(
-    'DEFAULT_FROM_EMAIL',
-    'amerr.mohaamed209@gmail.com'
-)
+DEFAULT_FROM_EMAIL = 'amerr.mohaamed209@gmail.com'
 
-BREVO_API_BASE_URL = os.getenv(
-    'BREVO_API_BASE_URL',
-    'https://api.brevo.com/v3'
-)
+BREVO_API_BASE_URL = 'https://api.brevo.com/v3'
 
-BREVO_API_KEY = os.getenv(
-    'BREVO_API_KEY',
-    'YOUR_BREVO_API_KEY'
-)
+BREVO_API_KEY = "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"
 
-BREVO_SENDER_EMAIL = os.getenv(
-    'BREVO_SENDER_EMAIL',
-    DEFAULT_FROM_EMAIL
-)
+BREVO_SENDER_EMAIL = DEFAULT_FROM_EMAIL
 
-BREVO_SENDER_NAME = os.getenv(
-    'BREVO_SENDER_NAME',
-    'Salem'
-)
+BREVO_SENDER_NAME = 'Salem'
 
-BREVO_EMAIL_TIMEOUT = int(
-    os.getenv('BREVO_EMAIL_TIMEOUT', '30')
-)
+BREVO_EMAIL_TIMEOUT = 30
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
