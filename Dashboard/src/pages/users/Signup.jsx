@@ -1,5 +1,3 @@
-
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -142,13 +140,32 @@ function Signup() {
                     className="w-full px-3 py-2 border rounded-md"
                 />
 
-                <input
-                    type="text"
-                    placeholder={t("role")}
+                {/* ROLE SELECT */}
+                <select
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-md"
-                />
+                    className="w-full px-3 py-2 border rounded-md bg-white"
+                >
+                    <option value="">
+                        {t("selectRole")}
+                    </option>
+
+                    <option value="admin">
+                        {t("admin")}
+                    </option>
+
+                    <option value="employee">
+                        {t("employee")}
+                    </option>
+
+                    <option value="field_worker">
+                        {t("fieldWorker")}
+                    </option>
+
+                    <option value="distribution_officer">
+                        {t("distributionOfficer")}
+                    </option>
+                </select>
 
                 <input
                     type="text"

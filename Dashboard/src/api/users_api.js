@@ -28,7 +28,7 @@ export const createUser = async (data) => {
         Account_Status: data.accountStatus || "نشط",
     };
 
-    const res = await client.post("/employee/signup", payload);
+    const res = await client.post("/employee/signup/", payload);
 
     return res.data;
 };
