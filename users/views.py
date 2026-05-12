@@ -1245,29 +1245,70 @@ def update_department(request, department_id):
 @require_http_methods(["DELETE", "POST"])
 @employee_access_token_required
 def delete_department(request, department_id):
-    department = Department.objects.filter(id=department_id).first()
-    if not department:
-        return JsonResponse({"message": "Department not found."}, status=404)
 
+    department = Department.objects.filter(
+        id=department_id
+    ).first()
+
+    if not department:
+        return JsonResponse(
+            {
+                "message":
+                "Department not found."
+            },
+            status=404,
+        )
+
+    # CHECK EMPLOYEES
     employees_count = User.objects.filter(
         user_type=User.UserType.EMPLOYEE,
         department=department,
     ).count()
+
     if employees_count > 0:
+
         return JsonResponse(
             {
-                "message": "Cannot delete this department because employees are assigned to it.",
-                "employees_count": employees_count,
+                "message":
+                "Cannot delete this department because employees are assigned to it.",
+
+                "employees_count":
+                employees_count,
             },
             status=409,
         )
 
+    # CHECK REPORTS / INCIDENTS
+    incidences_count = Incidence.objects.filter(
+        department=department
+    ).count()
+
+    if incidences_count > 0:
+
+        return JsonResponse(
+            {
+                "message":
+                "Cannot delete this department because reports are linked to it.",
+
+                "reports_count":
+                incidences_count,
+            },
+            status=409,
+        )
+
+    # DELETE LOGO
     if department.logo:
         department.logo.delete(save=False)
 
     department.delete()
-    return JsonResponse({"message": "Department deleted successfully."}, status=200)
 
+    return JsonResponse(
+        {
+            "message":
+            "Department deleted successfully."
+        },
+        status=200,
+    )
 
 @csrf_exempt
 @require_POST
