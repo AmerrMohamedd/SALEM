@@ -59,25 +59,21 @@ function UsersFilters({
         focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]
     "
 >
-    <option value="">
-        {t("role")}
-    </option>
-
     <option value="admin">
-        {t("admin")}
-    </option>
+    {t("admin")}
+</option>
 
-    <option value="operator">
-        {t("employee")}
-    </option>
+<option value="operator">
+    {t("employee")}
+</option>
 
-    <option value="field_worker">
-        {t("fieldWorker")}
-    </option>
+<option value="technical">
+    {t("fieldWorker")}
+</option>
 
-    <option value="distribution_officer">
-        {t("distributionOfficer")}
-    </option>
+<option value="supervisior">
+    {t("distributionOfficer")}
+</option>
 </select>
 
             {/* Add User */}

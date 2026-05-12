@@ -158,11 +158,11 @@ function Signup() {
         {t("employee")}
     </option>
 
-    <option value="field_worker">
+    <option value="technical">
         {t("fieldWorker")}
     </option>
 
-    <option value="distribution_officer">
+    <option value="supervisior">
         {t("distributionOfficer")}
     </option>
 </select>

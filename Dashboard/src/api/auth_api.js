@@ -28,7 +28,7 @@ export const login = async (national_id, password) => {
 };
 // ✅ SIGNUP
 export const signup = async (userData) => {
-  const res = await client.post("/signup/", userData);
+  const res = await client.post("/employee/signup/", userData);
   return res.data;
 };
 
