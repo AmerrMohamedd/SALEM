@@ -49,28 +49,36 @@ function UsersFilters({
 
             {/* Role Filter */}
             <select
-                onChange={(e) => onRoleChange(e.target.value)}
-                className="
-                    h-10 w-full lg:w-44
-                    px-3 text-sm
-                    border border-gray-200
-                    rounded-full
-                    shadow-[0_2px_4px_rgba(0,0,0,0.12)]
-                    focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]
-                "
-            >
-                <option value="">
-                    {t("role")}
-                </option>
+    onChange={(e) => onRoleChange(e.target.value)}
+    className="
+        h-10 w-full lg:w-44
+        px-3 text-sm
+        border border-gray-200
+        rounded-full
+        shadow-[0_2px_4px_rgba(0,0,0,0.12)]
+        focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]
+    "
+>
+    <option value="">
+        {t("role")}
+    </option>
 
-                <option value="admin">
-                    {t("admin")}
-                </option>
+    <option value="admin">
+        {t("admin")}
+    </option>
 
-                <option value="operator">
-                    {t("employee")}
-                </option>
-            </select>
+    <option value="operator">
+        {t("employee")}
+    </option>
+
+    <option value="field_worker">
+        {t("fieldWorker")}
+    </option>
+
+    <option value="distribution_officer">
+        {t("distributionOfficer")}
+    </option>
+</select>
 
             {/* Add User */}
             <button

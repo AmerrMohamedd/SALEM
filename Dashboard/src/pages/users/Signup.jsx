@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
@@ -140,50 +140,80 @@ function Signup() {
                     className="w-full px-3 py-2 border rounded-md"
                 />
 
-                {/* ROLE SELECT */}
+                {/* ROLE */}
                 <select
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
+    value={role}
+    onChange={(e) => setRole(e.target.value)}
+    className="w-full px-3 py-2 border rounded-md bg-white"
+>
+    <option value="">
+        {t("selectRole")}
+    </option>
+
+    <option value="admin">
+        {t("admin")}
+    </option>
+
+    <option value="operator">
+        {t("employee")}
+    </option>
+
+    <option value="field_worker">
+        {t("fieldWorker")}
+    </option>
+
+    <option value="distribution_officer">
+        {t("distributionOfficer")}
+    </option>
+</select>
+
+                {/* REGION */}
+                <select
+                    value={region}
+                    onChange={(e) => setRegion(e.target.value)}
                     className="w-full px-3 py-2 border rounded-md bg-white"
                 >
                     <option value="">
-                        {t("selectRole")}
+                        {t("region")}
                     </option>
 
-                    <option value="admin">
-                        {t("admin")}
+                    <option value="Cairo">
+                        Cairo
                     </option>
 
-                    <option value="employee">
-                        {t("employee")}
+                    <option value="Giza">
+                        Giza
                     </option>
 
-                    <option value="field_worker">
-                        {t("fieldWorker")}
-                    </option>
-
-                    <option value="distribution_officer">
-                        {t("distributionOfficer")}
+                    <option value="Alexandria">
+                        Alexandria
                     </option>
                 </select>
 
-                <input
-                    type="text"
-                    placeholder={t("region")}
-                    value={region}
-                    onChange={(e) => setRegion(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-md"
-                />
-
-                <input
-                    type="text"
-                    placeholder={t("department")}
+                {/* DEPARTMENT */}
+                <select
                     value={department}
                     onChange={(e) =>
                         setDepartment(e.target.value)
                     }
-                    className="w-full px-3 py-2 border rounded-md"
-                />
+                    className="w-full px-3 py-2 border rounded-md bg-white"
+                >
+                    <option value="">
+                        {t("department")}
+                    </option>
+
+                    <option value="gas">
+                        Gas
+                    </option>
+
+                    <option value="water">
+                        Water
+                    </option>
+
+                    <option value="electricity">
+                        Electricity
+                    </option>
+                </select>
 
                 <motion.button
                     type="submit"

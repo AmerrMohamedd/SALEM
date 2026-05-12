@@ -1,9 +1,8 @@
 import editIcon from "../../assets/icons/edit.png";
 import deleteIcon from "../../assets/trash.png";
-import { useTranslation } from "react-i18next";
 
 function UsersTableRows({ users, onDelete, onEdit }) {
-    const { t } = useTranslation();
+
     return (
         <div className="min-w-[900px] bg-white rounded-xl shadow mt-2 divide-y">
             {users.map((user) => (
@@ -27,8 +26,15 @@ function UsersTableRows({ users, onDelete, onEdit }) {
 
                     <div>{user.role}</div>
 
-                    <div className="text-green-600 font-semibold">
-                        {t("active")}
+                    {/* STATUS */}
+                    <div
+                        className={
+                            user.status === "نشط"
+                                ? "text-green-600 font-semibold"
+                                : "text-red-500 font-semibold"
+                        }
+                    >
+                        {user.status}
                     </div>
 
                     <div className="text-gray-500 text-xs leading-tight">
