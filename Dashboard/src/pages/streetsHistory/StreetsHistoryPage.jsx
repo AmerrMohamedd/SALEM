@@ -81,17 +81,11 @@ function StreetsHistoryPage() {
 
         if (!isMounted) return;
 
-        const allData = Array.isArray(data?.records)
-          ? data.records
-          : [];
-
-        const filtered = allData.filter((item) =>
-          item.street
-            ?.toLowerCase()
-            .includes(searchId.toLowerCase())
+        setRecords(
+          Array.isArray(data?.records)
+            ? data.records
+            : []
         );
-
-        setRecords(filtered);
 
         setStats(data?.stats || {});
 

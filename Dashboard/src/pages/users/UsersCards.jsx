@@ -1,4 +1,4 @@
-function UsersCards({ users }) {
+function UsersCards({ users, onEdit }) {
     return (
         <div
             className="
@@ -13,7 +13,11 @@ function UsersCards({ users }) {
             {users.map((user) => (
                 <div
                     key={user.id}
-                    className="bg-white rounded-xl shadow p-4 text-center"
+                    onClick={() => onEdit(user)}
+                    className="
+                        bg-white rounded-xl shadow p-4 text-center
+                        cursor-pointer hover:shadow-lg transition
+                    "
                 >
                     <img
                         src={

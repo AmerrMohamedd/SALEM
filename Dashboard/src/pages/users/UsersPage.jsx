@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 
 import UsersFilters from "./UsersFilters";
@@ -85,7 +84,8 @@ function UsersPage() {
         Math.ceil(filteredUsers.length / perPage)
     );
 
-    const isTableView = role !== "";
+    /* ===== TABLE VIEW ===== */
+    const isTableView = role !== "" || search !== "";
 
     /* ================= DELETE USER ================= */
     const handleDeleteUser = async (id) => {
@@ -152,11 +152,13 @@ function UsersPage() {
                         {/* ===== CARDS ===== */}
                         {!isTableView && (
                             <>
-                                <UsersCards users={visibleUsers} />
-
-                               
-                                   
-                                
+                                <UsersCards
+                                    users={visibleUsers}
+                                    onEdit={(user) => {
+                                        setSelectedUser(user);
+                                        setOpenEdit(true);
+                                    }}
+                                />
                             </>
                         )}
 

@@ -42,12 +42,12 @@ function UsersFilters({
                         setSearch(e.target.value);
                         onSearchChange(e.target.value);
                     }}
-                    placeholder={t("searchUsers")}                    
+                    placeholder={t("searchUsers")}
                     className="w-full text-sm outline-none bg-transparent"
                 />
             </div>
 
-            {/* Role */}
+            {/* Role Filter */}
             <select
                 onChange={(e) => onRoleChange(e.target.value)}
                 className="
@@ -59,11 +59,17 @@ function UsersFilters({
                     focus:outline-none focus:ring-2 focus:ring-[#2DDBC9]
                 "
             >
-                <option value="">{t("role")}</option>
-                <option value="المديرون">{t("admin")}</option>
-                <option value="الموظفون">{t("employee")}</option>
-                <option value="الميدانيون">{t("fieldWorker")}</option>
-                <option value="مسؤولو التوزيع">{t("distributionOfficer")}</option>
+                <option value="">
+                    {t("role")}
+                </option>
+
+                <option value="admin">
+                    {t("admin")}
+                </option>
+
+                <option value="operator">
+                    {t("employee")}
+                </option>
             </select>
 
             {/* Add User */}

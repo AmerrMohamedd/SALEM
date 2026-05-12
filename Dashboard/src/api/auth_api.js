@@ -34,13 +34,13 @@ export const signup = async (userData) => {
 
 // ✅ FORGOT PASSWORD
 export const forgotPassword = async (email) => {
-  const res = await client.post("/password/forgot", { email });
+  const res = await client.post("/password/forgot/", { email });
   return res.data;
 };
 
 // ✅ VERIFY OTP
 export const verifyOtp = async (email, otp) => {
-  const res = await client.post("/password/verify-otp", {
+  const res = await client.post("/password/verify-otp/", {
     email,
     otp,
   });
@@ -50,7 +50,7 @@ export const verifyOtp = async (email, otp) => {
 
 // ✅ RESET PASSWORD
 export const resetPassword = async (email, otp, new_password) => {
-  const res = await client.post("/password/reset", {
+  const res = await client.post("/password/reset/", {
     email,
     otp,
     new_password,
