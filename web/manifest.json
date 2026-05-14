@@ -1,6 +1,6 @@
 {
-    "name": "salem_app",
-    "short_name": "salem_app",
+    "name": "salem",
+    "short_name": "salem",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

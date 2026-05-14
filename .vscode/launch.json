@@ -4,13 +4,23 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
         {
-            "name": "Salem",
+            "name": "salem",
             "request": "launch",
             "type": "dart",
-            "program": "lib/core/main.dart"
+            "program": "lib/main.dart"
         },
-
+        {
+            "name": "salem (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "salem (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
     ]
 }
