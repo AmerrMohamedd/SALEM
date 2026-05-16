@@ -1360,6 +1360,24 @@ def assign_incidence_to_employee(request):
     if not employee:
         return JsonResponse({"message": "Employee from token not found."}, status=401)
 
+    # CHECK ACTIVE INCIDENCE
+    active_incidence = Incidence.objects.filter(
+        assigned_employee=employee,
+        status__in=[
+            Incidence.Status.ASSIGNED,
+            Incidence.Status.IN_PROGRESS,
+        ]
+    ).exists()
+
+    if active_incidence:
+        return JsonResponse(
+            {
+                "message": "You already have an active incidence assigned."
+            },
+            status=400,
+        )
+
+
     incidence = (
         Incidence.objects.select_related("citizin", "department", "assigned_employee")
         .filter(id=data["incidence_id"])
