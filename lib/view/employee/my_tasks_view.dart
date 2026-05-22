@@ -73,12 +73,31 @@ class Mytasks extends StatelessWidget {
                     ),
                   ),
                 ),
-                ...List.generate(5, (index) {
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 3.h),
-                    child: CompletedTaskTile(),
-                  );
-                }),
+                if (state is TaskLoaded && state.assignedToMeCompleted != null)
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: state.assignedToMeCompleted.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 3.h),
+                        child: CompletedTaskTile(
+                          task: state.assignedToMeCompleted[index],
+                        ),
+                      );
+                    },
+                  ),
+                if (state is TaskLoaded && state.assignedToMeCompleted == [])
+                  Center(
+                    child: Text(
+                      'No completed tasks yet.',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
               ],
             );
           },

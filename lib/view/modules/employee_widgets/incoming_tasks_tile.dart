@@ -111,13 +111,10 @@ class IncomingTasksTile extends StatelessWidget {
                             task.location!,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            textHeightBehavior: TextHeightBehavior(
-                              applyHeightToFirstAscent: false,
-                              applyHeightToLastDescent: false,
-                            ),
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontFamily: 'league',
+                              height: 1.0,
                             ),
                           ),
                         ),
@@ -178,8 +175,7 @@ class IncomingTasksTile extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      ReportDetails(task: task),
+                  builder: (context) => ReportDetails(task: task),
                 ),
               ),
             ),

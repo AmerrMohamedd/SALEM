@@ -80,7 +80,7 @@ class EmployeeHome extends StatelessWidget {
                         "assets/vectors/ring_icon.png",
                         width: 14.w,
                         height: 17.h,
-                        fit: BoxFit.none,
+                        fit: BoxFit.contain,
                       ),
                       onPressed: () {},
                     ),
@@ -100,7 +100,7 @@ class EmployeeHome extends StatelessWidget {
                         "assets/vectors/settings_icon.png",
                         width: 17.w,
                         height: 17.h,
-                        fit: BoxFit.none,
+                        fit: BoxFit.contain,
                       ),
                       onPressed: () {},
                     ),
@@ -165,13 +165,32 @@ class EmployeeHome extends StatelessWidget {
                   return Center(child: CircularProgressIndicator());
                 } else if (state is TaskLoaded) {
                   final tasks = state.EmployeeTasks;
+                  if (tasks.isEmpty) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/vectors/no_reports.png",
+                          width: double.infinity,
+                        ),
+                        SizedBox(height: 43.h),
+                        Text(
+                          "No reports yet",
+                          style: TextStyle(
+                            fontSize: 32.sp,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'league',
+                          ),
+                        ),
+                      ],
+                    );
+                  }
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: tasks.length,
                     itemBuilder: (context, index) {
                       final task = tasks[index];
-                      
 
                       return IncomingTasksTile(task: task);
                     },

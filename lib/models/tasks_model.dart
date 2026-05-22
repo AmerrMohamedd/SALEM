@@ -1,5 +1,3 @@
-
-
 class TaskModel {
   final String? id;
   final String? type;
@@ -8,11 +6,15 @@ class TaskModel {
   final String? location;
   final String? priority;
   final String? beforeImage;
+  final String? afterImage;
   final bool? isAssigned;
   final String? description;
   final String? citizenName;
   final String? citizenPhone;
   final String? assignedEmployeeId;
+  final String? lat;
+  final String? long;
+  final String? whatWasDone;
 
   TaskModel({
     this.description,
@@ -30,6 +32,10 @@ class TaskModel {
     this.citizenName,
     this.citizenPhone,
     this.assignedEmployeeId,
+    this.lat,
+    this.long,
+    this.afterImage,
+    this.whatWasDone,
   });
 
   String get formattedDate {
@@ -59,6 +65,21 @@ class TaskModel {
     }
   }
 
+  int get progressStep {
+    if (status == null) return 0;
+
+    switch (status) {
+      case 'Assigned':
+        return 1;
+      case 'In_Progress':
+        return 2;
+      case 'Review':
+        return 3;
+      default:
+        return 0;
+    }
+  }
+
   factory TaskModel.fromJson(Map<String, dynamic> json) {
     return TaskModel(
       id: json['id']?.toString(),
@@ -67,6 +88,8 @@ class TaskModel {
       type: json['Department']['name'],
       beforeImage: json['Image_Before_Analysis'],
       location: json['Location_Name'],
+      lat: json['Latlatitude'],
+      long: json['Longitude'],
       isAssigned: json['Assigned_Employee'] != null,
       priority: json['Priority'],
       description: json['Description'],
@@ -75,6 +98,8 @@ class TaskModel {
       assignedEmployeeId: json['Assigned_Employee'] != null
           ? json['Assigned_Employee']['id'].toString()
           : null,
+      afterImage: json['Image_After_Analysis'],
+      whatWasDone: json['What_was_done'],
     );
   }
 }

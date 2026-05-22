@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:salem/core/constans.dart';
 import 'package:salem/models/tasks_model.dart';
+import 'package:salem/view/employee/task_progress_view.dart';
 import 'package:salem/view/modules/common/main_button.dart';
 import 'package:salem/view/modules/employee_widgets/progress_bar.dart';
 
@@ -170,7 +171,15 @@ class _CurrentTaskTileState extends State<CurrentTaskTile> {
                   SizedBox(height: 13.h),
                   MainButton(
                     text: 'Continue Task',
-                    ontap: () {},
+                    ontap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              TaskProgressView(taskId: widget.task.id!),
+                        ),
+                      );
+                    },
                     font_family: 'league',
                     color: mainColor_navy,
                     width: 108.w,

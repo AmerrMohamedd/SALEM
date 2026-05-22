@@ -19,7 +19,7 @@ class SuccessTaskPage extends StatelessWidget {
               'assets/vectors/big_success_icon.svg',
               width: 172.w,
               height: 172.h,
-              fit: BoxFit.none,
+              fit: BoxFit.cover,
             ),
             SizedBox(height: 46.h),
             ShaderMask(

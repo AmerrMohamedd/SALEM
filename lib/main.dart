@@ -71,6 +71,7 @@ class MyApp extends StatelessWidget {
           '/forgetPassword': (context) => ForgetPasswordPage(),
           '/otpVerify': (context) => OtpVerify(),
           '/resetPassword': (context) => ResetPassword(),
+         
         },
       ),
     );

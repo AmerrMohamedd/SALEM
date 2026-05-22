@@ -256,9 +256,10 @@ class CreateReportPage extends StatelessWidget {
                       );
 
                       if (image != null) {
-                        context.read<TaskCubit>().setTaskImage(
+                        cubit.setTaskImage(
                           File(image.path),
                         );
+
                       }
                     },
                     child: Container(

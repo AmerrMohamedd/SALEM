@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salem/models/tasks_model.dart';
 import 'package:salem/repos/tasks_repo.dart';
-
+import 'package:collection/collection.dart';
 part 'task_state.dart';
 
 class TaskCubit extends Cubit<TaskState> {
@@ -25,6 +25,7 @@ class TaskCubit extends Cubit<TaskState> {
           CitizenTasks: await taskRepo.fetchCitizentasks(),
           EmployeeTasks: [],
           assignedToMe: null,
+          assignedToMeCompleted: [],
         ),
       );
     } catch (e) {
@@ -48,17 +49,28 @@ class TaskCubit extends Cubit<TaskState> {
 
       _calculateTaskStats(allTasks);
       if (allTasks.any((task) => task.assignedEmployeeId == employeeId)) {
-        final assignedToMe = allTasks.firstWhere(
-          (task) => task.assignedEmployeeId == employeeId,
+        final assignedToMe = allTasks.firstWhereOrNull(
+          (task) =>
+              task.assignedEmployeeId == employeeId &&
+              task.status != 'Finished',
         );
+
+        final assignedToMeCompleted = allTasks
+            .where(
+              (task) =>
+                  task.assignedEmployeeId == employeeId &&
+                  task.status == 'Finished',
+            )
+            .toList();
         emit(
           TaskLoaded(
             CitizenTasks: [],
             EmployeeTasks: unassignedTasks,
             assignedToMe: assignedToMe,
+            assignedToMeCompleted: assignedToMeCompleted,
           ),
         );
-     
+
         return;
       }
 
@@ -67,8 +79,73 @@ class TaskCubit extends Cubit<TaskState> {
           CitizenTasks: [],
           EmployeeTasks: unassignedTasks,
           assignedToMe: null,
+          assignedToMeCompleted: [],
         ),
       );
+    } catch (e) {
+      emit(TaskError(e.toString()));
+    }
+  }
+
+  Future<void> assignTask({
+    required String department,
+    required String employeeId,
+    required String taskId,
+  }) async {
+    emit(TaskLoading());
+
+    try {
+      await taskRepo.assignTask(taskId: taskId);
+      await loadEmployeeTasks(department: department, employeeId: employeeId);
+    } catch (e) {
+      emit(TaskError(e.toString()));
+    }
+  }
+
+  Future<void> taskInProgress({
+    required String department,
+    required String employeeId,
+    required String taskId,
+  }) async {
+    emit(TaskLoading());
+
+    try {
+      if (location != null) {
+        await taskRepo.taskInProgressWithLocation(
+          taskId: taskId,
+          lat: location!['latitude'],
+          long: location!['longitude'],
+          location: location!['address'],
+        );
+      } else {
+        await taskRepo.taskInProgress(taskId: taskId);
+      }
+
+      await loadEmployeeTasks(department: department, employeeId: employeeId);
+    } catch (e) {
+      emit(TaskError(e.toString()));
+    }
+  }
+
+  Future<void> taskReview(String whatWasDone, String incidenceId) async {
+    if (whatWasDone.trim().isEmpty) {
+      emit(TaskError("Please type what was done"));
+      return;
+    }
+
+    if (taskImage == null) {
+      emit(TaskError("Please take a photo"));
+      return;
+    }
+
+    emit(TaskActionLoading());
+    try {
+      await taskRepo.taskReview({
+        "imageAfterAnalysis": taskImage,
+        'whatWasDone': whatWasDone,
+        'incidence_id': incidenceId,
+      });
+      emit(TaskActionSuccess());
     } catch (e) {
       emit(TaskError(e.toString()));
     }
@@ -152,6 +229,15 @@ class TaskCubit extends Cubit<TaskState> {
     } catch (e) {
       emit(TaskError(e.toString()));
     }
+  }
+
+  void resetLocation({
+    required String department,
+    required String employeeId,
+  }) async {
+    location = null;
+    await loadEmployeeTasks(department: department, employeeId: employeeId);
+    // عشان يحصل rebuild
   }
 
   bool isTaskTypeSelected(String type) {

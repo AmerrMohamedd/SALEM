@@ -25,11 +25,13 @@ class TaskLoaded extends TaskState {
   final List<TaskModel> CitizenTasks;
   final List<TaskModel> EmployeeTasks;
   final TaskModel? assignedToMe;
+  final List<TaskModel> assignedToMeCompleted;
 
   TaskLoaded({
     required this.CitizenTasks,
     required this.EmployeeTasks,
     required this.assignedToMe,
+    required this.assignedToMeCompleted,
   }); 
   }
 

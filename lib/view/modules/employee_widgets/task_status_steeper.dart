@@ -11,9 +11,9 @@ class TaskStatusStepper extends StatelessWidget {
     required this.currentStep,
     this.stepTitles = const [
       'Reported',
-      'Under Review',
       'Assigned',
       'In Progress',
+      'Review',
       'Resolved',
     ],
   }) : super(key: key);
@@ -38,7 +38,7 @@ class TaskStatusStepper extends StatelessWidget {
           children: List.generate(
             stepTitles.length,
             (index) => Padding(
-              padding: EdgeInsets.only(left: index == 0 ? 0 : 7.w),
+              padding: EdgeInsets.only(left: index == 0 ? 0 : 12.w),
               child: Text(
                 stepTitles[index],
                 style: TextStyle(

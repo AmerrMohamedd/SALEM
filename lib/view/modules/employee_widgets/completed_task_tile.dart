@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:salem/core/constans.dart';
+import 'package:salem/models/tasks_model.dart';
 
 class CompletedTaskTile extends StatelessWidget {
-  const CompletedTaskTile({super.key});
-
+  const CompletedTaskTile({super.key, required this.task});
+  final TaskModel task;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -57,7 +58,7 @@ class CompletedTaskTile extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    'task.type',
+                                    task.type!,
                                     style: TextStyle(
                                       fontFamily: 'league',
                                       fontSize: 12.sp,
@@ -82,7 +83,7 @@ class CompletedTaskTile extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    'task.id.toString()',
+                                    task.id.toString(),
                                     style: TextStyle(
                                       fontFamily: 'league',
                                       fontSize: 12.sp,
@@ -98,7 +99,7 @@ class CompletedTaskTile extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                    'Time Complete: ',
+                                    'Created: ',
                                     style: TextStyle(
                                       fontFamily: 'league',
                                       fontSize: 12.sp,
@@ -110,7 +111,7 @@ class CompletedTaskTile extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    'task.timeComplete',
+                                    task.formattedDate,
                                     style: TextStyle(
                                       fontFamily: 'league',
                                       fontSize: 12.sp,
@@ -138,7 +139,7 @@ class CompletedTaskTile extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    'task.nextStepETA',
+                                    task.whatWasDone!,
                                     style: TextStyle(
                                       fontFamily: 'league',
                                       fontSize: 12.sp,
