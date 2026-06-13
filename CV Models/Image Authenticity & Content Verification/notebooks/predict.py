@@ -1,19 +1,16 @@
-from fastapi import FastAPI, UploadFile, File
-from PIL import Image
-from torchvision import transforms
 import torch
 import timm
-import io
 
-app = FastAPI(
-    title="Image Authenticity Service"
-)
+from PIL import Image
+from torchvision import transforms
 
 # =========================
 # CONFIG
 # =========================
 
-MODEL_PATH = "../saved_model/best_model.pth"
+MODEL_PATH = "saved_model/best_model.pth"
+
+IMAGE_SIZE = 224
 
 DEVICE = torch.device(
     "cuda" if torch.cuda.is_available() else "cpu"
@@ -23,8 +20,6 @@ CLASS_NAMES = [
     "authentic",
     "spam"
 ]
-
-IMAGE_SIZE = 224
 
 # =========================
 # LOAD MODEL
@@ -46,32 +41,22 @@ model.load_state_dict(
 model.to(DEVICE)
 model.eval()
 
+# =========================
+# TRANSFORM
+# =========================
+
 transform = transforms.Compose([
     transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
     transforms.ToTensor()
 ])
 
 # =========================
-# ROUTES
+# PREDICT FUNCTION
 # =========================
 
-@app.get("/")
-def home():
-    return {
-        "service": "Image Authenticity Service",
-        "status": "running"
-    }
+def predict_image(image_path):
 
-@app.post("/predict")
-async def predict(
-    file: UploadFile = File(...)
-):
-
-    image_bytes = await file.read()
-
-    image = Image.open(
-        io.BytesIO(image_bytes)
-    ).convert("RGB")
+    image = Image.open(image_path).convert("RGB")
 
     image = transform(image)
 
@@ -97,12 +82,24 @@ async def predict(
         pred.item()
     ]
 
-    confidence = round(
-        confidence.item() * 100,
-        2
+    confidence = confidence.item() * 100
+
+    return prediction, confidence
+
+
+# =========================
+# TEST
+# =========================
+
+if __name__ == "__main__":
+
+    image_path = "D:/SALEM_Ai/CV Models/Image Authenticity & Content Verification/temp_uploads/000000007247.jpg"
+
+    prediction, confidence = predict_image(
+        image_path
     )
 
-    return {
-        "prediction": prediction,
-        "confidence": confidence
-    }
+    print("\nPrediction :", prediction)
+    print(
+        f"Confidence : {confidence:.2f}%"
+    )

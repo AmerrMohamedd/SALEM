@@ -1,8 +1,0 @@
-tensorflow
-numpy
-pillow
-imagehash
-fastapi
-uvicorn
-python-multipart
-opencv-python
