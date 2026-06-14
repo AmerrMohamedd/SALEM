@@ -53,6 +53,7 @@ class MainLayoutEmployee extends StatelessWidget {
                 children: pages,
               ),
               bottomNavigationBar: MainBottomNavBar(
+                isEmployee: true,
                 currentIndex: state.currentIndex,
                 onTap: (index) {
                   cubit.changeIndex(index);

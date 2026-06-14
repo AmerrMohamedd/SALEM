@@ -5,7 +5,9 @@ import 'package:salem/core/api_services.dart';
 import 'package:salem/cubits/auth/auth_cubit.dart';
 import 'package:salem/cubits/auth/password_cubit.dart';
 import 'package:salem/cubits/nav/nav_cubit.dart';
+import 'package:salem/cubits/notifications/cubit/notifications_cubit.dart';
 import 'package:salem/cubits/tasks/task_cubit.dart';
+import 'package:salem/repos/notifications_repo.dart';
 import 'package:salem/repos/tasks_repo.dart';
 import 'package:salem/repos/user_repo.dart';
 import 'package:salem/view/auth/forget%20password/forget_password.dart';
@@ -37,6 +39,7 @@ void main() async {
         BlocProvider(create: (context) => PasswordCubit()),
         BlocProvider(create: (context) => NavCubit()),
         BlocProvider(create: (context) => TaskCubit(TaskRepo())),
+        BlocProvider(create: (context) => NotificationsCubit(NotificationsRepo())),
       ],
       child: MyApp(),
     ),
@@ -71,7 +74,6 @@ class MyApp extends StatelessWidget {
           '/forgetPassword': (context) => ForgetPasswordPage(),
           '/otpVerify': (context) => OtpVerify(),
           '/resetPassword': (context) => ResetPassword(),
-         
         },
       ),
     );

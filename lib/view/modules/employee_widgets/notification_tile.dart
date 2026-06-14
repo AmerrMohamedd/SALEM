@@ -4,15 +4,22 @@ import 'package:flutter_svg/svg.dart';
 import 'package:salem/core/constans.dart';
 
 class NotificationTile extends StatelessWidget {
-  const NotificationTile({super.key});
-
+  const NotificationTile({
+    super.key,
+    required this.name,
+    required this.location,
+    required this.timeAgo,
+  });
+  final String name;
+  final String location;
+  final String timeAgo;
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 360.w,
-      padding: EdgeInsets.symmetric(vertical: 12.h), // بدل height الثابت
+      padding: EdgeInsets.symmetric(vertical: 12.h),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start, // مهم!
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(width: 30.w),
@@ -29,10 +36,9 @@ class NotificationTile extends StatelessWidget {
           ),
           SizedBox(width: 22.w),
           Expanded(
-            // مهم علشان ياخد باقي المساحة
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // مهم!
-              mainAxisSize: MainAxisSize.min, // مهم!
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -46,7 +52,7 @@ class NotificationTile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '2 M',
+                      timeAgo,
                       textHeightBehavior: TextHeightBehavior(
                         applyHeightToFirstAscent: false,
                         applyHeightToLastDescent: false,
@@ -60,10 +66,10 @@ class NotificationTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 4.h), // مسافة بين العنوان والنص
+                SizedBox(height: 4.h),
                 Text(
-                  'تمت الموافقة على طلب الدعم الخاص ببلاغ كابل كهرباء مقطوع. الفريق في الطريق إليك.',
-                  maxLines: 3, // أو null
+                  '$name submitted a support request for a Gas Incident.\nLocation: $location',
+                  maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14.sp,

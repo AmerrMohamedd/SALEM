@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:salem/core/constans.dart';
 import 'package:salem/cubits/auth/auth_cubit.dart';
+import 'package:salem/cubits/notifications/cubit/notifications_cubit.dart';
 import 'package:salem/cubits/tasks/task_cubit.dart';
 import 'package:salem/models/employee_model.dart';
 import 'package:salem/models/tasks_model.dart';
@@ -558,7 +559,27 @@ class _TaskProgressViewState extends State<TaskProgressView> {
                                 SizedBox(width: 32.w),
                                 MainButton(
                                   text: 'Request Support',
-                                  ontap: () {},
+                                  ontap: () async {
+                                    try {
+                                      final msg = await context
+                                          .read<NotificationsCubit>()
+                                          .requestSupport(
+                                            int.parse(widget.taskId),
+                                          );
+
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(content: Text(msg)),
+                                      );
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(content: Text(e.toString())),
+                                      );
+                                    }
+                                  },
                                   font_family: 'league',
                                   width: 139.42.w,
                                   height: 30.h,

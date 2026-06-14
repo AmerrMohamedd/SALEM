@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:salem/core/constans.dart';
 import 'package:salem/cubits/auth/auth_cubit.dart';
 import 'package:salem/cubits/auth/password_cubit.dart';
+import 'package:salem/cubits/notifications/cubit/notifications_cubit.dart';
 import 'package:salem/cubits/tasks/task_cubit.dart';
 import 'package:salem/models/employee_model.dart';
 import 'package:salem/view/modules/common/back_arrow.dart';
@@ -40,6 +41,7 @@ class LoginPage extends StatelessWidget {
               department: (cubit.currentUser as EmployeeModel).Department,
               employeeId: (cubit.currentUser as EmployeeModel).id,
             );
+            context.read<NotificationsCubit>().loadNotifications();
             Navigator.pushNamedAndRemoveUntil(
               context,
               '/mainEmployee',
