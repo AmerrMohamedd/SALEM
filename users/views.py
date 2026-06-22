@@ -17,6 +17,14 @@ from django.views.decorators.http import require_POST, require_http_methods
 from .brevo_api import BrevoEmailError, send_transactional_email
 from .models import Department, Incidence, OperatorNotification, PasswordResetOTP, User
 
+from .services.ai_service import (
+    check_duplicate,
+    check_image_authenticity,
+    detect_road_damage,
+    get_trust_score
+)
+
+
 INCIDENCE_STATUS_FILTER_MAP = {
     "new": Incidence.Status.NEW,
     "assigned": Incidence.Status.ASSIGNED,
@@ -1309,20 +1317,201 @@ def delete_department(request, department_id):
         },
         status=200,
     )
+def calculate_user_trust_metrics(user):
 
+    reports = Incidence.objects.filter(
+        citizin=user
+    )
+
+    total_reports = reports.count()
+
+    if total_reports == 0:
+        return {
+            "valid_ratio": 1,
+            "duplicate_rate": 0,
+            "fake_image_ratio": 0,
+            "reports_last_30_days": 0,
+            "avg_severity_reported": 0
+        }
+
+    duplicate_reports = reports.filter(
+        duplicate=True
+    ).count()
+
+    fake_reports = reports.filter(
+        image_authenticity__iexact="fake"
+    ).count()
+
+    reports_last_30_days = reports.filter(
+        created_at__gte=timezone.now() - timedelta(days=30)
+    ).count()
+
+    valid_reports = (
+        total_reports
+        - duplicate_reports
+        - fake_reports
+    )
+
+    valid_ratio = valid_reports / total_reports
+
+    duplicate_rate = duplicate_reports / total_reports
+
+    fake_image_ratio = fake_reports / total_reports
+
+    return {
+        "valid_ratio": round(valid_ratio, 4),
+        "duplicate_rate": round(duplicate_rate, 4),
+        "fake_image_ratio": round(fake_image_ratio, 4),
+        "reports_last_30_days": reports_last_30_days,
+        "avg_severity_reported": 0
+    }
 @csrf_exempt
 @require_POST
 @citizin_access_token_required
 def create_citizin_incidence(request):
+
     data, error = _extract_citizin_incidence_form_data(request)
+
     if error:
         return JsonResponse({"message": error}, status=400)
 
     department = _resolve_department(data["department_value"])
+
     if not department:
         return JsonResponse({"message": "Department not found."}, status=400)
 
+    # ==========================
+    # Duplicate Detection AI
+    # ==========================
+
+    duplicate = False
+    similarity = 0
+
     try:
+
+        duplicate_result = check_duplicate(
+            data["description"]
+        )
+
+        if duplicate_result:
+
+            duplicate = duplicate_result.get(
+                "duplicate",
+                False
+            )
+
+            similarity = duplicate_result.get(
+                "similarity",
+                0
+            )
+
+    except Exception as e:
+
+        print(
+            "Duplicate Detection Error:",
+            e
+        )
+
+    # ==========================
+    # Image Authenticity AI
+    # ==========================
+
+    image_authenticity = None
+    image_confidence = None
+
+    try:
+
+        image_result = check_image_authenticity(
+            data["image_before_analysis"]
+        )
+
+        if image_result:
+
+            image_authenticity = image_result.get(
+                "prediction"
+            )
+
+            image_confidence = image_result.get(
+                "confidence"
+            )
+
+    except Exception as e:
+
+        print(
+            "Image Authenticity Error:",
+            e
+        )
+
+    # ==========================
+    # Road Damage Detection AI
+    # ==========================
+
+    road_prediction = None
+    road_confidence = None
+
+    try:
+
+        road_result = detect_road_damage(
+            data["image_before_analysis"]
+        )
+
+        if road_result:
+
+            road_prediction = road_result.get(
+                "prediction"
+            )
+
+            road_confidence = road_result.get(
+                "confidence"
+            )
+
+    except Exception as e:
+
+        print(
+            "Road Detection Error:",
+            e
+        )
+
+    # ==========================
+    # Trust Model AI
+    # ==========================
+
+    trust_score = None
+    trust_level = None
+
+    try:
+
+        trust_metrics = calculate_user_trust_metrics(
+            request.citizin_user
+        )
+
+        trust_result = get_trust_score(
+            trust_metrics["valid_ratio"],
+            trust_metrics["duplicate_rate"],
+            trust_metrics["fake_image_ratio"],
+            trust_metrics["reports_last_30_days"],
+            trust_metrics["avg_severity_reported"]
+        )
+
+        if trust_result:
+
+            trust_score = trust_result.get(
+                "trust_score"
+            )
+
+            trust_level = trust_result.get(
+                "trust_level"
+            )
+
+    except Exception as e:
+
+        print(
+            "Trust Model Error:",
+            e
+        )
+
+    try:
+
         incidence = Incidence.objects.create(
             description=data["description"],
             latlatitude=data["latlatitude"],
@@ -1331,22 +1520,93 @@ def create_citizin_incidence(request):
             department=department,
             image_before_analysis=data["image_before_analysis"],
             citizin=request.citizin_user,
+
+            duplicate=duplicate,
+            duplicate_similarity=similarity,
+
+            image_authenticity=image_authenticity,
+            image_confidence=image_confidence,
+
+            road_prediction=road_prediction,
+            road_confidence=road_confidence,
+
+            trust_score=trust_score,
+            trust_level=trust_level,
         )
+
+        if trust_score is not None:
+
+            request.citizin_user.trust_score = trust_score
+
+        if trust_level is not None:
+
+            request.citizin_user.trust_level = trust_level
+
+        request.citizin_user.save(
+            update_fields=[
+                "trust_score",
+                "trust_level"
+            ]
+        )
+
     except ValidationError as exc:
+
         if hasattr(exc, "message_dict"):
-            return JsonResponse({"errors": exc.message_dict}, status=400)
-        return JsonResponse({"errors": exc.messages}, status=400)
+            return JsonResponse(
+                {"errors": exc.message_dict},
+                status=400
+            )
+
+        return JsonResponse(
+            {"errors": exc.messages},
+            status=400
+        )
+
     except IntegrityError:
-        return JsonResponse({"message": "Failed to create incidence due to data conflict."}, status=400)
+
+        return JsonResponse(
+            {
+                "message":
+                "Failed to create incidence due to data conflict."
+            },
+            status=400
+        )
 
     return JsonResponse(
         {
             "message": "Incidence created successfully.",
-            "incidence": _incidence_to_dict(request, incidence),
+
+            "AI_Result": {
+
+                "duplicate": duplicate,
+                "similarity": similarity,
+
+                "image_authenticity":
+                    image_authenticity,
+
+                "image_confidence":
+                    image_confidence,
+
+                "road_prediction":
+                    road_prediction,
+
+                "road_confidence":
+                    road_confidence,
+
+                "trust_score":
+                    trust_score,
+
+                "trust_level":
+                    trust_level
+            },
+
+            "incidence": _incidence_to_dict(
+                request,
+                incidence
+            ),
         },
         status=201,
     )
-
 
 @csrf_exempt
 @require_POST

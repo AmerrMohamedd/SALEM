@@ -80,6 +80,31 @@ class User(models.Model):
         blank=True,
         db_column="Username",
     )
+    trust_score = models.FloatField(
+    default=0.5,
+    db_column="Trust_Score"
+)
+
+    trust_level = models.CharField(
+    max_length=20,
+    default="Medium",
+    db_column="Trust_Level"
+)
+
+    valid_ratio = models.FloatField(
+    default=0,
+    db_column="Valid_Ratio"
+)
+
+    duplicate_rate = models.FloatField(
+    default=0,
+    db_column="Duplicate_Rate"
+)
+
+    fake_image_ratio = models.FloatField(
+    default=0,
+    db_column="Fake_Image_Ratio"
+)
 
     class Meta:
         db_table = "Users"
@@ -267,6 +292,75 @@ class Incidence(models.Model):
         db_column="Assigned_Employee_Id",
         limit_choices_to={"user_type": User.UserType.EMPLOYEE},
     )
+
+    duplicate = models.BooleanField(
+    default=False,
+    db_column="Duplicate"
+)
+
+    duplicate_similarity = models.FloatField(
+    null=True,
+    blank=True,
+    db_column="Duplicate_Similarity"
+)
+
+    trust_score = models.FloatField(
+    null=True,
+    blank=True,
+    db_column="Trust_Score"
+)
+
+    trust_level = models.CharField(
+    max_length=20,
+    null=True,
+    blank=True,
+    db_column="Trust_Level"
+)
+
+    severity_prediction = models.CharField(
+    max_length=20,
+    null=True,
+    blank=True,
+    db_column="Severity_Prediction"
+)
+
+    severity_score = models.FloatField(
+    null=True,
+    blank=True,
+)
+
+    priority_prediction = models.CharField(
+    max_length=20,
+    null=True,
+    blank=True,
+)
+
+    priority_score = models.FloatField(
+    null=True,
+    blank=True,
+)
+
+    road_prediction = models.CharField(
+    max_length=50,
+    null=True,
+    blank=True,
+)
+
+    road_confidence = models.FloatField(
+    null=True,
+    blank=True,
+)
+
+    image_authenticity = models.CharField(
+    max_length=50,
+    null=True,
+    blank=True,
+)
+
+    image_confidence = models.FloatField(
+    null=True,
+    blank=True,
+)
 
     class Meta:
         db_table = "Incidence"
