@@ -197,6 +197,7 @@ class Incidence(models.Model):
         REVIEW = "Review", "Review"
         FORWORDED = "Forworded", "Forworded"
         FINISHED = "Finished", "Finished"
+        REJECTED = "Rejected", "Rejected"
 
     class Priority(models.TextChoices):
         LOW = "Low", "Low"
@@ -223,6 +224,11 @@ class Incidence(models.Model):
         db_column="Created_At",
         db_index=True,
     )
+    forward_reason = models.CharField(
+    max_length=100,
+    null=True,
+    blank=True
+)
     dashboard_date = models.DateField(
         default=timezone.localdate,
         db_column="Dashboard_Date",

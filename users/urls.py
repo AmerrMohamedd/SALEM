@@ -1,6 +1,8 @@
 from django.urls import path
 
 from .views import (
+    approve_report,
+    reject_report,
     get_operator_notifications,
     mark_notification_as_read,
     assign_incidence_to_employee,
@@ -59,6 +61,17 @@ urlpatterns = [
         "incidence/<int:incidence_id>/in-progress/",
         move_incidence_to_in_progress,
         name="move-incidence-to-in-progress",
+    ),
+    path(
+    "incidences/<int:report_id>/approve/",
+    approve_report,
+    name="approve_report",
+    ),
+
+    path(
+    "incidences/<int:report_id>/reject/",
+    reject_report,
+    name="reject_report",
     ),
     path("incidence/<int:incidence_id>/", get_incidence_by_id, name="get-incidence-by-id"),
     path("incidence/<int:incidence_id>/status/", get_incidence_status_by_id, name="get-incidence-status-by-id"),

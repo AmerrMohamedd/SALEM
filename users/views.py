@@ -3,6 +3,9 @@ import secrets
 from datetime import datetime, timedelta, timezone
 from functools import wraps
 
+from rest_framework.decorators import api_view
+from django.shortcuts import get_object_or_404
+
 import jwt
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
@@ -245,7 +248,35 @@ def _resolve_department(department_value):
 
     return Department.objects.filter(name__iexact=value).first()
 
+@api_view(["POST"])
+def approve_report(request, report_id):
 
+    incidence = get_object_or_404(
+    Incidence,
+    id=report_id
+)
+
+    incidence.status = Incidence.Status.NEW
+    incidence.save()
+
+    return Response({
+        "message": "Report approved successfully"
+    })
+@api_view(["POST"])
+def reject_report(request, report_id):
+
+    incidence = get_object_or_404(
+    Incidence,
+    id=report_id
+)
+
+    incidence.status = Incidence.Status.NEW
+    incidence.save()
+
+
+    return Response({
+        "message": "Report rejected successfully"
+    })
 def _extract_department_form_data(request):
     name = request.POST.get("Name") or request.POST.get("name")
     logo = request.FILES.get("Logo") or request.FILES.get("logo")
@@ -1604,13 +1635,60 @@ def create_citizin_incidence(request):
             e
         )
 
+    DEPARTMENT_MAPPING = {
+    "Road": [
+        "Road_Damage",
+        "Garbage",
+        "Fallen_Tree"
+    ],
+
+    "Electricity": [
+        "Electrical_Pole"
+    ],
+
+    "Gas": [
+        "Fire"
+    ]
+}    
+    # ==========================
+    # AI Decision Layer
+    # ==========================
+
+    status = Incidence.Status.NEW
+    forward_reason = None
+
+    if image_authenticity == "spam":    
+
+        status = Incidence.Status.FORWORDED
+        forward_reason = "Spam Image"
+
+    else:
+
+        allowed_predictions = DEPARTMENT_MAPPING.get(
+        department.name,
+        []
+    )
+
+        if (
+            road_prediction
+            and
+            allowed_predictions
+            and
+            road_prediction not in allowed_predictions
+    ):
+            status = Incidence.Status.FORWORDED
+            forward_reason = "Department Mismatch"
+
+
     try:
 
         incidence = Incidence.objects.create(
+            forward_reason=forward_reason,
             description=data["description"],
             latlatitude=data["latlatitude"],
             longitude=data["longitude"],
             location_name=data["location_name"],
+            status=status,
             department=department,
             image_before_analysis=data["image_before_analysis"],
             citizin=request.citizin_user,
@@ -1688,6 +1766,9 @@ def create_citizin_incidence(request):
 
                 "road_prediction":
                     road_prediction,
+
+                "forward_reason":
+                  forward_reason,    
 
                 "road_confidence":
                     road_confidence,
