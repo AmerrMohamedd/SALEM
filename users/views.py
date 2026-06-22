@@ -21,7 +21,9 @@ from .services.ai_service import (
     check_duplicate,
     check_image_authenticity,
     detect_road_damage,
-    get_trust_score
+    get_trust_score,
+    get_severity,
+    get_priority
 )
 
 
@@ -1509,6 +1511,50 @@ def create_citizin_incidence(request):
             "Trust Model Error:",
             e
         )
+         # ==========================
+    # Severity Model AI
+    # ==========================
+
+    severity_prediction = None
+    severity_score = None
+
+    try:
+
+        image_authenticity_score = (
+            image_confidence
+            if image_authenticity == "authentic"
+            else 0
+        )
+
+        reports_nearby_1h = Incidence.objects.filter(
+            location_name=data["location_name"],
+            created_at__gte=django_timezone.now() - timedelta(hours=1)
+        ).count()
+
+        severity_result = get_severity(
+            trust_score if trust_score else 0,
+            0,
+            image_authenticity_score,
+            reports_nearby_1h,
+            0
+        )
+
+        if severity_result:
+
+            severity_prediction = severity_result.get(
+                "severity_prediction"
+            )
+
+            severity_score = severity_result.get(
+                "severity_score"
+            )
+
+    except Exception as e:
+
+        print(
+            "Severity Model Error:",
+            e
+        )
 
     try:
 
@@ -1532,6 +1578,9 @@ def create_citizin_incidence(request):
 
             trust_score=trust_score,
             trust_level=trust_level,
+
+            severity_prediction=severity_prediction,
+            severity_score=severity_score,
         )
 
         if trust_score is not None:
@@ -1597,7 +1646,12 @@ def create_citizin_incidence(request):
                     trust_score,
 
                 "trust_level":
-                    trust_level
+                    trust_level,
+                "severity_prediction":
+                    severity_prediction,
+
+                "severity_score":
+                    severity_score    
             },
 
             "incidence": _incidence_to_dict(
