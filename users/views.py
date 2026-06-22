@@ -247,7 +247,8 @@ def _resolve_department(department_value):
         return Department.objects.filter(id=int(value)).first()
 
     return Department.objects.filter(name__iexact=value).first()
-
+@csrf_exempt
+@require_POST
 @api_view(["POST"])
 def approve_report(request, report_id):
 
@@ -262,6 +263,8 @@ def approve_report(request, report_id):
     return Response({
         "message": "Report approved successfully"
     })
+@csrf_exempt
+@require_POST
 @api_view(["POST"])
 def reject_report(request, report_id):
 
