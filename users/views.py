@@ -1555,6 +1555,51 @@ def create_citizin_incidence(request):
             "Severity Model Error:",
             e
         )
+            # ==========================
+    # Priority Model AI
+    # ==========================
+
+    priority_prediction = None
+    priority_score = None
+
+    try:
+
+        area_load = Incidence.objects.filter(
+            location_name=data["location_name"],
+            status__in=[
+                Incidence.Status.NEW,
+                Incidence.Status.ASSIGNED,
+                Incidence.Status.IN_PROGRESS
+            ]
+        ).count()
+
+        priority_result = get_priority(
+            severity_prediction if severity_prediction else "Medium",
+            severity_score if severity_score else 0,
+            area_load,
+            1,      # available_teams
+            1,      # team_skill_match
+            1,      # historical_team_performance
+            trust_score if trust_score else 0,
+            reports_nearby_1h
+        )
+
+        if priority_result:
+
+            priority_prediction = priority_result.get(
+                "priority_prediction"
+            )
+
+            priority_score = priority_result.get(
+                "confidence_score"
+            )
+
+    except Exception as e:
+
+        print(
+            "Priority Model Error:",
+            e
+        )
 
     try:
 
@@ -1581,6 +1626,8 @@ def create_citizin_incidence(request):
 
             severity_prediction=severity_prediction,
             severity_score=severity_score,
+            priority_prediction=priority_prediction,
+            priority_score=priority_score,
         )
 
         if trust_score is not None:
@@ -1651,7 +1698,13 @@ def create_citizin_incidence(request):
                     severity_prediction,
 
                 "severity_score":
-                    severity_score    
+                    severity_score,
+                
+                "priority_prediction":
+                    priority_prediction,
+
+                "priority_score":
+                    priority_score
             },
 
             "incidence": _incidence_to_dict(
