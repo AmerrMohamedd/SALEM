@@ -10,12 +10,15 @@ BASE_URL = "https://amerramerr-salem-ai-services.hf.space"
 def check_duplicate(description):
     try:
         response = requests.post(
-            f"{BASE_URL}/duplicate/",
+            f"{BASE_URL}/duplicate/check-duplicate",
             json={
                 "description": description
             },
             timeout=30
         )
+
+        print("Duplicate Status:", response.status_code)
+        print("Duplicate Body:", response.text)
 
         response.raise_for_status()
         return response.json()
@@ -38,7 +41,7 @@ def get_trust_score(
 ):
     try:
         response = requests.post(
-            f"{BASE_URL}/trust/",
+            f"{BASE_URL}/trust/predict",
             json={
                 "valid_ratio": valid_ratio,
                 "duplicate_rate": duplicate_rate,
@@ -48,6 +51,9 @@ def get_trust_score(
             },
             timeout=30
         )
+
+        print("Trust Status:", response.status_code)
+        print("Trust Body:", response.text)
 
         response.raise_for_status()
         return response.json()
@@ -70,7 +76,7 @@ def get_severity(
 ):
     try:
         response = requests.post(
-            f"{BASE_URL}/severity/",
+            f"{BASE_URL}/severity/predict",
             json={
                 "citizen_trust_score": citizen_trust_score,
                 "anomaly_score": anomaly_score,
@@ -80,6 +86,9 @@ def get_severity(
             },
             timeout=30
         )
+
+        print("Severity Status:", response.status_code)
+        print("Severity Body:", response.text)
 
         response.raise_for_status()
         return response.json()
@@ -105,7 +114,7 @@ def get_priority(
 ):
     try:
         response = requests.post(
-            f"{BASE_URL}/priority/",
+            f"{BASE_URL}/priority/predict",
             json={
                 "severity_label": severity_label,
                 "severity_score": severity_score,
@@ -118,6 +127,9 @@ def get_priority(
             },
             timeout=30
         )
+
+        print("Priority Status:", response.status_code)
+        print("Priority Body:", response.text)
 
         response.raise_for_status()
         return response.json()
@@ -134,12 +146,15 @@ def get_priority(
 def detect_road_damage(image_file):
     try:
         response = requests.post(
-            f"{BASE_URL}/road/",
+            f"{BASE_URL}/road/predict",
             files={
                 "image": image_file
             },
             timeout=60
         )
+
+        print("Road Status:", response.status_code)
+        print("Road Body:", response.text)
 
         response.raise_for_status()
         return response.json()
@@ -156,12 +171,15 @@ def detect_road_damage(image_file):
 def check_image_authenticity(image_file):
     try:
         response = requests.post(
-            f"{BASE_URL}/image/",
+            f"{BASE_URL}/image/predict",
             files={
                 "image": image_file
             },
             timeout=60
         )
+
+        print("Image Status:", response.status_code)
+        print("Image Body:", response.text)
 
         response.raise_for_status()
         return response.json()
