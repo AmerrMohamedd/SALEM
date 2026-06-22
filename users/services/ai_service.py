@@ -145,6 +145,7 @@ def get_priority(
 
 def detect_road_damage(image_file):
     try:
+        image_file.seek(0)
         response = requests.post(
             f"{BASE_URL}/road/predict",
             files={
@@ -174,14 +175,15 @@ def detect_road_damage(image_file):
 
 def check_image_authenticity(image_file):
     try:
+        image_file.seek(0)
         response = requests.post(
             f"{BASE_URL}/image/predict",
             files={
-               "image": (
+               "file": (
                     image_file.name,
                     image_file.read(),
                     image_file.content_type
-                )
+    )
             },
             timeout=60
         )
