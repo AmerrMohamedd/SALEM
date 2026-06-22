@@ -148,7 +148,11 @@ def detect_road_damage(image_file):
         response = requests.post(
             f"{BASE_URL}/road/predict",
             files={
-                "image": image_file
+                "image": (
+                    image_file.name,
+                    image_file.read(),
+                    image_file.content_type
+    )
             },
             timeout=60
         )
@@ -173,7 +177,11 @@ def check_image_authenticity(image_file):
         response = requests.post(
             f"{BASE_URL}/image/predict",
             files={
-                "image": image_file
+               "image": (
+                    image_file.name,
+                    image_file.read(),
+                    image_file.content_type
+                )
             },
             timeout=60
         )
