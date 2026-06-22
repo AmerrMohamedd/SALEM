@@ -1345,7 +1345,7 @@ def calculate_user_trust_metrics(user):
     ).count()
 
     reports_last_30_days = reports.filter(
-        created_at__gte=timezone.now() - timedelta(days=30)
+        created_at__gte=django_timezone.now() - timedelta(days=30)
     ).count()
 
     valid_reports = (
