@@ -270,7 +270,7 @@ def reject_report(request, report_id):
     id=report_id
 )
 
-    incidence.status = Incidence.Status.NEW
+    incidence.status = Incidence.Status.REJECTED
     incidence.save()
 
 
@@ -1681,6 +1681,9 @@ def create_citizin_incidence(request):
 
 
     try:
+        print("IMAGE =", image_authenticity)
+        print("FINAL STATUS =", status)
+        print("FORWARD REASON =", forward_reason)
 
         incidence = Incidence.objects.create(
             forward_reason=forward_reason,
@@ -1710,7 +1713,8 @@ def create_citizin_incidence(request):
             priority_prediction=priority_prediction,
             priority_score=priority_score,
         )
-
+        print("SAVED STATUS =", incidence.status)
+        print("SAVED REASON =", incidence.forward_reason)
         if trust_score is not None:
 
             request.citizin_user.trust_score = trust_score
