@@ -1426,6 +1426,7 @@ def create_citizin_incidence(request):
         image_result = check_image_authenticity(
             data["image_before_analysis"]
         )
+        print("IMAGE RESULT =", image_result)
 
         if image_result:
 
@@ -1452,10 +1453,11 @@ def create_citizin_incidence(request):
     road_confidence = None
 
     try:
-
+        data["image_before_analysis"].seek(0)
         road_result = detect_road_damage(
             data["image_before_analysis"]
         )
+        print("ROAD RESULT =", road_result)
 
         if road_result:
 
@@ -1494,6 +1496,7 @@ def create_citizin_incidence(request):
             trust_metrics["reports_last_30_days"],
             trust_metrics["avg_severity_reported"]
         )
+        print("TRUST RESULT =", trust_result)
 
         if trust_result:
 
